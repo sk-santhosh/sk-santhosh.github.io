@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/three-js-3d-sample/static/css/main.2c7cce06.chunk.css",
+    "main.js": "/three-js-3d-sample/static/js/main.f438affe.chunk.js",
+    "main.js.map": "/three-js-3d-sample/static/js/main.f438affe.chunk.js.map",
+    "runtime-main.js": "/three-js-3d-sample/static/js/runtime-main.fcce6327.js",
+    "runtime-main.js.map": "/three-js-3d-sample/static/js/runtime-main.fcce6327.js.map",
+    "static/js/2.1472acd3.chunk.js": "/three-js-3d-sample/static/js/2.1472acd3.chunk.js",
+    "static/js/2.1472acd3.chunk.js.map": "/three-js-3d-sample/static/js/2.1472acd3.chunk.js.map",
+    "static/js/3.9577fc65.chunk.js": "/three-js-3d-sample/static/js/3.9577fc65.chunk.js",
+    "static/js/3.9577fc65.chunk.js.map": "/three-js-3d-sample/static/js/3.9577fc65.chunk.js.map",
+    "index.html": "/three-js-3d-sample/index.html",
+    "static/css/main.2c7cce06.chunk.css.map": "/three-js-3d-sample/static/css/main.2c7cce06.chunk.css.map",
+    "static/js/2.1472acd3.chunk.js.LICENSE.txt": "/three-js-3d-sample/static/js/2.1472acd3.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.fcce6327.js",
+    "static/js/2.1472acd3.chunk.js",
+    "static/css/main.2c7cce06.chunk.css",
+    "static/js/main.f438affe.chunk.js"
+  ]
+}
