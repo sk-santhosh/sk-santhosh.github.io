@@ -1,7 +1,7 @@
 ---
-title: 'When to Use Static Generation v.s. Server-side Rendering'
+title: 'Santhosh When to Use Static Generation v.s. Server-side Rendering'
 date: '26 May'
-author: 'Sathish J'
+author: 'Sathish'
 tags: 'kubernetes,docker,cncf'
 ---
 ![certificate](https://sentinelfox.com/hero/ops-ac245ed50068a825d18199321ee7633b.png)
