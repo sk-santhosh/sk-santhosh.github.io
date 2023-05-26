@@ -4,7 +4,7 @@ date: '26 May'
 author: 'Santhosh J'
 tags: 'kubernetes,docker,cncf'
 ---
-![certificate](https://github.com/sk-santhosh/sk-santhosh.github.io/blob/cf54e812455aa4f0be43144633c1c9ccc9f7dc4a/certificates/mean_stack.jpg)
+![certificate](https://sentinelfox.com/hero/ops-ac245ed50068a825d18199321ee7633b.png)
 We recommend using **Static Generation** (with and without data) whenever possible because your page can be built once and served by CDN, which makes it much faster than having a server render the page on every request.
 
 You can use Static Generation for many types of pages, including:
@@ -16,7 +16,7 @@ You can use Static Generation for many types of pages, including:
 
 You should ask yourself: "Can I pre-render this page **ahead** of a user's request?" If the answer is yes, then you should choose Static Generation.
 
-![certificate](https://github.com/sk-santhosh/sk-santhosh.github.io/blob/cf54e812455aa4f0be43144633c1c9ccc9f7dc4a/certificates/mean_stack.jpg)
+![certificate](https://sentinelfox.com/hero/ops-ac245ed50068a825d18199321ee7633b.png)
 
 On the other hand, Static Generation is **not** a good idea if you cannot pre-render a page ahead of a user's request. Maybe your page shows frequently updated data, and the page content changes on every request.
 
