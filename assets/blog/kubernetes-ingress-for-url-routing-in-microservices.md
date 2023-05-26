@@ -1,5 +1,5 @@
 ---
-title: 'kubernetes-ingress-for-url-routing-in-microservices'
+title: 'Kubernetes Ingress for URL Routing in Microservices'
 date: '27 Jan 2023'
 author: 'Santhosh J'
 tags: 'kubernetes,ingress,cncf'
