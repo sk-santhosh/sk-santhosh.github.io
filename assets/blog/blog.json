@@ -23,18 +23,6 @@
         "Microservices",
         "CNCF"
       ]
-    },
-    {
-      "id": "kubernetes-ingress-for-url-routing-in-microservices-2",
-      "imageSrc": "https://miro.medium.com/v2/resize:fit:1400/format:webp/0*fNi0XG2neuY9RMd-.png",
-      "date": "27 Jan,2023",
-      "title": "Demo Add Ingress for URL Routing in Microservices",
-      "delay": "100",
-      "tags": [
-        "Kubernetes",
-        "Microservices",
-        "CNCF"
-      ]
     }
   ]
 }
