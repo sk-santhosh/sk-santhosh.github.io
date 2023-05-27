@@ -1,0 +1,28 @@
+{
+  "blogs": [
+    {
+      "id": "demo-blog",
+      "imageSrc": "https://miro.medium.com/v2/resize:fit:1400/format:webp/0*fNi0XG2neuY9RMd-.png",
+      "date": "23 Apr,2022",
+      "title": "When to Use Static Generation v.s. Server-side Rendering",
+      "delay": "100",
+      "tags": [
+        "Kubernetes",
+        "Docker",
+        "CNCF"
+      ]
+    },
+    {
+      "id": "kubernetes-ingress-for-url-routing-in-microservices",
+      "imageSrc": "https://miro.medium.com/v2/resize:fit:1400/format:webp/0*fNi0XG2neuY9RMd-.png",
+      "date": "27 Jan,2023",
+      "title": "Kubernetes Ingress for URL Routing in Microservices",
+      "delay": "100",
+      "tags": [
+        "Kubernetes",
+        "Microservices",
+        "CNCF"
+      ]
+    }
+  ]
+}
