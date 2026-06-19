@@ -4,7 +4,20 @@ import Nav from "@/components/nav";
 import CommandPalette from "@/components/command-palette";
 import MobileMenuButton from "@/components/mobile-menu-button";
 import ThemeToggle from "@/components/theme-toggle";
+import { resume } from "@/data/resume";
 import "./globals.css";
+
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  `https://sk-santhosh.github.io${process.env.NEXT_PUBLIC_BASE_PATH || ""}`;
+
+const siteTitle = `${resume.name} — ${resume.title}`;
+const ogImage = {
+  url: `${siteUrl}/og.png`,
+  width: 1200,
+  height: 630,
+  alt: siteTitle,
+};
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
@@ -17,9 +30,23 @@ export const viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Santhosh Kumar J — Platform Architect & SRE Leader",
-  description:
-    "Platform Architect, Cloud Architect, and SRE leader with 13+ years building cloud-native platforms on AWS, Azure, and GCP.",
+  metadataBase: new URL(siteUrl),
+  title: siteTitle,
+  description: resume.summary,
+  openGraph: {
+    title: siteTitle,
+    description: resume.summary,
+    url: siteUrl,
+    siteName: resume.name,
+    type: "website",
+    images: [ogImage],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteTitle,
+    description: resume.summary,
+    images: [ogImage.url],
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
