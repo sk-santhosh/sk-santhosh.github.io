@@ -17,8 +17,9 @@ export const viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Santhosh Kumar J — Site Reliability Engineer",
-  description: "Site Reliability Engineer. DevOps, cloud infrastructure, and open source.",
+  title: "Santhosh Kumar J — Platform Architect & SRE Leader",
+  description:
+    "Platform Architect, Cloud Architect, and SRE leader with 13+ years building cloud-native platforms on AWS, Azure, and GCP.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

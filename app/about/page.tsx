@@ -18,12 +18,9 @@ export default function AboutPage() {
 					<h1 className="text-base font-bold text-slate-900 dark:text-slate-100">About</h1>
 				</div>
 				<p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-					I&apos;m {resume.name}, a {resume.title} based in {resume.location}. {resume.tagline}
+					I&apos;m {resume.name}, a {resume.title} based in {resume.location}.
 				</p>
-				<p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mt-3">
-					Founder of SentinelFox, building security-focused developer tools. I run a homelab, contribute to open source,
-					and write about things I&apos;m learning.
-				</p>
+				<p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mt-3">{resume.summary}</p>
 			</section>
 
 			{/* Experience */}
