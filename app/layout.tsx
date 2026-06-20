@@ -9,7 +9,7 @@ import "./globals.css";
 
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ||
-  `https://sk-santhosh.github.io${process.env.NEXT_PUBLIC_BASE_PATH || ""}`;
+  `https://sk-santhosh.info${process.env.NEXT_PUBLIC_BASE_PATH || ""}`;
 
 const siteTitle = `${resume.name} — ${resume.title}`;
 const ogImage = {
