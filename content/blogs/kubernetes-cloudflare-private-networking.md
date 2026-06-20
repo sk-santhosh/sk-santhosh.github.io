@@ -13,9 +13,7 @@ This is how I wire it up across customer environments.
 
 `cloudflared` runs as a Deployment inside your cluster. It dials out to Cloudflare and registers a tunnel. Cloudflare routes requests for your configured hostnames through that persistent connection to your internal services — all without anything listening on a public port.
 
-```
-[User] → cloudflare.com edge → tunnel → cloudflared pod → ClusterIP Service → app pods
-```
+![Request flow from the user through the Cloudflare edge and an outbound tunnel into the private Kubernetes cluster](/diagrams/cloudflare-tunnel-flow.svg)
 
 ## Deploying cloudflared on Kubernetes
 

@@ -16,12 +16,7 @@ This is the observability stack I've deployed across multiple customer environme
 - **Tempo** — Grafana's distributed tracing backend (stores and queries traces)
 - **Grafana** — unified UI for traces, metrics (Prometheus), and logs (Loki)
 
-```
-App (OTel SDK) → OTel Collector → Tempo
-                              ↘ Prometheus
-                              ↘ Loki
-                Grafana ← queries all three
-```
+![Telemetry flows from the app SDK into the OTel Collector, which exports to Tempo, Prometheus, and Loki; Grafana queries all three](/diagrams/otel-pipeline.svg)
 
 ## Instrumenting Your Application
 

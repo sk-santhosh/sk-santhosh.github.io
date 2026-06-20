@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 320" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+  <rect x="1" y="1" width="918" height="318" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
+  <text x="24" y="34" font-size="17" font-weight="700" fill="#0f172a">OpenTelemetry pipeline — one Collector, three backends</text>
+
+  <g font-size="14" text-anchor="middle">
+    <!-- app -->
+    <rect x="24" y="120" width="160" height="58" rx="9" fill="#ecfdf5" stroke="#10b981"/>
+    <text x="104" y="146" fill="#047857">App</text>
+    <text x="104" y="164" fill="#047857" font-size="12">(OTel SDK)</text>
+
+    <!-- collector -->
+    <rect x="280" y="120" width="170" height="58" rx="9" fill="#eff6ff" stroke="#3b82f6"/>
+    <text x="365" y="146" fill="#1d4ed8">OTel Collector</text>
+    <text x="365" y="164" fill="#1d4ed8" font-size="12">receive · process · export</text>
+
+    <!-- backends -->
+    <rect x="600" y="40" width="170" height="50" rx="9" fill="#f5f3ff" stroke="#8b5cf6"/>
+    <text x="685" y="71" fill="#6d28d9">Tempo (traces)</text>
+
+    <rect x="600" y="124" width="170" height="50" rx="9" fill="#fffbeb" stroke="#f59e0b"/>
+    <text x="685" y="155" fill="#b45309">Prometheus (metrics)</text>
+
+    <rect x="600" y="208" width="170" height="50" rx="9" fill="#ecfeff" stroke="#06b6d4"/>
+    <text x="685" y="239" fill="#0e7490">Loki (logs)</text>
+
+    <!-- grafana -->
+    <rect x="280" y="244" width="170" height="50" rx="9" fill="#fff7ed" stroke="#f97316"/>
+    <text x="365" y="275" fill="#c2410c">Grafana</text>
+  </g>
+
+  <g stroke="#94a3b8" stroke-width="2" fill="none">
+    <line x1="186" y1="149" x2="276" y2="149" marker-end="url(#arrow)"/>
+    <!-- collector to backends -->
+    <path d="M452 142 C 530 120, 540 80, 596 70" marker-end="url(#arrow)"/>
+    <path d="M452 149 L596 149" marker-end="url(#arrow)"/>
+    <path d="M452 156 C 530 178, 540 215, 596 228" marker-end="url(#arrow)"/>
+  </g>
+  <!-- grafana queries backends (dashed) -->
+  <g stroke="#cbd5e1" stroke-width="2" fill="none" stroke-dasharray="6 4">
+    <path d="M452 266 C 540 266, 560 70, 596 66"/>
+    <path d="M452 268 C 540 268, 560 149, 596 149"/>
+    <path d="M452 270 L596 235"/>
+  </g>
+  <text x="500" y="312" font-size="11.5" fill="#94a3b8">— — Grafana queries all three backends</text>
+</svg>

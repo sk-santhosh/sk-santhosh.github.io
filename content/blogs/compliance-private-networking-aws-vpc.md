@@ -15,14 +15,7 @@ Workloads that handle sensitive data should have **no path to or from the public
 - Outbound internet (for patches, APIs) goes through a **NAT gateway** in a public subnet — egress only, never ingress.
 - Internal AWS service traffic (S3, ECR, Secrets Manager) never touches the internet at all — it goes through **VPC endpoints**.
 
-```
-            ┌─────────────── VPC (10.0.0.0/16) ───────────────┐
- Internet ──┤  Public subnet:  NAT GW, ALB                      │
-            │  Private subnet: app tier (no public IP)          │
-            │  Private subnet: data tier (no public IP)         │
-            │  VPC endpoints:  S3, ECR, Secrets Manager, KMS    │
-            └───────────────────────────────────────────────────┘
-```
+![VPC with a public subnet for NAT and ALB, private app and data subnets with no public IPs, and VPC endpoints keeping AWS traffic off the internet](/diagrams/vpc-architecture.svg)
 
 ## Subnet Tiering with Terraform
 

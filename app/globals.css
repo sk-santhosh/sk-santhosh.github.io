@@ -47,7 +47,6 @@ body {
 .dark .prose strong { color: #f1f5f9; }
 .dark .prose a { color: #60a5fa; }
 .dark .prose code { background: #1e293b; color: #e2e8f0; border-color: #334155; }
-.dark .prose pre { background: #1e1e1e; border-color: #2d2d2d; }
 .dark .prose blockquote { border-color: #334155; color: #94a3b8; }
 .dark .prose hr { border-color: #334155; }
 
@@ -109,31 +108,41 @@ body {
   border: 1px solid #e2e8f0;
 }
 
-/* VSCode (Dark+) code blocks — dark in both themes so syntax colors stay legible */
+/* VSCode (Light+) code blocks — light background in both themes */
 .prose pre {
-  background: #1e1e1e;
+  background: #f6f8fa;
   border-radius: 0.5rem;
   padding: 1rem 1.25rem;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   margin-bottom: 1.25rem;
-  border: 1px solid #2d2d2d;
+  border: 1px solid #d0d7de;
   max-width: 100%;
 }
 
 .prose pre code {
   background: transparent;
-  color: #d4d4d4;
+  color: #1f2328;
   padding: 0;
   border: none;
   font-size: 0.8125rem;
   line-height: 1.6;
 }
 
-/* VSCode Dark+ syntax theme (highlight.js tokens) */
+/* Keep code blocks light even in dark mode (override inline-code dark styles) */
+.dark .prose pre {
+  background: #f6f8fa;
+  border-color: #d0d7de;
+}
+.dark .prose pre code {
+  background: transparent;
+  color: #1f2328;
+}
+
+/* VSCode Light+ syntax theme (highlight.js tokens) */
 .prose .hljs-comment,
 .prose .hljs-quote {
-  color: #6a9955;
+  color: #008000;
   font-style: italic;
 }
 .prose .hljs-keyword,
@@ -143,30 +152,30 @@ body {
 .prose .hljs-doctag,
 .prose .hljs-meta,
 .prose .hljs-meta .hljs-keyword {
-  color: #569cd6;
+  color: #0000ff;
 }
 .prose .hljs-string,
 .prose .hljs-regexp,
 .prose .hljs-meta .hljs-string,
 .prose .hljs-addition {
-  color: #ce9178;
+  color: #a31515;
 }
 .prose .hljs-number,
 .prose .hljs-symbol,
 .prose .hljs-bullet {
-  color: #b5cea8;
+  color: #098658;
 }
 .prose .hljs-title,
 .prose .hljs-title.function_,
 .prose .hljs-function .hljs-title {
-  color: #dcdcaa;
+  color: #795e26;
 }
 .prose .hljs-built_in,
 .prose .hljs-type,
 .prose .hljs-class .hljs-title,
 .prose .hljs-title.class_,
 .prose .hljs-selector-class {
-  color: #4ec9b0;
+  color: #267f99;
 }
 .prose .hljs-attr,
 .prose .hljs-attribute,
@@ -176,16 +185,16 @@ body {
 .prose .hljs-params,
 .prose .hljs-selector-attr,
 .prose .hljs-selector-pseudo {
-  color: #9cdcfe;
+  color: #001080;
 }
 .prose .hljs-name,
 .prose .hljs-selector-id,
 .prose .hljs-tag {
-  color: #569cd6;
+  color: #800000;
 }
 .prose .hljs-deletion {
-  color: #ce9178;
-  background: #3a1d1d;
+  color: #a31515;
+  background: #ffeef0;
 }
 .prose .hljs-emphasis {
   font-style: italic;
@@ -205,4 +214,17 @@ body {
 .prose hr {
   border-color: #e2e8f0;
   margin: 1.5rem 0;
+}
+
+.prose img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1.5rem 0;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+}
+
+.dark .prose img {
+  border-color: #1e293b;
 }
