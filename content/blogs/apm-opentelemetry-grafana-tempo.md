@@ -1,24 +1,24 @@
 ---
-title: "APM with OpenTelemetry, Grafana, and Tempo"
-description: "How to set up application performance monitoring using OpenTelemetry for instrumentation, Tempo for traces, and Grafana for unified visibility."
+title: "Application performance monitoring with OpenTelemetry, Grafana and Tempo"
+description: "How to set up application performance monitoring using OpenTelemetry for instrumentation, Tempo for traces and Grafana for unified visibility."
 date: "2026-01-22"
 tags: ["Observability", "OpenTelemetry", "Grafana", "Platform Engineering"]
 ---
 
-Most APM tools are expensive, lock you into a vendor, and make it hard to own your data. The OpenTelemetry + Grafana stack gives you the same visibility at a fraction of the cost — and since it's all open standards, switching storage backends later is straightforward.
+Most APM tools are expensive, lock you into a vendor and make it hard to own your data. The OpenTelemetry + Grafana stack gives you the same visibility at a fraction of the cost — and since it's all open standards, switching storage backends later is straightforward.
 
 This is the observability stack I've deployed across multiple customer environments.
 
-## The Components
+## The components
 
-- **OpenTelemetry SDK** — instruments your application and emits traces, metrics, and logs
-- **OpenTelemetry Collector** — receives, processes, and exports telemetry to backends
+- **OpenTelemetry SDK** — instruments your application and emits traces, metrics and logs
+- **OpenTelemetry Collector** — receives, processes and exports telemetry to backends
 - **Tempo** — Grafana's distributed tracing backend (stores and queries traces)
-- **Grafana** — unified UI for traces, metrics (Prometheus), and logs (Loki)
+- **Grafana** — unified UI for traces, metrics (Prometheus) and logs (Loki)
 
 ![Telemetry flows from the app SDK into the OTel Collector, which exports to Tempo, Prometheus, and Loki; Grafana queries all three](/diagrams/otel-pipeline.svg)
 
-## Instrumenting Your Application
+## Instrumenting your application
 
 For a Node.js service, auto-instrumentation covers most of the common libraries (HTTP, Express, database drivers) without changing application code:
 
@@ -107,7 +107,7 @@ data:
           exporters: [loki]
 ```
 
-## Tempo for Traces
+## Tempo for traces
 
 Tempo stores traces as objects on disk (or object storage like S3/GCS). It's queried via TraceQL from Grafana.
 
@@ -131,11 +131,11 @@ Add Tempo as a data source in Grafana:
 - Enable **Trace to logs** and link your Loki data source — Grafana will correlate a trace's time range with the logs from the same service automatically.
 
 Now in Grafana → Explore, you can:
-- Search traces by service, duration, and status (`{ .http.status_code = 500 }`)
+- Search traces by service, duration and status (`{ .http.status_code = 500 }`)
 - Click a span to see the full trace waterfall
 - Jump directly from a slow span to the corresponding log lines
 
-## What You Get
+## What you get
 
 Once all three services are instrumented, a single slow API request gives you:
 
@@ -143,8 +143,8 @@ Once all three services are instrumented, a single slow API request gives you:
 2. **Correlated logs** — the exact log lines from each service during that request
 3. **Service graph** — which services call which, and their error rates and p99 latencies
 
-The service graph in Grafana is built automatically from trace data — no configuration required. It's usually the first thing I show teams to make them realize what they've been missing without distributed tracing.
+The service graph in Grafana is built automatically from trace data — no configuration required. It's usually the first thing I show teams to make them realise what they've been missing without distributed tracing.
 
-## One Thing to Get Right Early
+## One thing to get right early
 
 Set `OTEL_RESOURCE_ATTRIBUTES=service.name=<name>,service.namespace=<team>` as environment variables on every deployment. Trace data without good service names is nearly unusable. Do this from the start — retrofitting it across 20 services is painful.

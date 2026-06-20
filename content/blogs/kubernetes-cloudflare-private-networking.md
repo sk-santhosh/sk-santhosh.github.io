@@ -1,15 +1,15 @@
 ---
-title: "Kubernetes + Cloudflare Tunnel: Private Networking Without a Public IP"
+title: "Kubernetes and Cloudflare Tunnel: Zero Trust private networking without a public IP"
 description: "How to expose Kubernetes services securely using Cloudflare Tunnel and Zero Trust, with no open inbound ports."
 date: "2025-11-18"
 tags: ["Kubernetes", "Cloudflare", "Networking", "Platform Engineering"]
 ---
 
-Most Kubernetes setups expose services through a LoadBalancer, which means a public IP, firewall rules, and an attack surface to manage. Cloudflare Tunnel flips that model — your cluster opens an outbound connection to Cloudflare's edge, and traffic flows in through that tunnel. No inbound ports. No public IP on the node.
+Most Kubernetes setups expose services through a LoadBalancer, which means a public IP, firewall rules and an attack surface to manage. Cloudflare Tunnel flips that model — your cluster opens an outbound connection to Cloudflare's edge, and traffic flows in through that tunnel. No inbound ports. No public IP on the node.
 
 This is how I wire it up across customer environments.
 
-## How It Works
+## How it works
 
 `cloudflared` runs as a Deployment inside your cluster. It dials out to Cloudflare and registers a tunnel. Cloudflare routes requests for your configured hostnames through that persistent connection to your internal services — all without anything listening on a public port.
 
@@ -83,13 +83,13 @@ spec:
 
 Run two replicas — `cloudflared` uses its own internal load balancing across them. If one pod dies, traffic shifts to the other with no gap.
 
-## Zero Trust Access Policies
+## Zero Trust access policies
 
 The tunnel gets traffic to your cluster, but you still want to control who can reach what. Cloudflare Access sits in front and enforces identity-based policies before a request ever hits your app.
 
 In the Cloudflare dashboard, create an Access Application for each hostname and attach a policy — e.g., "allow if user email ends in @yourcompany.com and device is managed". This replaces VPN for internal tool access.
 
-## Private Network Routing
+## Private network routing
 
 For non-HTTP services (databases, internal APIs that shouldn't be exposed via hostname), Cloudflare's WARP-to-Tunnel feature lets enrolled devices reach RFC 1918 addresses routed through the tunnel.
 
@@ -108,7 +108,7 @@ warp-routing:
 
 Then in Zero Trust → Networks → Routes, add your pod and service CIDRs (e.g. the `10.96.0.0/12` service CIDR and your pod CIDR like `10.244.0.0/16`). Devices running WARP can now reach those ranges directly, treating your cluster as a private network segment.
 
-## What This Replaces
+## What this replaces
 
 - LoadBalancer services (and their cloud costs)
 - NodePort + firewall rules

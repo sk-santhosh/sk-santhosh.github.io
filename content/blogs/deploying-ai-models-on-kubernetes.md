@@ -1,24 +1,26 @@
 ---
-title: "Deploying AI Inference on Kubernetes"
-description: "A practical guide to running AI model inference workloads on Kubernetes — resource limits, autoscaling, and serving at scale."
+title: "Deploying AI inference on Kubernetes"
+description: "A practical guide to running AI model inference workloads on Kubernetes — resource limits, autoscaling and serving at scale."
 date: "2025-12-10"
 tags: ["Kubernetes", "AI", "Platform Engineering", "DevOps"]
 ---
 
-Running AI models in production is a different class of problem from a typical web service. The compute profile is spiky, models are large, startup times are slow, and GPU scheduling adds a new layer of complexity. Here's the setup that's worked for me across a few deployments.
+Running AI models in production is a different class of problem from a typical web service. The compute profile is spiky, models are large, startup times are slow and GPU scheduling adds a new layer of complexity. Here's the setup that's worked for me across a few deployments.
 
-## The Stack
+## The stack
 
-- **Ollama** — model server that handles loading, caching, and inference for open models
+- **Ollama** — model server that handles loading, caching and inference for open models
 - **Kubernetes** — orchestration, resource limits, rolling deployments
-- **HPA + KEDA** — autoscaling based on queue depth or GPU utilization
+- **HPA + KEDA** — autoscaling based on queue depth or GPU utilisation
 - **Persistent Volume** — model weights live here, not in the container image
 
-## Why Not Bake Models Into the Image?
+![App calls a ClusterIP Service that routes to an Ollama pod on a GPU node; an init container pulls the model into a PVC mounted at /root/.ollama, and KEDA scales replicas on Redis queue depth](/diagrams/ai-inference-k8s.svg)
+
+## Why not bake models into the image?
 
 A 7B parameter model is 4–8 GB. Embedding it in a Docker image makes every pull and every node that runs the pod download that data. Instead, mount a PVC at `/root/.ollama` and pre-pull the model once. The container image stays small, and the weights survive pod restarts.
 
-`ReadWriteOnce` is fine for a single replica. If you plan to scale across nodes (see autoscaling below), switch to a `ReadWriteMany` volume backed by NFS, EFS, or Filestore — or give each replica its own volume with a StatefulSet and `volumeClaimTemplates`. An RWO volume can only be mounted by pods on one node, so extra replicas elsewhere will stay `Pending`.
+`ReadWriteOnce` is fine for a single replica. If you plan to scale across nodes (see autoscaling below), switch to a `ReadWriteMany` volume backed by NFS, EFS or Filestore — or give each replica its own volume with a StatefulSet and `volumeClaimTemplates`. An RWO volume can only be mounted by pods on one node, so extra replicas elsewhere will stay `Pending`.
 
 ```yaml
 apiVersion: v1
@@ -90,7 +92,7 @@ spec:
       targetPort: 11434
 ```
 
-## Pre-pulling Models with an Init Container
+## Pre-pulling models with an init container
 
 Use an init container to pull the model before the main container starts, so the pod is never serving requests with a cold model cache:
 
@@ -104,7 +106,7 @@ initContainers:
         mountPath: /root/.ollama
 ```
 
-## GPU Nodes
+## GPU nodes
 
 If you have GPU nodes in your cluster, add the NVIDIA device plugin and then request GPUs in the container spec:
 

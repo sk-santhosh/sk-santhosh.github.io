@@ -1,13 +1,13 @@
 ---
-title: "Compliance-Ready Private Networking on AWS VPC"
-description: "How to design an AWS VPC that keeps workloads private, auditable, and aligned with SOC 2, PCI-DSS, and HIPAA — using private subnets, VPC endpoints, flow logs, and Terraform."
+title: "Private networking on AWS for GDPR and ISO 27001 compliance"
+description: "How to design an AWS VPC that keeps workloads private, auditable and aligned with GDPR, ISO 27001 and PCI-DSS — using private subnets, VPC endpoints, flow logs and Terraform."
 date: "2026-06-17"
 tags: ["AWS", "Networking", "Compliance", "Terraform"]
 ---
 
-When auditors ask "how is this data protected in transit?" and "prove nothing in this subnet can reach the internet," vague answers don't pass. SOC 2, PCI-DSS, and HIPAA all care about the same network fundamentals: isolation, least privilege, encryption, and an audit trail. This is how I design AWS VPCs so those answers are built in — and provable — rather than bolted on.
+When auditors ask "how is this data protected in transit?" and "prove nothing in this subnet can reach the internet," vague answers don't pass. GDPR, ISO 27001 and PCI-DSS all care about the same network fundamentals: isolation, least privilege, encryption and an audit trail. This is how I design AWS VPCs so those answers are built in — and provable — rather than bolted on.
 
-## The Core Principle: Private by Default
+## The core principle: private by default
 
 Workloads that handle sensitive data should have **no path to or from the public internet** unless one is explicitly justified. In a compliant VPC that means:
 
@@ -17,7 +17,7 @@ Workloads that handle sensitive data should have **no path to or from the public
 
 ![VPC with a public subnet for NAT and ALB, private app and data subnets with no public IPs, and VPC endpoints keeping AWS traffic off the internet](/diagrams/vpc-architecture.svg)
 
-## Subnet Tiering with Terraform
+## Subnet tiering with Terraform
 
 Separate tiers into separate subnets so security groups and NACLs can enforce boundaries between them. The data tier should never be directly reachable from the internet-facing tier without going through the app tier.
 
@@ -45,7 +45,7 @@ resource "aws_subnet" "private_data" {
 }
 ```
 
-## Keep AWS Traffic Off the Internet: VPC Endpoints
+## Keep AWS traffic off the internet: VPC endpoints
 
 By default, a private instance calling `s3.amazonaws.com` or Secrets Manager routes out through the NAT gateway and across the public internet to AWS's public endpoints. Auditors flag this. **VPC endpoints (PrivateLink)** keep that traffic inside the AWS network.
 
@@ -73,7 +73,7 @@ resource "aws_vpc_endpoint" "secretsmanager" {
 
 With `private_dns_enabled`, the SDK call to `secretsmanager.<region>.amazonaws.com` resolves to a private VPC IP automatically — no code changes. This single control satisfies a lot of "encryption in transit" and "no public data path" requirements at once.
 
-## Least Privilege: Security Groups Over NACLs
+## Least privilege: security groups over NACLs
 
 Security groups are stateful and reference each other — make them your primary control. Reference SGs by ID, not CIDR, so the rule expresses intent ("the data tier accepts traffic *from the app tier*") rather than a brittle IP range.
 
@@ -91,7 +91,7 @@ resource "aws_security_group_rule" "db_from_app" {
 
 Use **NACLs** as a coarse, subnet-level backstop — e.g. explicitly denying the data subnet any route to `0.0.0.0/0`. They're stateless and harder to reason about, so keep their rules few and blunt.
 
-## The Audit Trail: VPC Flow Logs
+## The audit trail: VPC Flow Logs
 
 You can't prove what you don't record. VPC Flow Logs capture accepted and rejected connections — the evidence auditors ask for, and the data you need when investigating an incident. Send them to CloudWatch or S3 with a retention period that matches your framework (PCI-DSS wants a year, with 3 months immediately available).
 
@@ -109,9 +109,9 @@ resource "aws_cloudwatch_log_group" "flow_logs" {
 }
 ```
 
-Pair this with a GuardDuty detector — it consumes flow logs, DNS logs, and CloudTrail to flag things like a private instance suddenly talking to a known-malicious IP or a crypto-mining domain. That's continuous monitoring evidence with almost no operational cost.
+Pair this with a GuardDuty detector — it consumes flow logs, DNS logs and CloudTrail to flag things like a private instance suddenly talking to a known-malicious IP or a crypto-mining domain. That's continuous monitoring evidence with almost no operational cost.
 
-## Encryption in Transit
+## Encryption in transit
 
 Network isolation is necessary but not sufficient — most frameworks also want data encrypted on the wire, even inside the VPC.
 
@@ -119,7 +119,7 @@ Network isolation is necessary but not sufficient — most frameworks also want 
 - **VPC endpoints are TLS** to the AWS service by default.
 - For database connections, **enforce SSL** at the engine level (e.g. RDS `rds.force_ssl = 1`) so a misconfigured client can't silently connect in plaintext.
 
-## Mapping It Back to the Frameworks
+## Mapping it back to the frameworks
 
 The same handful of controls answers the recurring audit questions:
 
@@ -130,8 +130,8 @@ The same handful of controls answers the recurring audit questions:
 - **GuardDuty** → continuous threat detection
 - **TLS + enforced DB SSL** → encryption in transit
 
-## Make It Provable, Not Just Present
+## Make it provable, not just present
 
 The final piece is **drift detection**. A compliant VPC on day one means nothing if someone attaches an internet gateway to a private route table six months later. Run AWS Config rules — `vpc-flow-logs-enabled`, `vpc-sg-open-only-to-authorized-ports`, `restricted-ssh` — so a violation is flagged automatically, and keep the whole VPC in Terraform so every change is reviewed in a pull request and recorded in version control.
 
-Compliance in networking isn't a one-time audit scramble. Build the controls into the infrastructure code, log everything, and let Config and GuardDuty prove continuously that the controls are still in place.
+Compliance in networking isn't a one-time audit scramble. Build the controls into the infrastructure code, log everything and let Config and GuardDuty prove continuously that the controls are still in place.

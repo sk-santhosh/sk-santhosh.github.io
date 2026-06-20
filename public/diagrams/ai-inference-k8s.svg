@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 360" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+  <defs>
+    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#94a3b8"/>
+    </marker>
+    <marker id="arO" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#ea580c"/>
+    </marker>
+  </defs>
+  <rect x="1" y="1" width="918" height="358" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
+  <text x="24" y="34" font-size="17" font-weight="700" fill="#0f172a">AI inference on Kubernetes</text>
+
+  <g text-anchor="middle">
+    <!-- app -->
+    <rect x="24" y="150" width="120" height="56" rx="9" fill="#f1f5f9" stroke="#94a3b8"/>
+    <text x="84" y="183" font-size="13.5" fill="#334155">App / client</text>
+
+    <!-- service -->
+    <rect x="184" y="150" width="150" height="56" rx="9" fill="#eff6ff" stroke="#3b82f6"/>
+    <text x="259" y="174" font-size="13.5" fill="#1d4ed8" font-weight="600">Service</text>
+    <text x="259" y="192" font-size="11.5" fill="#1d4ed8">ClusterIP :11434</text>
+
+    <!-- GPU node boundary -->
+    <rect x="378" y="74" width="518" height="200" rx="10" fill="#f8fafc" stroke="#10b981" stroke-dasharray="5 4"/>
+    <text x="396" y="96" font-size="12" font-weight="600" fill="#047857" text-anchor="start">GPU node — taint nvidia.com/gpu</text>
+
+    <!-- init container -->
+    <rect x="398" y="110" width="190" height="34" rx="8" fill="#fff7ed" stroke="#f97316"/>
+    <text x="493" y="132" font-size="12" fill="#c2410c">init: ollama pull (model)</text>
+
+    <!-- ollama pod -->
+    <rect x="398" y="158" width="190" height="78" rx="9" fill="#ecfdf5" stroke="#10b981"/>
+    <text x="493" y="186" font-size="13.5" fill="#047857" font-weight="600">Ollama pod</text>
+    <text x="493" y="205" font-size="11.5" fill="#047857">ollama/ollama</text>
+    <text x="493" y="223" font-size="11" fill="#059669">requests nvidia.com/gpu: 1</text>
+
+    <!-- PVC -->
+    <rect x="636" y="158" width="240" height="78" rx="9" fill="#f5f3ff" stroke="#8b5cf6"/>
+    <text x="756" y="186" font-size="13.5" fill="#6d28d9" font-weight="600">PVC — model weights</text>
+    <text x="756" y="205" font-size="11.5" fill="#6d28d9">mounted at /root/.ollama</text>
+    <text x="756" y="223" font-size="11" fill="#7c3aed">RWX to scale across nodes</text>
+
+    <!-- KEDA + queue -->
+    <rect x="398" y="296" width="190" height="44" rx="9" fill="#fffbeb" stroke="#f59e0b"/>
+    <text x="493" y="323" font-size="12.5" fill="#b45309">KEDA ScaledObject</text>
+
+    <rect x="636" y="296" width="240" height="44" rx="9" fill="#ecfeff" stroke="#06b6d4"/>
+    <text x="756" y="323" font-size="12.5" fill="#0e7490">Redis inference queue</text>
+  </g>
+
+  <g stroke="#94a3b8" stroke-width="2" fill="none">
+    <line x1="146" y1="178" x2="180" y2="178" marker-end="url(#ar)"/>
+    <line x1="336" y1="178" x2="394" y2="190" marker-end="url(#ar)"/>
+    <line x1="588" y1="197" x2="632" y2="197" marker-end="url(#ar)"/>
+    <line x1="588" y1="127" x2="588" y2="154" marker-end="url(#ar)"/>
+  </g>
+  <text x="610" y="190" font-size="10.5" text-anchor="middle" fill="#6d28d9">mount</text>
+
+  <!-- scaling flow (orange) -->
+  <g stroke="#ea580c" stroke-width="2" fill="none" stroke-dasharray="6 4">
+    <line x1="636" y1="318" x2="592" y2="318" marker-end="url(#arO)"/>
+    <line x1="493" y1="292" x2="493" y2="240" marker-end="url(#arO)"/>
+  </g>
+  <text x="690" y="290" font-size="10.5" text-anchor="middle" fill="#ea580c">queue depth</text>
+  <text x="512" y="270" font-size="10.5" text-anchor="start" fill="#ea580c">scale replicas</text>
+</svg>

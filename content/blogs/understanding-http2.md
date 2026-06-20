@@ -1,33 +1,35 @@
 ---
-title: "HTTP/2 in Practice: Multiplexing, Performance, and the Gotchas"
-description: "What HTTP/2 actually changes under the hood, how to enable it across Nginx and Kubernetes ingress, and the failure modes that catch people out."
+title: "HTTP/2 in practice: multiplexing, performance and the trade-offs"
+description: "What HTTP/2 actually changes under the hood, how to enable it across Nginx and Kubernetes ingress and the trade-offs that catch people out."
 date: "2026-06-12"
 tags: ["Networking", "Performance", "HTTP", "Kubernetes"]
 ---
 
-HTTP/2 has been a default for years, but a surprising number of services still terminate at HTTP/1.1 — or worse, claim HTTP/2 at the edge and silently fall back to HTTP/1.1 between the proxy and the backend. This post covers what HTTP/2 actually changes, how to turn it on correctly, and the gotchas that bite in production.
+HTTP/2 has been a default for years, but a surprising number of services still terminate at HTTP/1.1 — or worse, claim HTTP/2 at the edge and silently fall back to HTTP/1.1 between the proxy and the backend. This post covers what HTTP/2 actually changes, how to turn it on correctly and the trade-offs that bite in production.
 
-## What HTTP/1.1 Got Wrong
+## What HTTP/1.1 got wrong
 
 Under HTTP/1.1, a connection handles one request at a time. The browser opens 6 parallel connections per host and hopes for the best. If one response is slow, everything queued behind it on that connection waits — **head-of-line blocking** at the application layer.
 
 The workarounds were hacks: domain sharding, sprite sheets, inlining CSS, concatenating JS bundles. All of them existed purely to dodge the one-request-per-connection limit.
 
-## What HTTP/2 Changes
+## What HTTP/2 changes
 
 HTTP/2 keeps the same semantics — methods, headers, status codes — but rewrites how bytes go over the wire.
 
-**Multiplexing.** A single TCP connection carries many concurrent *streams*. Requests and responses are split into frames, interleaved, and reassembled. One slow response no longer blocks the others on the connection.
+![HTTP/1.1 uses many connections each carrying one request with head-of-line blocking, while HTTP/2 multiplexes interleaved streams over a single connection](/diagrams/http2-multiplexing.svg)
+
+**Multiplexing.** A single TCP connection carries many concurrent *streams*. Requests and responses are split into frames, interleaved and reassembled. One slow response no longer blocks the others on the connection.
 
 **Binary framing.** Messages are binary frames, not plaintext lines. Faster to parse, less ambiguous.
 
-**Header compression (HPACK).** HTTP headers are repetitive — the same `User-Agent`, `Cookie`, and `Accept` on every request. HPACK compresses them with a shared dynamic table, so repeated headers cost almost nothing.
+**Header compression (HPACK).** HTTP headers are repetitive — the same `User-Agent`, `Cookie` and `Accept` on every request. HPACK compresses them with a shared dynamic table, so repeated headers cost almost nothing.
 
-**Server push.** The server could preemptively send resources the client would ask for next. In practice this was hard to get right, often wasteful, and is now deprecated — don't build around it.
+**Server push.** The server could preemptively send resources the client would ask for next. In practice this was hard to get right, often wasteful and is now deprecated — don't build around it.
 
 ## Enabling HTTP/2 on Nginx
 
-HTTP/2 in browsers requires TLS. The syntax changed in recent Nginx versions — the `http2` parameter on `listen` is deprecated in favor of the `http2` directive:
+HTTP/2 in browsers requires TLS. The syntax changed in recent Nginx versions — the `http2` parameter on `listen` is deprecated in favour of the `http2` directive:
 
 ```nginx
 server {
@@ -103,7 +105,7 @@ spec:
           port: 8080
 ```
 
-### The Second Hop
+### The second hop
 
 The subtler question is the **gateway-to-pod hop**. By default that's HTTP/1.1, which is fine for REST. To make the gateway speak HTTP/2 to the backend, the Gateway API uses the Service's standard `appProtocol` field — no annotations:
 
@@ -142,18 +144,18 @@ spec:
 
 For plain REST backends, leaving the second hop at HTTP/1.1 is the right default — the multiplexing win is between the *browser* and the edge, where high latency and many parallel requests live.
 
-## The Gotchas
+## The trade-offs
 
 **TCP head-of-line blocking still exists.** HTTP/2 removes head-of-line blocking at the *application* layer, but everything still rides one TCP connection. A single lost packet stalls *every* stream until it's retransmitted, because TCP delivers bytes in order. On lossy networks (mobile), HTTP/2 can be *worse* than HTTP/1.1's multiple connections. This is the exact problem HTTP/3 (QUIC over UDP) was built to solve.
 
-**Don't keep the HTTP/1.1 optimizations.** Domain sharding actively *hurts* under HTTP/2 — it forces multiple connections and defeats multiplexing and a shared HPACK table. Concatenating every asset into one giant bundle also hurts, because it kills granular caching. Serve from a single origin and let multiplexing do its job.
+**Don't keep the HTTP/1.1 optimisations.** Domain sharding actively *hurts* under HTTP/2 — it forces multiple connections and defeats multiplexing and a shared HPACK table. Concatenating every asset into one giant bundle also hurts, because it kills granular caching. Serve from a single origin and let multiplexing do its job.
 
 **Connection reuse and load balancing.** A long-lived HTTP/2 connection pins a client to one backend. An L4 load balancer that balances per-connection (not per-request) can leave one pod hot while others sit idle. Use an L7-aware proxy, or cap connection lifetime so clients periodically rebalance.
 
 **Verify end to end, not just at the edge.** A green padlock and `HTTP/2 200` at the browser says nothing about the edge-to-backend hop. Check both legs when you're chasing latency.
 
-## When It Actually Matters
+## When it actually matters
 
 The biggest wins show up for clients making many requests over high-latency links — exactly the browser-to-edge path. For low-latency service-to-service calls inside a cluster, the difference is usually marginal unless you're using gRPC (which mandates HTTP/2 for its streaming).
 
-Turn it on at the edge, verify ALPN negotiated `h2`, drop the HTTP/1.1-era hacks, and reach for HTTP/3 when your traffic is mobile-heavy and packet loss is your real enemy.
+Turn it on at the edge, verify ALPN negotiated `h2`, drop the HTTP/1.1-era hacks and reach for HTTP/3 when your traffic is mobile-heavy and packet loss is your real enemy.
