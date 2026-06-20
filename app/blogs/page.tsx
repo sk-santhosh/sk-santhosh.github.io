@@ -16,7 +16,7 @@ export default function BlogsPage() {
         <BookOpen size={15} className="text-blue-400" />
         <h1 className="text-base font-bold text-slate-900 dark:text-slate-100">Blogs</h1>
       </div>
-      <p className="text-xs text-slate-400 dark:text-slate-500 mb-8 leading-relaxed">
+      <p className="text-sm text-slate-600 dark:text-slate-400 mb-8 leading-relaxed">
         Thoughts on DevOps, Software Engineering, and homelab experiments.
       </p>
       <div>

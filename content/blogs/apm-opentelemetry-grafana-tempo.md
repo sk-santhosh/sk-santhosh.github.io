@@ -1,7 +1,7 @@
 ---
 title: "Application performance monitoring with OpenTelemetry, Grafana and Tempo"
 description: "How to set up application performance monitoring using OpenTelemetry for instrumentation, Tempo for traces and Grafana for unified visibility."
-date: "2026-01-22"
+date: "2026-06-02"
 tags: ["Observability", "OpenTelemetry", "Grafana", "Platform Engineering"]
 ---
 

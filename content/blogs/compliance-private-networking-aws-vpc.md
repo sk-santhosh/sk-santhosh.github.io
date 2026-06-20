@@ -1,7 +1,7 @@
 ---
 title: "Private networking on AWS for GDPR and ISO 27001 compliance"
 description: "How to design an AWS VPC that keeps workloads private, auditable and aligned with GDPR, ISO 27001 and PCI-DSS — using private subnets, VPC endpoints, flow logs and Terraform."
-date: "2026-06-17"
+date: "2026-06-10"
 tags: ["AWS", "Networking", "Compliance", "Terraform"]
 ---
 

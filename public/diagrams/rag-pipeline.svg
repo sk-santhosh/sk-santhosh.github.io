@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 430" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+  <defs>
+    <marker id="ra" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+  <rect x="1" y="1" width="958" height="428" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
+  <text x="24" y="34" font-size="17" font-weight="700" fill="#0f172a">A RAG pipeline — indexing once, retrieving on every query</text>
+
+  <!-- Vector DB (shared, centre) -->
+  <g text-anchor="middle">
+    <rect x="596" y="168" width="210" height="92" rx="9" fill="#f5f3ff" stroke="#8b5cf6"/>
+    <text x="701" y="204" font-size="14" fill="#6d28d9" font-weight="600">Vector database</text>
+    <text x="701" y="226" font-size="12" fill="#6d28d9">Postgres + pgvector</text>
+    <text x="701" y="245" font-size="11" fill="#7c3aed">chunk text + embedding</text>
+  </g>
+
+  <!-- Indexing lane -->
+  <text x="24" y="72" font-size="13" font-weight="600" fill="#b45309">1 · Indexing (offline, per document change)</text>
+  <g text-anchor="middle" font-size="13">
+    <rect x="24" y="92" width="150" height="52" rx="9" fill="#f1f5f9" stroke="#94a3b8"/>
+    <text x="99" y="123" fill="#334155">Documents</text>
+    <rect x="200" y="92" width="150" height="52" rx="9" fill="#fffbeb" stroke="#f59e0b"/>
+    <text x="275" y="123" fill="#b45309">Chunk &amp; clean</text>
+    <rect x="376" y="92" width="170" height="52" rx="9" fill="#eff6ff" stroke="#3b82f6"/>
+    <text x="461" y="123" fill="#1d4ed8">Embedding model</text>
+  </g>
+
+  <!-- Query lane -->
+  <text x="24" y="290" font-size="13" font-weight="600" fill="#0e7490">2 · Query (online, per request)</text>
+  <g text-anchor="middle" font-size="13">
+    <rect x="24" y="306" width="150" height="52" rx="9" fill="#f1f5f9" stroke="#94a3b8"/>
+    <text x="99" y="337" fill="#334155">User question</text>
+    <rect x="196" y="306" width="166" height="52" rx="9" fill="#eff6ff" stroke="#3b82f6"/>
+    <text x="279" y="337" fill="#1d4ed8">Embedding model</text>
+    <rect x="384" y="306" width="150" height="52" rx="9" fill="#ecfeff" stroke="#06b6d4"/>
+    <text x="459" y="337" fill="#0e7490">Retrieve top-k</text>
+    <rect x="556" y="306" width="150" height="52" rx="9" fill="#ecfdf5" stroke="#10b981"/>
+    <text x="631" y="337" fill="#047857">LLM (vLLM)</text>
+    <rect x="728" y="306" width="206" height="52" rx="9" fill="#dcfce7" stroke="#22c55e"/>
+    <text x="831" y="337" fill="#15803d">Grounded answer</text>
+  </g>
+
+  <!-- arrows -->
+  <g stroke="#94a3b8" stroke-width="2" fill="none">
+    <!-- indexing horizontal -->
+    <line x1="174" y1="118" x2="196" y2="118" marker-end="url(#ra)"/>
+    <line x1="350" y1="118" x2="372" y2="118" marker-end="url(#ra)"/>
+    <!-- indexing into DB -->
+    <path d="M546 120 C 612 120, 624 150, 648 164" marker-end="url(#ra)"/>
+    <!-- query horizontal -->
+    <line x1="174" y1="332" x2="192" y2="332" marker-end="url(#ra)"/>
+    <line x1="362" y1="332" x2="380" y2="332" marker-end="url(#ra)"/>
+    <line x1="534" y1="332" x2="552" y2="332" marker-end="url(#ra)"/>
+    <line x1="706" y1="332" x2="724" y2="332" marker-end="url(#ra)"/>
+    <!-- DB into retrieve -->
+    <path d="M648 252 C 560 286, 520 290, 462 302" marker-end="url(#ra)"/>
+  </g>
+  <text x="600" y="146" font-size="10.5" text-anchor="middle" fill="#7c3aed">write vectors</text>
+  <text x="556" y="276" font-size="10.5" text-anchor="middle" fill="#0891b2">similarity search</text>
+  <text x="631" y="378" font-size="10.5" text-anchor="middle" fill="#64748b">prompt = retrieved context + question</text>
+</svg>

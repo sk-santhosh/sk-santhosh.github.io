@@ -68,23 +68,23 @@ body {
 }
 
 .prose p {
-  color: #1e293b;
-  line-height: 1.8;
+  color: #475569;
+  line-height: 1.65;
   margin-bottom: 1rem;
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
 }
 
 .prose ul,
 .prose ol {
   padding-left: 1.25rem;
   margin-bottom: 1rem;
-  color: #1e293b;
+  color: #475569;
 }
 
 .prose li {
   margin-bottom: 0.25rem;
-  font-size: 0.9375rem;
-  line-height: 1.8;
+  font-size: 0.875rem;
+  line-height: 1.65;
 }
 
 .prose strong {
@@ -206,7 +206,7 @@ body {
 .prose blockquote {
   border-left: 2px solid #e2e8f0;
   padding-left: 1rem;
-  color: #475569;
+  color: #64748b;
   font-style: italic;
   margin-bottom: 1rem;
 }

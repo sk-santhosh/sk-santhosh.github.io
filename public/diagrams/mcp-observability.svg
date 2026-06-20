@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 380" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+  <defs>
+    <marker id="ma" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+  <rect x="1" y="1" width="958" height="378" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
+  <text x="24" y="34" font-size="17" font-weight="700" fill="#0f172a">Analysing incidents in plain language with MCP and AI</text>
+
+  <!-- engineer -->
+  <g text-anchor="middle">
+    <rect x="24" y="156" width="128" height="62" rx="9" fill="#f1f5f9" stroke="#94a3b8"/>
+    <text x="88" y="183" font-size="13.5" fill="#334155" font-weight="600">Engineer</text>
+    <text x="88" y="201" font-size="11" fill="#475569">asks in plain English</text>
+
+    <!-- AI assistant / MCP client -->
+    <rect x="192" y="156" width="176" height="62" rx="9" fill="#f5f3ff" stroke="#8b5cf6"/>
+    <text x="280" y="183" font-size="13.5" fill="#6d28d9" font-weight="600">AI assistant</text>
+    <text x="280" y="201" font-size="11.5" fill="#6d28d9">MCP client</text>
+  </g>
+
+  <!-- MCP server -->
+  <rect x="408" y="100" width="214" height="174" rx="10" fill="#eff6ff" stroke="#3b82f6"/>
+  <text x="515" y="128" font-size="14" text-anchor="middle" fill="#1d4ed8" font-weight="600">MCP server</text>
+  <text x="515" y="146" font-size="11" text-anchor="middle" fill="#1d4ed8">observability tools (read-only)</text>
+  <g text-anchor="middle" font-size="11.5">
+    <rect x="424" y="160" width="182" height="28" rx="6" fill="#fffbeb" stroke="#f59e0b"/>
+    <text x="515" y="178" fill="#b45309">query_prometheus()</text>
+    <rect x="424" y="196" width="182" height="28" rx="6" fill="#ecfeff" stroke="#06b6d4"/>
+    <text x="515" y="214" fill="#0e7490">query_loki()</text>
+    <rect x="424" y="232" width="182" height="28" rx="6" fill="#ecfdf5" stroke="#10b981"/>
+    <text x="515" y="250" fill="#047857">query_tempo()</text>
+  </g>
+
+  <!-- backends -->
+  <g text-anchor="middle" font-size="13">
+    <rect x="676" y="100" width="260" height="50" rx="9" fill="#fffbeb" stroke="#f59e0b"/>
+    <text x="806" y="121" fill="#b45309" font-weight="600">Prometheus</text>
+    <text x="806" y="138" font-size="11" fill="#b45309">PromQL · metrics</text>
+
+    <rect x="676" y="162" width="260" height="50" rx="9" fill="#ecfeff" stroke="#06b6d4"/>
+    <text x="806" y="183" fill="#0e7490" font-weight="600">Loki</text>
+    <text x="806" y="200" font-size="11" fill="#0e7490">LogQL · logs</text>
+
+    <rect x="676" y="224" width="260" height="50" rx="9" fill="#ecfdf5" stroke="#10b981"/>
+    <text x="806" y="245" fill="#047857" font-weight="600">Tempo</text>
+    <text x="806" y="262" font-size="11" fill="#047857">TraceQL · traces</text>
+  </g>
+
+  <!-- arrows -->
+  <g stroke="#94a3b8" stroke-width="2" fill="none">
+    <line x1="152" y1="187" x2="188" y2="187" marker-end="url(#ma)"/>
+    <!-- assistant <-> server (two-way) -->
+    <line x1="368" y1="181" x2="404" y2="181" marker-end="url(#ma)"/>
+    <line x1="404" y1="195" x2="368" y2="195" marker-end="url(#ma)"/>
+    <!-- tools to backends -->
+    <line x1="606" y1="174" x2="672" y2="128" marker-end="url(#ma)"/>
+    <line x1="606" y1="210" x2="672" y2="188" marker-end="url(#ma)"/>
+    <line x1="606" y1="246" x2="672" y2="248" marker-end="url(#ma)"/>
+  </g>
+  <text x="386" y="166" font-size="10.5" text-anchor="middle" fill="#6d28d9">MCP</text>
+  <text x="645" y="300" font-size="11" text-anchor="middle" fill="#64748b">HTTP query APIs</text>
+  <text x="280" y="246" font-size="11" text-anchor="middle" fill="#64748b">model decides which tools to call, and chains them</text>
+</svg>

@@ -1,7 +1,7 @@
 ---
 title: "Deploying AI inference on Kubernetes"
 description: "A practical guide to running AI model inference workloads on Kubernetes with vLLM — resource limits, autoscaling and serving at scale."
-date: "2025-12-10"
+date: "2026-05-28"
 tags: ["Kubernetes", "AI", "Platform Engineering", "DevOps"]
 ---
 

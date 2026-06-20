@@ -1,7 +1,7 @@
 ---
 title: "Kubernetes and Cloudflare Tunnel: Zero Trust private networking without a public IP"
 description: "How to expose Kubernetes services securely using Cloudflare Tunnel and Zero Trust, with no open inbound ports."
-date: "2025-11-18"
+date: "2026-05-22"
 tags: ["Kubernetes", "Cloudflare", "Networking", "Platform Engineering"]
 ---
 

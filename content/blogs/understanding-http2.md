@@ -1,7 +1,7 @@
 ---
 title: "HTTP/2 in practice: multiplexing, performance and the trade-offs"
 description: "What HTTP/2 actually changes under the hood, how to enable it across Nginx and Kubernetes ingress and the trade-offs that catch people out."
-date: "2026-06-12"
+date: "2026-06-06"
 tags: ["Networking", "Performance", "HTTP", "Kubernetes"]
 ---
 
