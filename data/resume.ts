@@ -6,11 +6,11 @@ export const resume = {
 	summary:
 		'Platform & Cloud Architect and SRE with 13+ years building cloud-native platforms on AWS, Azure, and GCP. I lead engineering teams on cloud migrations, Kubernetes modernization, and reliability programs for systems serving 10M+ users.',
 	location: 'Chennai, India',
-	email: 'santhosh@sentinelfox.com',
+	email: 'santhoshj.off@gmail.com',
 	social: {
 		github: 'https://github.com/sk-santhosh',
 		linkedin: 'https://linkedin.com/in/sk-santhosh-j',
-		twitter: 'https://twitter.com/santhoshk',
+		twitter: 'https://twitter.com/its_sk__',
 	},
 	skills: [
 		'Kubernetes',
