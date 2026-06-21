@@ -1,0 +1,22 @@
+#!/bin/sh
+# Auto-generate Open Graph cards when blog content changes, then stage them.
+# Activated via `git config core.hooksPath .githooks` (run by `npm install`).
+
+# Only run when a blog markdown file is part of this commit (added/copied/
+# modified/renamed) — keeps unrelated commits fast.
+changed=$(git diff --cached --name-only --diff-filter=ACMR -- 'content/blogs/*.md')
+
+if [ -z "$changed" ]; then
+  exit 0
+fi
+
+echo "pre-commit: blog content changed, regenerating OG cards…"
+npm run og || {
+  echo "pre-commit: OG generation failed; aborting commit." >&2
+  exit 1
+}
+
+# Stage generated/removed cards so they go into this same commit.
+git add public/og
+
+exit 0

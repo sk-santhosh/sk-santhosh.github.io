@@ -16,6 +16,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const post = await getBlogBySlug(slug);
   if (!post) return {};
   const url = `${siteUrl}/blogs/${slug}`;
+  const ogImage = {
+    url: `${siteUrl}/og/${slug}.png`,
+    width: 1200,
+    height: 630,
+    alt: post.title,
+  };
   return {
     title: post.title,
     description: post.description,
@@ -31,11 +37,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       publishedTime: post.date,
       authors: [resume.name],
       tags: post.tags,
+      images: [ogImage],
     },
     twitter: {
       card: "summary_large_image",
       title: post.title,
       description: post.description,
+      images: [ogImage.url],
     },
   };
 }
@@ -45,6 +53,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   const post = await getBlogBySlug(slug);
   if (!post) notFound();
 
+  const postUrl = `${siteUrl}/blogs/${slug}`;
+
   const articleJsonLd = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -53,11 +63,21 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     datePublished: post.date,
     dateModified: post.date,
     keywords: post.tags.join(", "),
-    image: `${siteUrl}/og.png`,
-    url: `${siteUrl}/blogs/${slug}`,
-    mainEntityOfPage: `${siteUrl}/blogs/${slug}`,
+    image: `${siteUrl}/og/${slug}.png`,
+    url: postUrl,
+    mainEntityOfPage: postUrl,
     author: { "@type": "Person", name: resume.name, url: siteUrl },
     publisher: { "@type": "Person", name: resume.name, url: siteUrl },
+  };
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: siteUrl },
+      { "@type": "ListItem", position: 2, name: "Blogs", item: `${siteUrl}/blogs` },
+      { "@type": "ListItem", position: 3, name: post.title, item: postUrl },
+    ],
   };
 
   return (
@@ -65,6 +85,10 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <Link
         href="/blogs"
