@@ -5,11 +5,8 @@ import CommandPalette from "@/components/command-palette";
 import MobileMenuButton from "@/components/mobile-menu-button";
 import ThemeToggle from "@/components/theme-toggle";
 import { resume } from "@/data/resume";
+import { siteUrl, googleSiteVerification } from "@/lib/site";
 import "./globals.css";
-
-const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ||
-  `https://sk-santhosh.info${process.env.NEXT_PUBLIC_BASE_PATH || ""}`;
 
 const siteTitle = `${resume.name} — ${resume.title}`;
 const ogImage = {
@@ -31,13 +28,52 @@ export const viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: siteTitle,
+  title: {
+    default: siteTitle,
+    template: `%s — ${resume.name}`,
+  },
   description: resume.summary,
+  applicationName: resume.name,
+  authors: [{ name: resume.name, url: siteUrl }],
+  creator: resume.name,
+  publisher: resume.name,
+  keywords: [
+    resume.name,
+    "Platform Architect",
+    "Cloud Architect",
+    "Site Reliability Engineer",
+    "SRE",
+    "Kubernetes",
+    "AWS",
+    "DevOps",
+    "Terraform",
+    "Observability",
+    ...resume.skills.slice(0, 12),
+  ],
+  category: "technology",
+  alternates: {
+    canonical: "/",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+  ...(googleSiteVerification
+    ? { verification: { google: googleSiteVerification } }
+    : {}),
   openGraph: {
     title: siteTitle,
     description: resume.summary,
     url: siteUrl,
     siteName: resume.name,
+    locale: "en_US",
     type: "website",
     images: [ogImage],
   },
@@ -49,11 +85,45 @@ export const metadata: Metadata = {
   },
 };
 
+// schema.org structured data — helps Google build a rich knowledge-panel result.
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: resume.name,
+  url: siteUrl,
+  image: `${siteUrl}/santhosh.jpg`,
+  jobTitle: resume.title,
+  description: resume.summary,
+  email: `mailto:${resume.email}`,
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: resume.location,
+  },
+  sameAs: [resume.social.github, resume.social.linkedin, resume.social.twitter],
+  knowsAbout: resume.skills,
+};
+
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: siteTitle,
+  url: siteUrl,
+  author: { "@type": "Person", name: resume.name },
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={jetbrainsMono.variable} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: `(function(){try{var t=localStorage.getItem('theme');var d=window.matchMedia('(prefers-color-scheme:dark)').matches;if(t==='dark'||(t===null&&d))document.documentElement.classList.add('dark')}catch(e){}})()` }} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+        />
       </head>
       <body className="min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 pb-10">
         <Nav />

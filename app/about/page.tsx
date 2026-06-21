@@ -5,7 +5,9 @@ import {FaXTwitter} from 'react-icons/fa6';
 import {resume} from '@/data/resume';
 
 export const metadata = {
-	title: 'About — Santhosh Kumar J',
+	title: 'About',
+	description: resume.summary,
+	alternates: {canonical: '/about'},
 };
 
 export default function AboutPage() {

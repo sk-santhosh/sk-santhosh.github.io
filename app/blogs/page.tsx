@@ -3,8 +3,9 @@ import { getAllBlogs } from "@/lib/blogs";
 import { BookOpen } from "lucide-react";
 
 export const metadata = {
-  title: "Blogs — Santhosh J",
+  title: "Blogs",
   description: "Thoughts on DevOps, Software Engineering, and tech experiments.",
+  alternates: { canonical: "/blogs" },
 };
 
 export default function BlogsPage() {
