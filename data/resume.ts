@@ -2,9 +2,9 @@ export const resume = {
 	name: 'Santhosh Kumar J',
 	title: 'Platform Architect · Cloud Architect · SRE',
 	tagline:
-		'Platform & Cloud Architect and SRE with 13+ years building and operating cloud-native platforms on AWS, Azure, and GCP for systems serving 10M+ users.',
+		'Platform & Cloud Architect and SRE with 14+ years building and operating cloud-native platforms on AWS, Azure, and GCP for systems serving 10M+ users.',
 	summary:
-		'Platform & Cloud Architect and SRE with 13+ years building cloud-native platforms on AWS, Azure, and GCP. I lead engineering teams on cloud migrations, Kubernetes modernization, and reliability programs for systems serving 10M+ users.',
+		'Platform & Cloud Architect and SRE with 14+ years building cloud-native platforms on AWS, Azure, and GCP. I lead engineering teams on cloud migrations, Kubernetes modernization, and reliability programs for systems serving 10M+ users.',
 	location: 'Chennai, India',
 	email: 'santhoshj.off@gmail.com',
 	social: {

@@ -9,15 +9,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 
   const staticRoutes: MetadataRoute.Sitemap = [
-    { url: `${siteUrl}/`, lastModified: now, changeFrequency: "monthly", priority: 1 },
-    { url: `${siteUrl}/about`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
-    { url: `${siteUrl}/blogs`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
+    { url: `${siteUrl}/`, lastModified: now, changeFrequency: "daily", priority: 1 },
+    { url: `${siteUrl}/about`, lastModified: now, changeFrequency: "daily", priority: 0.8 },
+    { url: `${siteUrl}/blogs`, lastModified: now, changeFrequency: "daily", priority: 0.8 },
   ];
 
   const blogRoutes: MetadataRoute.Sitemap = getAllBlogs().map((post) => ({
     url: `${siteUrl}/blogs/${post.slug}`,
     lastModified: new Date(post.date),
-    changeFrequency: "yearly",
+    changeFrequency: "daily",
     priority: 0.6,
   }));
 

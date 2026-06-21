@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 460" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+  <rect x="1" y="1" width="958" height="458" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
+  <text x="24" y="34" font-size="17" font-weight="700" fill="#0f172a">An AI platform on Kubernetes — the layers</text>
+
+  <!-- cluster container -->
+  <rect x="20" y="52" width="920" height="384" rx="12" fill="#f8fafc" stroke="#cbd5e1"/>
+
+  <!-- Row 1: consumers / devex -->
+  <rect x="40" y="70" width="880" height="44" rx="8" fill="#f1f5f9" stroke="#94a3b8"/>
+  <text x="56" y="89" font-size="13" fill="#334155" font-weight="600">Product teams &amp; developer experience</text>
+  <text x="56" y="106" font-size="10.5" fill="#475569">self-service golden paths · templates · GitOps (Argo CD)</text>
+
+  <!-- Row 2: AI gateway -->
+  <rect x="40" y="126" width="880" height="44" rx="8" fill="#f5f3ff" stroke="#8b5cf6"/>
+  <text x="56" y="145" font-size="13" fill="#6d28d9" font-weight="600">AI gateway</text>
+  <text x="56" y="162" font-size="10.5" fill="#6d28d9">OpenAI-compatible API · auth &amp; API keys · rate limits &amp; quotas · model routing + fallback · response cache</text>
+
+  <!-- Row 3: serving -->
+  <rect x="40" y="182" width="880" height="44" rx="8" fill="#eff6ff" stroke="#3b82f6"/>
+  <text x="56" y="201" font-size="13" fill="#1d4ed8" font-weight="600">Model serving</text>
+  <text x="56" y="218" font-size="10.5" fill="#1d4ed8">vLLM · KServe / Ray Serve · autoscaling on queue depth (KEDA) · scale-to-zero</text>
+
+  <!-- Row 4: data & orchestration -->
+  <g>
+    <rect x="40" y="238" width="282" height="60" rx="8" fill="#ecfeff" stroke="#06b6d4"/>
+    <text x="181" y="263" font-size="12.5" text-anchor="middle" fill="#0e7490" font-weight="600">Vector database</text>
+    <text x="181" y="281" font-size="10.5" text-anchor="middle" fill="#0e7490">pgvector · Qdrant</text>
+
+    <rect x="338" y="238" width="282" height="60" rx="8" fill="#fffbeb" stroke="#f59e0b"/>
+    <text x="479" y="263" font-size="12.5" text-anchor="middle" fill="#b45309" font-weight="600">Model registry &amp; cache</text>
+    <text x="479" y="281" font-size="10.5" text-anchor="middle" fill="#b45309">S3 / OCI artifacts</text>
+
+    <rect x="636" y="238" width="282" height="60" rx="8" fill="#ecfdf5" stroke="#10b981"/>
+    <text x="777" y="263" font-size="12.5" text-anchor="middle" fill="#047857" font-weight="600">Pipelines &amp; batch</text>
+    <text x="777" y="281" font-size="10.5" text-anchor="middle" fill="#047857">Argo Workflows · Ray</text>
+  </g>
+
+  <!-- Row 5: GPU compute -->
+  <rect x="40" y="310" width="880" height="44" rx="8" fill="#fff7ed" stroke="#fb923c"/>
+  <text x="56" y="329" font-size="13" fill="#c2410c" font-weight="600">GPU compute</text>
+  <text x="56" y="346" font-size="10.5" fill="#c2410c">Karpenter · NVIDIA GPU Operator · MIG / time-slicing · spot for batch jobs</text>
+
+  <!-- cross-cutting band -->
+  <rect x="40" y="366" width="880" height="40" rx="8" fill="#eef2ff" stroke="#6366f1"/>
+  <text x="56" y="384" font-size="11.5" fill="#4338ca" font-weight="600">Cross-cutting</text>
+  <text x="56" y="399" font-size="10.5" fill="#4338ca">observability (OTel → Grafana) · security &amp; governance · cost attribution &amp; chargeback</text>
+
+  <text x="480" y="426" font-size="11" text-anchor="middle" fill="#64748b">Every layer runs on one Kubernetes cluster — the paved road a team uses instead of rebuilding the plumbing.</text>
+</svg>

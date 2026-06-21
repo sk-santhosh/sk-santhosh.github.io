@@ -1,7 +1,7 @@
 ---
 title: 'Reducing Kubernetes costs by 35% with Karpenter and spot instances'
 description: 'How we cut an EKS compute bill by roughly a third — replacing static node groups with Karpenter, running the stateless majority on spot and letting consolidation reclaim idle capacity, without trading away reliability.'
-date: '2026-06-20'
+date: '2026-06-08'
 tags: ['Kubernetes', 'AWS', 'Karpenter', 'Cost Optimisation']
 ---
 

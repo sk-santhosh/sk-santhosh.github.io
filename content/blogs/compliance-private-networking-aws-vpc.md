@@ -1,8 +1,8 @@
 ---
-title: "Private networking on AWS for GDPR and ISO 27001 compliance"
-description: "How to design an AWS VPC that keeps workloads private, auditable and aligned with GDPR, ISO 27001 and PCI-DSS — using private subnets, VPC endpoints, flow logs and Terraform."
-date: "2026-06-10"
-tags: ["AWS", "Networking", "Compliance", "Terraform"]
+title: 'Private networking on AWS for GDPR and ISO 27001 compliance'
+description: 'How to design an AWS VPC that keeps workloads private, auditable and aligned with GDPR, ISO 27001 and PCI-DSS — using private subnets, VPC endpoints, flow logs and Terraform.'
+date: '2026-05-26'
+tags: ['AWS', 'Networking', 'Compliance', 'Terraform']
 ---
 
 When auditors ask "how is this data protected in transit?" and "prove nothing in this subnet can reach the internet," vague answers don't pass. GDPR, ISO 27001 and PCI-DSS all care about the same network fundamentals: isolation, least privilege, encryption and an audit trail. This is how I design AWS VPCs so those answers are built in — and provable — rather than bolted on.
@@ -75,7 +75,7 @@ With `private_dns_enabled`, the SDK call to `secretsmanager.<region>.amazonaws.c
 
 ## Least privilege: security groups over NACLs
 
-Security groups are stateful and reference each other — make them your primary control. Reference SGs by ID, not CIDR, so the rule expresses intent ("the data tier accepts traffic *from the app tier*") rather than a brittle IP range.
+Security groups are stateful and reference each other — make them your primary control. Reference SGs by ID, not CIDR, so the rule expresses intent ("the data tier accepts traffic _from the app tier_") rather than a brittle IP range.
 
 ```hcl
 resource "aws_security_group_rule" "db_from_app" {

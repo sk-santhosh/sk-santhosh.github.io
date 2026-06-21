@@ -1,8 +1,8 @@
 ---
-title: "Application performance monitoring with OpenTelemetry, Grafana and Tempo"
-description: "How to set up application performance monitoring using OpenTelemetry for instrumentation, Tempo for traces and Grafana for unified visibility."
-date: "2026-06-02"
-tags: ["Observability", "OpenTelemetry", "Grafana", "Platform Engineering"]
+title: 'Application performance monitoring with OpenTelemetry, Grafana and Tempo'
+description: 'How to set up application performance monitoring using OpenTelemetry for instrumentation, Tempo for traces and Grafana for unified visibility.'
+date: '2026-05-22'
+tags: ['Observability', 'OpenTelemetry', 'Grafana', 'Platform Engineering']
 ---
 
 Most APM tools are expensive, lock you into a vendor and make it hard to own your data. The OpenTelemetry + Grafana stack gives you the same visibility at a fraction of the cost — and since it's all open standards, switching storage backends later is straightforward.
@@ -33,20 +33,20 @@ npm install @opentelemetry/sdk-node \
 Create an `instrumentation.ts` that runs before your app:
 
 ```typescript
-import { NodeSDK } from '@opentelemetry/sdk-node';
-import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node';
-import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-grpc';
-import { resourceFromAttributes } from '@opentelemetry/resources';
-import { ATTR_SERVICE_NAME } from '@opentelemetry/semantic-conventions';
+import {NodeSDK} from '@opentelemetry/sdk-node';
+import {getNodeAutoInstrumentations} from '@opentelemetry/auto-instrumentations-node';
+import {OTLPTraceExporter} from '@opentelemetry/exporter-trace-otlp-grpc';
+import {resourceFromAttributes} from '@opentelemetry/resources';
+import {ATTR_SERVICE_NAME} from '@opentelemetry/semantic-conventions';
 
 const sdk = new NodeSDK({
-  resource: resourceFromAttributes({
-    [ATTR_SERVICE_NAME]: process.env.SERVICE_NAME ?? 'my-service',
-  }),
-  traceExporter: new OTLPTraceExporter({
-    url: process.env.OTEL_EXPORTER_OTLP_ENDPOINT ?? 'http://otel-collector:4317',
-  }),
-  instrumentations: [getNodeAutoInstrumentations()],
+	resource: resourceFromAttributes({
+		[ATTR_SERVICE_NAME]: process.env.SERVICE_NAME ?? 'my-service',
+	}),
+	traceExporter: new OTLPTraceExporter({
+		url: process.env.OTEL_EXPORTER_OTLP_ENDPOINT ?? 'http://otel-collector:4317',
+	}),
+	instrumentations: [getNodeAutoInstrumentations()],
 });
 
 sdk.start();
@@ -131,6 +131,7 @@ Add Tempo as a data source in Grafana:
 - Enable **Trace to logs** and link your Loki data source — Grafana will correlate a trace's time range with the logs from the same service automatically.
 
 Now in Grafana → Explore, you can:
+
 - Search traces by service, duration and status (`{ .http.status_code = 500 }`)
 - Click a span to see the full trace waterfall
 - Jump directly from a slow span to the corresponding log lines

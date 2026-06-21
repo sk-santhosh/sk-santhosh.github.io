@@ -1,8 +1,8 @@
 ---
-title: "Kubernetes and Cloudflare Tunnel: Zero Trust private networking without a public IP"
-description: "How to expose Kubernetes services securely using Cloudflare Tunnel and Zero Trust, with no open inbound ports."
-date: "2026-05-22"
-tags: ["Kubernetes", "Cloudflare", "Networking", "Platform Engineering"]
+title: 'Kubernetes and Cloudflare Tunnel: Zero Trust private networking without a public IP'
+description: 'How to expose Kubernetes services securely using Cloudflare Tunnel and Zero Trust, with no open inbound ports.'
+date: '2026-05-17'
+tags: ['Kubernetes', 'Cloudflare', 'Networking', 'Platform Engineering']
 ---
 
 Most Kubernetes setups expose services through a LoadBalancer, which means a public IP, firewall rules and an attack surface to manage. Cloudflare Tunnel flips that model — your cluster opens an outbound connection to Cloudflare's edge, and traffic flows in through that tunnel. No inbound ports. No public IP on the node.
@@ -64,7 +64,7 @@ spec:
       containers:
         - name: cloudflared
           image: cloudflare/cloudflared:latest
-          args: ["tunnel", "--config", "/etc/cloudflared/config.yaml", "run"]
+          args: ['tunnel', '--config', '/etc/cloudflared/config.yaml', 'run']
           volumeMounts:
             - name: config
               mountPath: /etc/cloudflared/config.yaml

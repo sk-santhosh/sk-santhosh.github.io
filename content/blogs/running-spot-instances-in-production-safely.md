@@ -1,11 +1,11 @@
 ---
-title: "Spot instances in production: when to use them, when not to and how to maintain availability"
-description: "When spot instances are the right call, when not to use them at all, and how to keep a service available even as AWS reclaims nodes underneath it. A workload-by-workload model with the reasoning behind each decision."
-date: "2026-06-21"
-tags: ["AWS", "Spot Instances", "Reliability", "Cost Optimisation"]
+title: 'Spot instances in production: when to use them, when not to and how to maintain availability'
+description: 'When spot instances are the right call, when not to use them at all, and how to keep a service available even as AWS reclaims nodes underneath it. A workload-by-workload model with the reasoning behind each decision.'
+date: '2026-06-09'
+tags: ['AWS', 'Spot Instances', 'Reliability', 'Cost Optimisation']
 ---
 
-Spot capacity is the same hardware as on-demand at up to 90% off, and the usual reaction is that it's too risky for production. It isn't — for the right workloads, designed the right way. The risk was never spot itself; it's running the *wrong* workload on it, or running the *right* workload without the safety net. The whole game is keeping a service available while AWS reclaims the nodes underneath it. This post answers three questions in order: **when** spot is the right call, **when not** to use it at all and **how** to maintain availability when you do.
+Spot capacity is the same hardware as on-demand at up to 90% off, and the usual reaction is that it's too risky for production. It isn't — for the right workloads, designed the right way. The risk was never spot itself; it's running the _wrong_ workload on it, or running the _right_ workload without the safety net. The whole game is keeping a service available while AWS reclaims the nodes underneath it. This post answers three questions in order: **when** spot is the right call, **when not** to use it at all and **how** to maintain availability when you do.
 
 It's the reliability companion to the [Karpenter cost post](/blogs/reducing-kubernetes-costs-karpenter-spot) — that one covered provisioning and savings, this one is about staying up while running on capacity that can vanish.
 
@@ -24,7 +24,7 @@ This is the distinction that trips most people up, and getting it wrong is how "
 - **Voluntary disruption** — consolidation, node upgrades, rollouts. PodDisruptionBudgets, the `karpenter.sh/do-not-disrupt` annotation and long termination grace periods all apply here.
 - **Involuntary disruption** — spot reclaim, hardware failure. **None of those controls apply.** AWS takes the node back regardless of your PDBs or annotations.
 
-The practical consequence: you cannot "pin" a long-running pod safely onto spot. Setting `terminationGracePeriodSeconds` to 600 does nothing against a reclaim — the pod is force-killed at the two-minute mark anyway. Availability on spot is a property of the *workload design*, not a flag you set on the node. Keep this in mind for everything that follows.
+The practical consequence: you cannot "pin" a long-running pod safely onto spot. Setting `terminationGracePeriodSeconds` to 600 does nothing against a reclaim — the pod is force-killed at the two-minute mark anyway. Availability on spot is a property of the _workload design_, not a flag you set on the node. Keep this in mind for everything that follows.
 
 ## When spot is the right call
 
@@ -36,7 +36,7 @@ Whether the workload tolerates a reclaim comes down to one rule:
 
 > If the workload is killed at any moment and retried from scratch, and the outcome is still **correct** (just slower), it belongs on spot. If kill-and-retry could be **wrong or lost**, it does not.
 
-The workloads that pass, and *why* they pass:
+The workloads that pass, and _why_ they pass:
 
 - **Stateless services behind a load balancer, with several replicas.** A reclaim drops one replica; the load balancer reroutes to the others and a replacement spins up. No request is lost as long as you never run the last copy on spot.
 - **Queue-driven workers.** If a worker dies mid-task the message returns to the queue and another worker reprocesses it. The unit of work survives the node.
@@ -61,11 +61,11 @@ The throughline: spot is wrong wherever a kill-and-retry is incorrect, where you
 
 ## How to maintain availability on spot
 
-Passing the test makes a workload *eligible*. These patterns are what keep the service available when a node is reclaimed underneath it — the difference between a reclaim that's a non-event and one that's an outage.
+Passing the test makes a workload _eligible_. These patterns are what keep the service available when a node is reclaimed underneath it — the difference between a reclaim that's a non-event and one that's an outage.
 
 ### Replicate and spread
 
-Never run the last copy of anything on a single spot node. Run multiple replicas, spread them across zones and instance types with topology constraints, and add a PDB so *voluntary* disruption can't drop you below a safe count.
+Never run the last copy of anything on a single spot node. Run multiple replicas, spread them across zones and instance types with topology constraints, and add a PDB so _voluntary_ disruption can't drop you below a safe count.
 
 ```yaml
 topologySpreadConstraints:
@@ -73,12 +73,12 @@ topologySpreadConstraints:
     topologyKey: topology.kubernetes.io/zone
     whenUnsatisfiable: ScheduleAnyway
     labelSelector:
-      matchLabels: { app: checkout }
+      matchLabels: {app: checkout}
   - maxSkew: 1
     topologyKey: kubernetes.io/hostname
     whenUnsatisfiable: ScheduleAnyway
     labelSelector:
-      matchLabels: { app: checkout }
+      matchLabels: {app: checkout}
 ```
 
 ### Drive work from a queue
@@ -89,7 +89,7 @@ A three-minute job on a node that's reclaimed at minute two is a non-event under
 
 ### Make it idempotent
 
-Retries are only safe if reprocessing the same item is harmless. Use a dedupe key, an upsert or a "skip if already done" check. This is the non-negotiable companion to queue-driven retries — without it, at-least-once delivery becomes at-least-once *corruption*.
+Retries are only safe if reprocessing the same item is harmless. Use a dedupe key, an upsert or a "skip if already done" check. This is the non-negotiable companion to queue-driven retries — without it, at-least-once delivery becomes at-least-once _corruption_.
 
 ### Handle SIGTERM gracefully
 
@@ -98,18 +98,18 @@ When the node drains, your pod gets SIGTERM. Use the window: stop accepting new 
 ```javascript
 let shuttingDown = false;
 
-process.on("SIGTERM", async () => {
-  shuttingDown = true;            // stop pulling new messages
-  await finishInFlight();         // let current work drain or checkpoint
-  await queue.close();
-  process.exit(0);
+process.on('SIGTERM', async () => {
+	shuttingDown = true; // stop pulling new messages
+	await finishInFlight(); // let current work drain or checkpoint
+	await queue.close();
+	process.exit(0);
 });
 
 async function loop() {
-  while (!shuttingDown) {
-    const job = await queue.receive();
-    if (job) await handleIdempotently(job);
-  }
+	while (!shuttingDown) {
+		const job = await queue.receive();
+		if (job) await handleIdempotently(job);
+	}
 }
 ```
 
@@ -134,6 +134,6 @@ Allowing `capacity-type` of both `spot` and `on-demand` in a single pool also gi
 
 ## The bottom line
 
-Spot keeps a service available in production when three things are true: the workload can be killed and retried correctly, you've diversified across pools, and the genuinely-can't-be-interrupted tier stays on on-demand. Decide *when* with the kill-and-retry rule, be honest about *when not to* — the data tier, one-shot side effects and undiversifiable workloads belong on on-demand — and *maintain availability* with replicas, queues, idempotency, graceful shutdown and diversity. Get the split right and availability is a design property, not a gamble, while the savings on everything else are too large to leave on the table.
+Spot keeps a service available in production when three things are true: the workload can be killed and retried correctly, you've diversified across pools, and the genuinely-can't-be-interrupted tier stays on on-demand. Decide _when_ with the kill-and-retry rule, be honest about _when not to_ — the data tier, one-shot side effects and undiversifiable workloads belong on on-demand — and _maintain availability_ with replicas, queues, idempotency, graceful shutdown and diversity. Get the split right and availability is a design property, not a gamble, while the savings on everything else are too large to leave on the table.
 
 Before you trust it, test it. **AWS Fault Injection Simulator** has a spot interruption action that sends a genuine two-minute notice on demand — use it to confirm that PDBs hold, replicas survive, the SIGTERM path drains cleanly and interrupted jobs actually retry. Then watch interruption rates per pool in production and drop any pool that interrupts far more than the rest.

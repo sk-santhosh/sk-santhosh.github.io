@@ -1,8 +1,8 @@
 ---
-title: "Analysing incidents in plain language with MCP and AI"
-description: "Investigating incidents by asking questions in plain language — exposing Prometheus, Loki and Tempo as tools an AI assistant calls over the Model Context Protocol, instead of reaching for PromQL, LogQL and TraceQL."
-date: "2026-06-19"
-tags: ["AI", "MCP", "Observability", "Platform Engineering"]
+title: 'Analysing incidents in plain language with MCP and AI'
+description: 'Investigating incidents by asking questions in plain language — exposing Prometheus, Loki and Tempo as tools an AI assistant calls over the Model Context Protocol, instead of reaching for PromQL, LogQL and TraceQL.'
+date: '2026-06-06'
+tags: ['AI', 'MCP', 'Observability', 'Platform Engineering']
 ---
 
 It's 2am. The checkout service is slow. You have everything you need — metrics in Prometheus, logs in Loki, traces in Tempo — but answering "why" means pivoting between three tools and writing PromQL, then LogQL, then TraceQL from memory, half-awake. The data is there. The friction is the query languages and the context-switching.
@@ -25,7 +25,7 @@ The server is a thin, read-only adapter over each backend's HTTP API. Three tool
 - `query_loki(logql, start, end, limit)` — logs filtered by label and pattern
 - `query_tempo(traceql, start, end)` and `get_trace(trace_id)` — traces and spans
 
-With the Python MCP SDK, a tool is just a decorated function. The docstring and type hints *are* the interface the model sees, so they need to be clear:
+With the Python MCP SDK, a tool is just a decorated function. The docstring and type hints _are_ the interface the model sees, so they need to be clear:
 
 ```python
 from mcp.server.fastmcp import FastMCP
@@ -51,12 +51,12 @@ def query_prometheus(promql: str, start: str, end: str, step: str = "30s") -> di
 
 ## What an investigation looks like
 
-Ask: *"Why was checkout slow between 14:00 and 14:15 today?"* The model strings the tools together on its own:
+Ask: _"Why was checkout slow between 14:00 and 14:15 today?"_ The model strings the tools together on its own:
 
 1. **`query_prometheus`** — p99 latency for `checkout` over that window. It sees a spike at 14:05.
 2. **`query_loki`** — error-level logs for `checkout` in the same window. It finds a burst of database timeouts.
 3. **`query_tempo`** — the slowest traces in that window. The bottleneck span is a connection-pool wait on Postgres.
-4. It correlates the three and answers: *the latency spike came from Postgres connection-pool exhaustion at 14:05; here are the metric, the log lines and a trace ID.*
+4. It correlates the three and answers: _the latency spike came from Postgres connection-pool exhaustion at 14:05; here are the metric, the log lines and a trace ID._
 
 That is exactly the path an experienced engineer takes — metric anomaly, then logs for the cause, then a trace to confirm — but driven from one plain-language question.
 

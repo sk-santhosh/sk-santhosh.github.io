@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 420" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+  <defs>
+    <marker id="sb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+  <rect x="1" y="1" width="958" height="418" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
+  <text x="24" y="34" font-size="17" font-weight="700" fill="#0f172a">From SLI to error budget to a release decision</text>
+
+  <!-- chain -->
+  <g>
+    <rect x="60" y="62" width="210" height="60" rx="9" fill="#f1f5f9" stroke="#94a3b8"/>
+    <text x="165" y="88" font-size="13.5" text-anchor="middle" fill="#334155" font-weight="600">SLI</text>
+    <text x="165" y="106" font-size="10.5" text-anchor="middle" fill="#475569">good events / valid events</text>
+
+    <rect x="320" y="62" width="230" height="60" rx="9" fill="#eff6ff" stroke="#3b82f6"/>
+    <text x="435" y="88" font-size="13.5" text-anchor="middle" fill="#1d4ed8" font-weight="600">SLO</text>
+    <text x="435" y="106" font-size="10.5" text-anchor="middle" fill="#1d4ed8">99.9% over 30 days</text>
+
+    <rect x="600" y="62" width="270" height="60" rx="9" fill="#fffbeb" stroke="#f59e0b"/>
+    <text x="735" y="88" font-size="13.5" text-anchor="middle" fill="#b45309" font-weight="600">Error budget</text>
+    <text x="735" y="106" font-size="10.5" text-anchor="middle" fill="#b45309">0.1% = 43 min / 30 days</text>
+  </g>
+  <g stroke="#94a3b8" stroke-width="2" fill="none">
+    <line x1="270" y1="92" x2="316" y2="92" marker-end="url(#sb)"/>
+    <line x1="550" y1="92" x2="596" y2="92" marker-end="url(#sb)"/>
+  </g>
+
+  <!-- burndown panel -->
+  <rect x="40" y="150" width="560" height="220" rx="10" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="60" y="174" font-size="13" fill="#334155" font-weight="600">Error budget burndown — 30 days</text>
+  <g font-size="9.5" fill="#8e8e8e" text-anchor="end">
+    <text x="84" y="194">100%</text><text x="84" y="270">50%</text><text x="84" y="348">0%</text>
+  </g>
+  <g stroke="#e2e8f0" stroke-width="1">
+    <line x1="90" y1="190" x2="580" y2="190"/><line x1="90" y1="266" x2="580" y2="266"/><line x1="90" y1="344" x2="580" y2="344"/>
+  </g>
+  <!-- even-pace reference -->
+  <line x1="90" y1="190" x2="580" y2="344" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <!-- actual burn -->
+  <polyline points="90,190 150,196 210,205 250,247 320,255 380,262 430,298 500,308 580,318" fill="none" stroke="#3b82f6" stroke-width="2.5"/>
+  <circle cx="250" cy="247" r="3.5" fill="#f2495c"/>
+  <circle cx="430" cy="298" r="3.5" fill="#f2495c"/>
+  <text x="262" y="240" font-size="9.5" fill="#b91c1c">incident</text>
+  <g font-size="10">
+    <line x1="430" y1="356" x2="440" y2="356" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5 4"/><text x="446" y="360" fill="#64748b">even pace</text>
+    <line x1="520" y1="356" x2="530" y2="356" stroke="#3b82f6" stroke-width="2.5"/><text x="536" y="360" fill="#64748b">actual</text>
+  </g>
+
+  <!-- policy panel -->
+  <rect x="620" y="150" width="300" height="220" rx="10" fill="#ffffff" stroke="#e2e8f0"/>
+  <text x="640" y="174" font-size="13" fill="#334155" font-weight="600">Release policy</text>
+
+  <rect x="640" y="188" width="260" height="56" rx="8" fill="#ecfdf5" stroke="#10b981"/>
+  <text x="656" y="210" font-size="12" fill="#047857" font-weight="600">Budget remaining</text>
+  <text x="656" y="228" font-size="10.5" fill="#047857">ship features freely</text>
+
+  <rect x="640" y="252" width="260" height="56" rx="8" fill="#fef2f2" stroke="#f87171"/>
+  <text x="656" y="274" font-size="12" fill="#b91c1c" font-weight="600">Budget exhausted</text>
+  <text x="656" y="292" font-size="10.5" fill="#b91c1c">freeze releases · fix reliability</text>
+
+  <text x="640" y="332" font-size="10.5" fill="#64748b">Burn rate sets urgency:</text>
+  <text x="640" y="350" font-size="10.5" fill="#64748b">fast burn pages, slow burn files a ticket.</text>
+</svg>

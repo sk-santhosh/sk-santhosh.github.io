@@ -1,8 +1,8 @@
 ---
-title: "Deploying AI inference on Kubernetes"
-description: "A practical guide to running AI model inference workloads on Kubernetes with vLLM — resource limits, autoscaling and serving at scale."
-date: "2026-05-28"
-tags: ["Kubernetes", "AI", "Platform Engineering", "DevOps"]
+title: 'Deploying AI inference on Kubernetes'
+description: 'A practical guide to running AI model inference workloads on Kubernetes with vLLM — resource limits, autoscaling and serving at scale.'
+date: '2026-05-19'
+tags: ['Kubernetes', 'AI', 'Platform Engineering', 'DevOps']
 ---
 
 Running AI models in production is a different class of problem from a typical web service. The compute profile is spiky, models are large, startup times are slow and GPU scheduling adds a new layer of complexity. Here's the setup that's worked for me across a few deployments.
@@ -59,9 +59,9 @@ spec:
         - name: vllm
           image: vllm/vllm-openai:latest
           args:
-            - "--model=meta-llama/Llama-3.2-3B-Instruct"
-            - "--max-model-len=8192"
-            - "--gpu-memory-utilization=0.90"
+            - '--model=meta-llama/Llama-3.2-3B-Instruct'
+            - '--max-model-len=8192'
+            - '--gpu-memory-utilization=0.90'
           ports:
             - containerPort: 8000
           env:
@@ -74,12 +74,12 @@ spec:
                   key: token
           resources:
             requests:
-              cpu: "4"
-              memory: "16Gi"
+              cpu: '4'
+              memory: '16Gi'
             limits:
-              cpu: "8"
-              memory: "24Gi"
-              nvidia.com/gpu: "1"
+              cpu: '8'
+              memory: '24Gi'
+              nvidia.com/gpu: '1'
           volumeMounts:
             - name: hf-cache
               mountPath: /root/.cache/huggingface
@@ -131,9 +131,9 @@ initContainers:
   - name: fetch-model
     image: vllm/vllm-openai:latest
     command:
-      - "huggingface-cli"
-      - "download"
-      - "meta-llama/Llama-3.2-3B-Instruct"
+      - 'huggingface-cli'
+      - 'download'
+      - 'meta-llama/Llama-3.2-3B-Instruct'
     env:
       - name: HF_HOME
         value: /root/.cache/huggingface
@@ -185,7 +185,7 @@ spec:
       metadata:
         serverAddress: http://prometheus.monitoring.svc.cluster.local:9090
         query: sum(vllm:num_requests_waiting)
-        threshold: "5"
+        threshold: '5'
 ```
 
 Keep `minReplicaCount` at 1 — scaling a GPU model from zero means a cold start measured in minutes, which most request paths can't absorb.

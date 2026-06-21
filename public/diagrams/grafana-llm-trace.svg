@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 420" font-family="ui-sans-serif, system-ui, -apple-system, Roboto, sans-serif">
+  <rect x="0" y="0" width="960" height="420" rx="6" fill="#0b0c0e"/>
+
+  <!-- header -->
+  <text x="16" y="28" font-size="15" font-weight="700" fill="#d8d9da">Trace · chat completion (RAG)</text>
+  <text x="16" y="46" font-size="11" fill="#8e8e8e">Tempo · trace 4af9e1c… · duration 1.84 s · 5 spans</text>
+
+  <!-- waterfall panel -->
+  <rect x="12" y="60" width="700" height="344" rx="4" fill="#181b1f" stroke="#2c3235"/>
+  <!-- time ruler -->
+  <g font-size="9.5" fill="#8e8e8e">
+    <text x="320" y="80">0 s</text><text x="450" y="80">0.6 s</text><text x="580" y="80">1.2 s</text><text x="690" y="80">1.8 s</text>
+  </g>
+  <g stroke="#2c3235" stroke-width="1">
+    <line x1="320" y1="86" x2="320" y2="396"/><line x1="450" y1="86" x2="450" y2="396"/><line x1="580" y1="86" x2="580" y2="396"/><line x1="700" y1="86" x2="700" y2="396"/>
+  </g>
+
+  <!-- span rows -->
+  <g font-size="11.5">
+    <!-- root -->
+    <text x="26" y="113" fill="#d8d9da" font-weight="600">chat.request</text>
+    <rect x="320" y="104" width="378" height="14" rx="3" fill="#5794f2"/>
+    <text x="320" y="136" font-size="9.5" fill="#8e8e8e" text-anchor="start">1.84 s</text>
+
+    <!-- retrieve -->
+    <text x="40" y="161" fill="#c7d0d9">rag.retrieve</text>
+    <rect x="320" y="152" width="26" height="14" rx="3" fill="#4cb7a5"/>
+    <text x="352" y="163" font-size="9.5" fill="#8e8e8e">0.12 s</text>
+
+    <!-- db.query -->
+    <text x="56" y="189" fill="#9fa7b3">db.query · pgvector</text>
+    <rect x="322" y="180" width="20" height="14" rx="3" fill="#b877d9"/>
+    <text x="348" y="191" font-size="9.5" fill="#8e8e8e">0.09 s</text>
+
+    <!-- rerank -->
+    <text x="40" y="217" fill="#c7d0d9">rag.rerank</text>
+    <rect x="348" y="208" width="12" height="14" rx="3" fill="#ff9830"/>
+    <text x="366" y="219" font-size="9.5" fill="#8e8e8e">0.05 s</text>
+
+    <!-- gen_ai.chat -->
+    <text x="40" y="245" fill="#73bf69" font-weight="600">gen_ai.chat · gpt-4o</text>
+    <rect x="356" y="236" width="342" height="14" rx="3" fill="#73bf69"/>
+    <text x="356" y="267" font-size="9.5" fill="#8e8e8e">1.61 s · selected</text>
+  </g>
+
+  <text x="26" y="370" font-size="10.5" fill="#8e8e8e">The model call dominates the request — the retrieval and rerank are a rounding error beside it.</text>
+
+  <!-- attributes panel -->
+  <rect x="724" y="60" width="224" height="344" rx="4" fill="#181b1f" stroke="#2c3235"/>
+  <text x="738" y="82" font-size="12" fill="#d8d9da" font-weight="600">Span attributes</text>
+  <line x1="738" y1="92" x2="934" y2="92" stroke="#2c3235"/>
+  <g font-size="10.5">
+    <text x="738" y="116" fill="#8e8e8e">gen_ai.system</text><text x="934" y="116" text-anchor="end" fill="#c7d0d9">openai</text>
+    <text x="738" y="142" fill="#8e8e8e">gen_ai.request.model</text><text x="934" y="142" text-anchor="end" fill="#c7d0d9">gpt-4o</text>
+    <text x="738" y="168" fill="#8e8e8e">gen_ai.operation.name</text><text x="934" y="168" text-anchor="end" fill="#c7d0d9">chat</text>
+    <text x="738" y="194" fill="#8e8e8e">gen_ai.request.temperature</text><text x="934" y="194" text-anchor="end" fill="#c7d0d9">0.2</text>
+    <text x="738" y="220" fill="#8e8e8e">gen_ai.usage.input_tokens</text><text x="934" y="220" text-anchor="end" fill="#73bf69">2143</text>
+    <text x="738" y="246" fill="#8e8e8e">gen_ai.usage.output_tokens</text><text x="934" y="246" text-anchor="end" fill="#73bf69">312</text>
+    <text x="738" y="272" fill="#8e8e8e">gen_ai.response.finish_reason</text><text x="934" y="272" text-anchor="end" fill="#c7d0d9">stop</text>
+    <text x="738" y="298" fill="#8e8e8e">server.address</text><text x="934" y="298" text-anchor="end" fill="#c7d0d9">api.openai.com</text>
+  </g>
+  <line x1="738" y1="318" x2="934" y2="318" stroke="#2c3235"/>
+  <text x="738" y="342" fill="#8e8e8e" font-size="10.5">est. cost</text><text x="934" y="342" text-anchor="end" fill="#b877d9" font-size="10.5">$0.0142</text>
+  <text x="738" y="366" fill="#8e8e8e" font-size="10.5">duration</text><text x="934" y="366" text-anchor="end" fill="#c7d0d9" font-size="10.5">1.61 s</text>
+</svg>

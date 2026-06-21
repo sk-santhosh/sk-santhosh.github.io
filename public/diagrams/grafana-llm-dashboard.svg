@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" font-family="ui-sans-serif, system-ui, -apple-system, Roboto, sans-serif">
+  <rect x="0" y="0" width="960" height="540" rx="6" fill="#0b0c0e"/>
+
+  <!-- header -->
+  <text x="16" y="28" font-size="15" font-weight="700" fill="#d8d9da">LLM application — overview</text>
+  <rect x="800" y="12" width="148" height="24" rx="4" fill="#181b1f" stroke="#2c3235"/>
+  <text x="874" y="28" font-size="11.5" text-anchor="middle" fill="#9fa7b3">◷ Last 6 hours</text>
+
+  <!-- stat panels -->
+  <g>
+    <rect x="12" y="48" width="225" height="92" rx="4" fill="#181b1f" stroke="#2c3235"/>
+    <text x="26" y="70" font-size="11.5" fill="#9fa7b3">Requests / s</text>
+    <text x="26" y="108" font-size="30" font-weight="700" fill="#73bf69">42.7</text>
+    <polyline points="26,128 60,124 94,129 128,120 162,126 196,118 224,123" fill="none" stroke="#73bf69" stroke-width="1.5" opacity="0.7"/>
+
+    <rect x="249" y="48" width="225" height="92" rx="4" fill="#181b1f" stroke="#2c3235"/>
+    <text x="263" y="70" font-size="11.5" fill="#9fa7b3">p95 latency</text>
+    <text x="263" y="108" font-size="30" font-weight="700" fill="#ff9830">1.84 s</text>
+    <polyline points="263,126 297,128 331,122 365,127 399,120 433,125 461,123" fill="none" stroke="#ff9830" stroke-width="1.5" opacity="0.7"/>
+
+    <rect x="486" y="48" width="225" height="92" rx="4" fill="#181b1f" stroke="#2c3235"/>
+    <text x="500" y="70" font-size="11.5" fill="#9fa7b3">Tokens / s</text>
+    <text x="500" y="108" font-size="30" font-weight="700" fill="#5794f2">9.1k</text>
+    <polyline points="500,127 534,120 568,126 602,118 636,124 670,116 698,122" fill="none" stroke="#5794f2" stroke-width="1.5" opacity="0.7"/>
+
+    <rect x="723" y="48" width="225" height="92" rx="4" fill="#181b1f" stroke="#2c3235"/>
+    <text x="737" y="70" font-size="11.5" fill="#9fa7b3">Est. cost / hour</text>
+    <text x="737" y="108" font-size="30" font-weight="700" fill="#b877d9">$3.27</text>
+    <polyline points="737,126 771,123 805,127 839,121 873,125 907,119 935,122" fill="none" stroke="#b877d9" stroke-width="1.5" opacity="0.7"/>
+  </g>
+
+  <!-- request latency timeseries -->
+  <rect x="12" y="150" width="462" height="178" rx="4" fill="#181b1f" stroke="#2c3235"/>
+  <text x="26" y="172" font-size="12" fill="#d8d9da" font-weight="600">Request latency</text>
+  <g font-size="9.5" fill="#8e8e8e" text-anchor="end">
+    <text x="64" y="194">3 s</text><text x="64" y="240">2 s</text><text x="64" y="286">1 s</text>
+  </g>
+  <g stroke="#2c3235" stroke-width="1">
+    <line x1="70" y1="190" x2="462" y2="190"/><line x1="70" y1="236" x2="462" y2="236"/><line x1="70" y1="282" x2="462" y2="282"/>
+  </g>
+  <polyline points="72,300 120,296 170,302 220,294 270,298 320,292 370,300 410,295 462,297" fill="none" stroke="#73bf69" stroke-width="2"/>
+  <polyline points="72,262 120,254 170,266 220,250 270,259 320,248 370,264 410,255 462,258" fill="none" stroke="#fade2a" stroke-width="2"/>
+  <polyline points="72,230 120,220 170,234 220,212 270,226 320,216 370,236 410,221 462,228" fill="none" stroke="#f2495c" stroke-width="2"/>
+  <g font-size="10">
+    <rect x="300" y="158" width="10" height="6" fill="#73bf69"/><text x="314" y="164" fill="#9fa7b3">p50</text>
+    <rect x="350" y="158" width="10" height="6" fill="#fade2a"/><text x="364" y="164" fill="#9fa7b3">p95</text>
+    <rect x="400" y="158" width="10" height="6" fill="#f2495c"/><text x="414" y="164" fill="#9fa7b3">p99</text>
+  </g>
+
+  <!-- token throughput timeseries -->
+  <rect x="486" y="150" width="462" height="178" rx="4" fill="#181b1f" stroke="#2c3235"/>
+  <text x="500" y="172" font-size="12" fill="#d8d9da" font-weight="600">Token throughput</text>
+  <g stroke="#2c3235" stroke-width="1">
+    <line x1="546" y1="190" x2="936" y2="190"/><line x1="546" y1="236" x2="936" y2="236"/><line x1="546" y1="282" x2="936" y2="282"/>
+  </g>
+  <polyline points="546,224 594,214 644,228 694,208 744,220 794,205 844,226 886,212 936,216" fill="none" stroke="#5794f2" stroke-width="2"/>
+  <polyline points="546,274 594,268 644,278 694,264 744,272 794,261 844,279 886,266 936,271" fill="none" stroke="#4cb7a5" stroke-width="2"/>
+  <g font-size="10">
+    <rect x="740" y="158" width="10" height="6" fill="#5794f2"/><text x="754" y="164" fill="#9fa7b3">input</text>
+    <rect x="800" y="158" width="10" height="6" fill="#4cb7a5"/><text x="814" y="164" fill="#9fa7b3">output</text>
+  </g>
+
+  <!-- requests by model -->
+  <rect x="12" y="338" width="462" height="190" rx="4" fill="#181b1f" stroke="#2c3235"/>
+  <text x="26" y="360" font-size="12" fill="#d8d9da" font-weight="600">Requests by model</text>
+  <g font-size="11" fill="#c7d0d9">
+    <text x="26" y="390">gpt-4o</text>
+    <rect x="150" y="378" width="250" height="18" rx="2" fill="#5794f2"/><text x="408" y="391" fill="#9fa7b3">18.2/s</text>
+    <text x="26" y="426">claude-sonnet-4</text>
+    <rect x="150" y="414" width="174" height="18" rx="2" fill="#73bf69"/><text x="332" y="427" fill="#9fa7b3">12.7/s</text>
+    <text x="26" y="462">llama-3.1-8b (local)</text>
+    <rect x="150" y="450" width="115" height="18" rx="2" fill="#ff9830"/><text x="273" y="463" fill="#9fa7b3">8.4/s</text>
+    <text x="26" y="498">text-embedding-3</text>
+    <rect x="150" y="486" width="47" height="18" rx="2" fill="#b877d9"/><text x="205" y="499" fill="#9fa7b3">3.4/s</text>
+  </g>
+
+  <!-- ttft by model -->
+  <rect x="486" y="338" width="462" height="190" rx="4" fill="#181b1f" stroke="#2c3235"/>
+  <text x="500" y="360" font-size="12" fill="#d8d9da" font-weight="600">p95 time to first token</text>
+  <g font-size="11" fill="#c7d0d9">
+    <text x="500" y="398">gpt-4o</text>
+    <rect x="630" y="386" width="197" height="20" rx="2" fill="#ff9830"/><text x="835" y="401" fill="#9fa7b3">410 ms</text>
+    <text x="500" y="448">claude-sonnet-4</text>
+    <rect x="630" y="436" width="250" height="20" rx="2" fill="#f2495c"/><text x="888" y="451" fill="#9fa7b3">520 ms</text>
+    <text x="500" y="498">llama-3.1-8b (local)</text>
+    <rect x="630" y="486" width="87" height="20" rx="2" fill="#73bf69"/><text x="725" y="501" fill="#9fa7b3">180 ms</text>
+  </g>
+</svg>

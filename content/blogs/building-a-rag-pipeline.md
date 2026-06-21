@@ -1,8 +1,8 @@
 ---
-title: "Building a RAG pipeline with pgvector and vLLM"
-description: "How retrieval-augmented generation grounds an LLM in your own data — chunking, embeddings, vector search with pgvector and generation with a self-hosted vLLM endpoint."
-date: "2026-06-15"
-tags: ["AI", "RAG", "PostgreSQL", "Platform Engineering"]
+title: 'Building a RAG pipeline with pgvector and vLLM'
+description: 'How retrieval-augmented generation grounds an LLM in your own data — chunking, embeddings, vector search with pgvector and generation with a self-hosted vLLM endpoint.'
+date: '2026-06-02'
+tags: ['AI', 'RAG', 'PostgreSQL', 'Platform Engineering']
 ---
 
 A language model only knows what it saw during training. Ask it about your internal runbooks, last week's incident or a private contract and it will either refuse or, worse, invent something plausible. Fine-tuning to teach it new facts is expensive and goes stale the moment the data changes. Retrieval-augmented generation (RAG) takes the other route: keep the model fixed, and at query time fetch the relevant facts and hand them to the model as context.
@@ -15,7 +15,7 @@ RAG has two phases. **Indexing** happens offline whenever your documents change:
 
 ![Indexing turns documents into chunks, embeds them and writes vectors to Postgres with pgvector; on each query the question is embedded, the top-k similar chunks are retrieved and passed to vLLM as context to produce a grounded answer](/diagrams/rag-pipeline.svg)
 
-The key idea: the LLM never has to *remember* your data, it just has to *read* the few relevant chunks you put in front of it.
+The key idea: the LLM never has to _remember_ your data, it just has to _read_ the few relevant chunks you put in front of it.
 
 ## Indexing: from documents to vectors
 
@@ -80,7 +80,7 @@ with psycopg.connect(DSN) as conn:
 
 ## Retrieval and generation
 
-On a query, embed the question with the *same* model, pull the closest chunks with pgvector's cosine-distance operator (`<=>`), then ask the LLM to answer using only that context:
+On a query, embed the question with the _same_ model, pull the closest chunks with pgvector's cosine-distance operator (`<=>`), then ask the LLM to answer using only that context:
 
 ```python
 llm = OpenAI(base_url="http://vllm.ai.svc.cluster.local:8000/v1", api_key="not-needed")

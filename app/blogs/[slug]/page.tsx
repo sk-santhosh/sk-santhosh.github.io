@@ -7,6 +7,10 @@ import { tagColor } from "@/lib/tag-colors";
 import { siteUrl } from "@/lib/site";
 import { resume } from "@/data/resume";
 
+// Only the slugs below exist; any other /blogs/* path renders the 404 page
+// instead of erroring under `output: export`.
+export const dynamicParams = false;
+
 export async function generateStaticParams() {
   return getAllBlogs().map((post) => ({ slug: post.slug }));
 }
