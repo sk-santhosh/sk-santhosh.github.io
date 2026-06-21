@@ -1,13 +1,14 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import {MapPin, ArrowRight, ArrowUpRight} from 'lucide-react';
+import {MapPin, ArrowRight} from 'lucide-react';
 import {MdEmail} from 'react-icons/md';
 import {FaGithub, FaLinkedin} from 'react-icons/fa';
 import {FaXTwitter} from 'react-icons/fa6';
-import {getAllBlogs, formatDate} from '@/lib/blogs';
+import {getAllBlogs} from '@/lib/blogs';
 import {resume} from '@/data/resume';
 import {tagColor} from '@/lib/tag-colors';
 import GitHubContributions from '@/components/github-contributions';
+import BlogCard from '@/components/blog-card';
 
 const socialLinks = [
 	{
@@ -89,35 +90,9 @@ export default function HomePage() {
 						View all <ArrowRight size={11} />
 					</Link>
 				</div>
-				<div className="divide-y divide-slate-100 dark:divide-slate-800">
+				<div>
 					{latestPosts.map((post) => (
-						<Link
-							key={post.slug}
-							href={`/blogs/${post.slug}`}
-							className="group flex items-start justify-between py-3 gap-3 hover:bg-slate-50 dark:hover:bg-slate-900 active:bg-slate-100 dark:active:bg-slate-800 -mx-2 px-2 rounded-md transition-colors"
-						>
-							<div className="min-w-0">
-								<p className="text-sm font-medium text-slate-800 dark:text-slate-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2 sm:truncate sm:line-clamp-none">
-									{post.title}
-								</p>
-								<div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 mt-0.5">
-									{post.tags.slice(0, 2).map((tag) => (
-										<span key={tag} className="text-xs text-slate-400 dark:text-slate-500">
-											{tag}
-										</span>
-									))}
-									<time className="text-xs text-slate-400 dark:text-slate-500 sm:hidden">{formatDate(post.date)}</time>
-								</div>
-							</div>
-							<div className="hidden sm:flex items-center gap-1.5 shrink-0 mt-0.5">
-								<time className="text-xs text-slate-400 dark:text-slate-500 whitespace-nowrap">{formatDate(post.date)}</time>
-								<ArrowUpRight size={12} className="text-slate-300 dark:text-slate-600 group-hover:text-blue-500 transition-colors" />
-							</div>
-							<ArrowUpRight
-								size={12}
-								className="sm:hidden shrink-0 mt-1 text-slate-300 dark:text-slate-600 group-hover:text-blue-500 transition-colors"
-							/>
-						</Link>
+						<BlogCard key={post.slug} post={post} />
 					))}
 				</div>
 			</section>
