@@ -8,3 +8,8 @@ export const siteUrl =
 // secret) to the value Google gives you under "HTML tag" verification.
 export const googleSiteVerification =
   process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION;
+
+// Google Analytics 4 measurement ID (G-XXXXXXXXXX).
+// Set NEXT_PUBLIC_GA_ID in the environment; when unset (e.g. local dev) GA is
+// not loaded, so development traffic never reaches your analytics.
+export const gaId = process.env.NEXT_PUBLIC_GA_ID;

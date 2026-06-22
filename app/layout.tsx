@@ -4,8 +4,9 @@ import Nav from "@/components/nav";
 import CommandPalette from "@/components/command-palette";
 import MobileMenuButton from "@/components/mobile-menu-button";
 import ThemeToggle from "@/components/theme-toggle";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import { resume } from "@/data/resume";
-import { siteUrl, googleSiteVerification } from "@/lib/site";
+import { siteUrl, googleSiteVerification, gaId } from "@/lib/site";
 import "./globals.css";
 
 const siteTitle = `${resume.name} — ${resume.title}`;
@@ -141,6 +142,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </footer>
         <CommandPalette />
         <MobileMenuButton />
+        {gaId && <GoogleAnalytics gaId={gaId} />}
       </body>
     </html>
   );
