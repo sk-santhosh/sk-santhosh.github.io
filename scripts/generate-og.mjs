@@ -67,7 +67,7 @@ function svgFor({ title, date, tags }) {
   <rect width="${W}" height="${H}" fill="#0f172a"/>
   <rect width="${W}" height="10" fill="#38bdf8"/>
   <text x="80" y="118" font-family="ui-monospace, 'JetBrains Mono', 'SFMono-Regular', Menlo, monospace" font-size="32" font-weight="700" fill="#38bdf8">&gt;_ Santhosh Kumar J</text>
-  <text x="80" y="158" font-family="Inter, Helvetica, Arial, sans-serif" font-size="24" fill="#94a3b8">Platform Architect · Cloud Architect · SRE</text>
+  <text x="80" y="158" font-family="Inter, Helvetica, Arial, sans-serif" font-size="24" fill="#94a3b8">Platform Engineer · Cloud Engineer · SRE</text>
   <text font-family="Inter, Helvetica, Arial, sans-serif" font-size="${fontSize}" font-weight="700" fill="#f8fafc">${titleTspans}</text>
   <text x="80" y="560" font-family="Inter, Helvetica, Arial, sans-serif" font-size="24" fill="#64748b">${esc(prettyDate)}</text>
   <text x="80" y="600" font-family="Inter, Helvetica, Arial, sans-serif" font-size="24" font-weight="600" fill="#38bdf8">${esc(tagLine)}</text>

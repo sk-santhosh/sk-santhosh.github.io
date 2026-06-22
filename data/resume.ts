@@ -1,16 +1,16 @@
 export const resume = {
 	name: 'Santhosh Kumar J',
-	title: 'Platform Architect · Cloud Architect · SRE',
+	title: 'Platform Engineer · Cloud Engineer · SRE',
 	// Toggle the scrolling "open to work" banner above the nav bar.
 	openToWork: {
 		enabled: true,
 		message:
-			'Open to work | Platform Architect, Cloud Architect & SRE roles | Open to relocation and international opportunities—let’s connect and discuss how I can contribute to your team.',
+			'Open to work | Platform Engineer, Cloud Engineer & SRE roles | Open to relocation and international opportunities—let’s connect and discuss how I can contribute to your team.',
 	},
 	tagline:
-		'Platform & Cloud Architect and SRE with 14+ years building and operating cloud-native platforms on AWS, Azure, and GCP for systems serving 10M+ users.',
+		'Platform & Cloud Engineer and SRE with 14+ years building and operating cloud-native platforms on AWS, Azure, and GCP for systems serving 10M+ users.',
 	summary:
-		'Platform & Cloud Architect and SRE with 14+ years building cloud-native platforms on AWS, Azure, and GCP. I lead engineering teams on cloud migrations, Kubernetes modernization, and reliability programs for systems serving 10M+ users.',
+		'14+ years designing, building and operating cloud-native platforms on AWS, Azure and GCP. Led engineering teams of 20+ and delivered 30+ cloud transformation projects — migrations, Kubernetes modernisation and reliability programmes — cutting infrastructure costs by up to 35% while sustaining 99.9% availability for systems serving 10M+ users.',
 	location: 'Chennai, India',
 	email: 'santhoshj.off@gmail.com',
 	social: {
@@ -57,17 +57,17 @@ export const resume = {
 	experience: [
 		{
 			company: 'SentinelFox Pvt Ltd',
-			role: 'Co-Founder & Platform Architect',
+			role: 'Co-Founder & Platform Engineer',
 			period: 'Jan 2022 – Present',
 			description:
-				'Founded and scaled a cloud consulting and platform engineering company, delivering 30+ cloud modernization projects and leading a team of 20+ engineers across Platform Engineering, SRE, Cloud Architecture, and Software Development.',
+				'Co-founded a services company that helps SaaS businesses set up their cloud infrastructure and developer environments securely, delivering 30+ cloud projects and leading a team of 20+ engineers across Platform Engineering, SRE, Cloud Engineering and Software Development.',
 		},
 		{
 			company: 'Nextwave Multimedia Pvt Ltd',
-			role: 'Senior Software Architect',
+			role: 'Senior Software Engineer',
 			period: 'Nov 2017 – Dec 2021',
 			description:
-				'Architected backend systems and distributed platforms supporting 10M+ active users at 99.9% availability, including multiplayer gaming backends, tournament platforms, and a 200K-line legacy PHP migration to Laravel.',
+				'Built and scaled backend systems and distributed platforms supporting 10M+ active users at 99.9% availability, including multiplayer gaming backends, tournament platforms, and a 200K-line legacy PHP migration to Laravel.',
 		},
 		{
 			company: 'eBuilders',
