@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import {MapPin, ArrowRight} from 'lucide-react';
+import {MapPin, ArrowRight, Download} from 'lucide-react';
 import {MdEmail} from 'react-icons/md';
 import {FaGithub, FaLinkedin} from 'react-icons/fa';
 import {FaXTwitter} from 'react-icons/fa6';
@@ -67,6 +67,13 @@ export default function HomePage() {
 								<Icon size={16} />
 							</a>
 						))}
+						<a
+							href="/resume.pdf"
+							download
+							className="inline-flex items-center gap-1.5 px-3 h-8 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 transition-colors"
+						>
+							<Download size={15} /> Resume
+						</a>
 					</div>
 				</div>
 				<Image

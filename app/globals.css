@@ -228,3 +228,23 @@ body {
 .dark .prose img {
   border-color: #1e293b;
 }
+
+/* Open-to-work marquee banner */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none;
+  }
+}

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono } from "next/font/google";
 import Nav from "@/components/nav";
+import OpenToWorkBanner from "@/components/open-to-work-banner";
 import CommandPalette from "@/components/command-palette";
 import MobileMenuButton from "@/components/mobile-menu-button";
 import ThemeToggle from "@/components/theme-toggle";
@@ -127,6 +128,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 pb-10">
+        <OpenToWorkBanner />
         <Nav />
         <main className="max-w-2xl md:max-w-3xl lg:max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">{children}</main>
         <footer className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-slate-950/95 nav-blur border-t border-slate-100 dark:border-slate-800">
