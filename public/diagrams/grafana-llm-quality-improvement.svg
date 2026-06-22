@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 440" font-family="ui-sans-serif, system-ui, -apple-system, Roboto, sans-serif">
+  <rect x="0" y="0" width="960" height="440" rx="6" fill="#0b0c0e"/>
+
+  <text x="16" y="28" font-size="15" font-weight="700" fill="#d8d9da">Faithfulness pass rate, climbing after each fix</text>
+  <rect x="800" y="12" width="148" height="24" rx="4" fill="#181b1f" stroke="#2c3235"/>
+  <text x="874" y="28" font-size="11.5" text-anchor="middle" fill="#9fa7b3">◷ Last 8 weeks</text>
+
+  <rect x="12" y="48" width="936" height="380" rx="4" fill="#181b1f" stroke="#2c3235"/>
+
+  <!-- y axis labels + gridlines -->
+  <g font-size="10" fill="#8e8e8e" text-anchor="end">
+    <text x="60" y="74">100%</text><text x="60" y="146">90%</text><text x="60" y="219">80%</text><text x="60" y="291">70%</text><text x="60" y="364">60%</text>
+  </g>
+  <g stroke="#2c3235" stroke-width="1">
+    <line x1="70" y1="70" x2="900" y2="70"/><line x1="70" y1="142" x2="900" y2="142"/><line x1="70" y1="215" x2="900" y2="215"/><line x1="70" y1="287" x2="900" y2="287"/><line x1="70" y1="360" x2="900" y2="360"/>
+  </g>
+
+  <!-- target line 90% -->
+  <line x1="70" y1="142" x2="900" y2="142" stroke="#73bf69" stroke-width="1.5" stroke-dasharray="6 4" opacity="0.6"/>
+  <text x="74" y="136" font-size="9.5" text-anchor="start" fill="#73bf69">target 90%</text>
+
+  <!-- intervention markers -->
+  <g stroke="#5a6169" stroke-width="1" stroke-dasharray="4 4">
+    <line x1="288" y1="60" x2="288" y2="360"/>
+    <line x1="485" y1="60" x2="485" y2="360"/>
+    <line x1="683" y1="60" x2="683" y2="360"/>
+  </g>
+  <g font-size="9.5" fill="#b8bfc7">
+    <text x="292" y="392">↑ reranker + chunking</text>
+    <text x="489" y="408">↑ prompt v2 (cite sources)</text>
+    <text x="687" y="392">↑ route hard queries</text>
+  </g>
+
+  <!-- account_recovery line (blue) -->
+  <polyline points="90,230 189,230 288,222 386,186 485,179 584,157 683,157 781,150 880,150" fill="none" stroke="#5794f2" stroke-width="2.5"/>
+  <!-- technical_support line (orange) -->
+  <polyline points="90,280 189,273 288,273 386,201 485,186 584,164 683,157 781,143 880,135" fill="none" stroke="#ff9830" stroke-width="2.5"/>
+
+  <!-- start/end value dots + labels -->
+  <circle cx="90" cy="280" r="3.5" fill="#ff9830"/><circle cx="880" cy="135" r="3.5" fill="#ff9830"/>
+  <circle cx="90" cy="230" r="3.5" fill="#5794f2"/><circle cx="880" cy="150" r="3.5" fill="#5794f2"/>
+  <text x="96" y="296" font-size="10" fill="#ff9830">71%</text>
+  <text x="876" y="128" font-size="10" text-anchor="end" fill="#ff9830">91%</text>
+  <text x="96" y="223" font-size="10" fill="#5794f2">78%</text>
+
+  <!-- legend -->
+  <g font-size="10.5">
+    <rect x="640" y="58" width="11" height="6" fill="#ff9830"/><text x="656" y="64" fill="#9fa7b3">technical_support</text>
+    <rect x="770" y="58" width="11" height="6" fill="#5794f2"/><text x="786" y="64" fill="#9fa7b3">account_recovery</text>
+  </g>
+
+  <!-- x axis weeks -->
+  <g font-size="9.5" fill="#8e8e8e" text-anchor="middle">
+    <text x="90" y="376">w0</text><text x="288" y="376">w2</text><text x="485" y="376">w4</text><text x="683" y="376">w6</text><text x="880" y="376">w8</text>
+  </g>
+</svg>

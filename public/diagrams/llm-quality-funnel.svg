@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 380" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+  <rect x="1" y="1" width="958" height="378" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
+  <text x="24" y="34" font-size="17" font-weight="700" fill="#0f172a">From conversation to resolution: where AI drops off</text>
+
+  <!-- funnel bars, centred -->
+  <!-- 1 Requests 100% w=860 -->
+  <rect x="50" y="64" width="860" height="44" rx="6" fill="#93c5fd"/>
+  <text x="66" y="91" font-size="13" fill="#0c2a4d" font-weight="600">Conversations</text>
+  <text x="894" y="91" font-size="12.5" text-anchor="end" fill="#0c2a4d">28,710 · 100%</text>
+
+  <!-- 2 Answered 99% w=851 -->
+  <rect x="54" y="118" width="851" height="44" rx="6" fill="#60a5fa"/>
+  <text x="70" y="145" font-size="13" fill="#0c2a4d" font-weight="600">Answered without error</text>
+  <text x="890" y="145" font-size="12.5" text-anchor="end" fill="#0c2a4d">28,420 · 99%</text>
+
+  <!-- 3 Grounded 88% w=757 -->
+  <rect x="101" y="172" width="757" height="44" rx="6" fill="#38bdf8"/>
+  <text x="117" y="199" font-size="13" fill="#0c2a4d" font-weight="600">Grounded answer (eval pass)</text>
+  <text x="843" y="199" font-size="12.5" text-anchor="end" fill="#0c2a4d">25,270 · 88%</text>
+
+  <!-- 4 Satisfied 80% w=688 -->
+  <rect x="136" y="226" width="688" height="44" rx="6" fill="#2dd4bf"/>
+  <text x="152" y="253" font-size="13" fill="#0c3a33" font-weight="600">User satisfied (no thumbs-down)</text>
+  <text x="809" y="253" font-size="12.5" text-anchor="end" fill="#0c3a33">22,970 · 80%</text>
+
+  <!-- 5 Resolved 72% w=620 -->
+  <rect x="170" y="280" width="620" height="44" rx="6" fill="#10b981"/>
+  <text x="186" y="307" font-size="13" fill="#06281d" font-weight="600">Task resolved successfully</text>
+  <text x="775" y="307" font-size="12.5" text-anchor="end" fill="#06281d">20,670 · 72%</text>
+
+  <text x="480" y="356" font-size="11" text-anchor="middle" fill="#64748b">Availability metrics only see the first two bars. Everything that matters to the user happens in the last three.</text>
+</svg>

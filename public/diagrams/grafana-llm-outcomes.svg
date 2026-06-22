@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" font-family="ui-sans-serif, system-ui, -apple-system, Roboto, sans-serif">
+  <rect x="0" y="0" width="960" height="600" rx="6" fill="#0b0c0e"/>
+
+  <!-- header -->
+  <text x="16" y="28" font-size="15" font-weight="700" fill="#d8d9da">AI outcomes by user intent</text>
+  <rect x="800" y="12" width="148" height="24" rx="4" fill="#181b1f" stroke="#2c3235"/>
+  <text x="874" y="28" font-size="11.5" text-anchor="middle" fill="#9fa7b3">◷ Last 7 days</text>
+
+  <!-- stat panels -->
+  <rect x="12" y="48" width="225" height="86" rx="4" fill="#181b1f" stroke="#2c3235"/>
+  <text x="26" y="70" font-size="11.5" fill="#9fa7b3">Conversations</text>
+  <text x="26" y="106" font-size="28" font-weight="700" fill="#5794f2">28.7k</text>
+
+  <rect x="249" y="48" width="225" height="86" rx="4" fill="#181b1f" stroke="#2c3235"/>
+  <text x="263" y="70" font-size="11.5" fill="#9fa7b3">Eval pass rate</text>
+  <text x="263" y="106" font-size="28" font-weight="700" fill="#73bf69">88%</text>
+
+  <rect x="486" y="48" width="225" height="86" rx="4" fill="#181b1f" stroke="#2c3235"/>
+  <text x="500" y="70" font-size="11.5" fill="#9fa7b3">Escalation rate</text>
+  <text x="500" y="106" font-size="28" font-weight="700" fill="#ff9830">11%</text>
+
+  <rect x="723" y="48" width="225" height="86" rx="4" fill="#181b1f" stroke="#2c3235"/>
+  <text x="737" y="70" font-size="11.5" fill="#9fa7b3">Cost / resolution</text>
+  <text x="737" y="106" font-size="28" font-weight="700" fill="#b877d9">$0.19</text>
+
+  <!-- table panel -->
+  <rect x="12" y="146" width="936" height="268" rx="4" fill="#181b1f" stroke="#2c3235"/>
+  <text x="26" y="168" font-size="12" fill="#d8d9da" font-weight="600">Outcomes by user.task</text>
+  <!-- header row -->
+  <g font-size="11" fill="#8e8e8e">
+    <text x="28" y="196">user.task</text>
+    <text x="440" y="196" text-anchor="end">conversations</text>
+    <text x="580" y="196" text-anchor="end">faithfulness</text>
+    <text x="700" y="196" text-anchor="end">thumbs-up</text>
+    <text x="824" y="196" text-anchor="end">escalation</text>
+    <text x="932" y="196" text-anchor="end">$/resolution</text>
+  </g>
+  <line x1="26" y1="206" x2="934" y2="206" stroke="#2c3235"/>
+
+  <!-- rows -->
+  <g font-size="11.5">
+    <!-- order_status -->
+    <text x="28" y="232" fill="#c7d0d9">order_status</text>
+    <text x="440" y="232" text-anchor="end" fill="#c7d0d9">9,140</text>
+    <text x="580" y="232" text-anchor="end" fill="#73bf69">96%</text>
+    <text x="700" y="232" text-anchor="end" fill="#c7d0d9">92%</text>
+    <text x="824" y="232" text-anchor="end" fill="#73bf69">4%</text>
+    <text x="932" y="232" text-anchor="end" fill="#c7d0d9">$0.07</text>
+    <line x1="26" y1="244" x2="934" y2="244" stroke="#202327"/>
+    <!-- billing -->
+    <text x="28" y="270" fill="#c7d0d9">billing</text>
+    <text x="440" y="270" text-anchor="end" fill="#c7d0d9">6,880</text>
+    <text x="580" y="270" text-anchor="end" fill="#73bf69">94%</text>
+    <text x="700" y="270" text-anchor="end" fill="#c7d0d9">89%</text>
+    <text x="824" y="270" text-anchor="end" fill="#73bf69">6%</text>
+    <text x="932" y="270" text-anchor="end" fill="#c7d0d9">$0.11</text>
+    <line x1="26" y1="282" x2="934" y2="282" stroke="#202327"/>
+    <!-- product_info -->
+    <text x="28" y="308" fill="#c7d0d9">product_info</text>
+    <text x="440" y="308" text-anchor="end" fill="#c7d0d9">5,460</text>
+    <text x="580" y="308" text-anchor="end" fill="#73bf69">90%</text>
+    <text x="700" y="308" text-anchor="end" fill="#c7d0d9">84%</text>
+    <text x="824" y="308" text-anchor="end" fill="#73bf69">9%</text>
+    <text x="932" y="308" text-anchor="end" fill="#c7d0d9">$0.14</text>
+    <line x1="26" y1="320" x2="934" y2="320" stroke="#202327"/>
+    <!-- account_recovery -->
+    <text x="28" y="346" fill="#c7d0d9">account_recovery</text>
+    <text x="440" y="346" text-anchor="end" fill="#c7d0d9">4,210</text>
+    <text x="580" y="346" text-anchor="end" fill="#f2495c">78%</text>
+    <text x="700" y="346" text-anchor="end" fill="#c7d0d9">61%</text>
+    <text x="824" y="346" text-anchor="end" fill="#f2495c">31%</text>
+    <text x="932" y="346" text-anchor="end" fill="#ff9830">$0.42</text>
+    <line x1="26" y1="358" x2="934" y2="358" stroke="#202327"/>
+    <!-- technical_support -->
+    <text x="28" y="384" fill="#c7d0d9">technical_support</text>
+    <text x="440" y="384" text-anchor="end" fill="#c7d0d9">3,020</text>
+    <text x="580" y="384" text-anchor="end" fill="#f2495c">71%</text>
+    <text x="700" y="384" text-anchor="end" fill="#c7d0d9">55%</text>
+    <text x="824" y="384" text-anchor="end" fill="#f2495c">38%</text>
+    <text x="932" y="384" text-anchor="end" fill="#f2495c">$0.63</text>
+  </g>
+
+  <!-- bottom left: escalation by eval result -->
+  <rect x="12" y="426" width="462" height="162" rx="4" fill="#181b1f" stroke="#2c3235"/>
+  <text x="26" y="448" font-size="12" fill="#d8d9da" font-weight="600">Escalation rate by eval result</text>
+  <g font-size="11.5" fill="#c7d0d9">
+    <text x="26" y="486">eval passed</text>
+    <rect x="150" y="474" width="42" height="18" rx="2" fill="#73bf69"/><text x="200" y="487" fill="#9fa7b3">6%</text>
+    <text x="26" y="528">eval failed</text>
+    <rect x="150" y="516" width="266" height="18" rx="2" fill="#f2495c"/><text x="424" y="529" fill="#9fa7b3">38%</text>
+  </g>
+  <text x="26" y="566" font-size="11" fill="#fade2a" font-weight="600">6.3× more likely to escalate when the eval fails</text>
+
+  <!-- bottom right: faithfulness by intent -->
+  <rect x="486" y="426" width="462" height="162" rx="4" fill="#181b1f" stroke="#2c3235"/>
+  <text x="500" y="448" font-size="12" fill="#d8d9da" font-weight="600">Faithfulness pass rate by intent</text>
+  <g font-size="10.5" fill="#c7d0d9">
+    <text x="500" y="473">order_status</text>
+    <rect x="640" y="463" width="240" height="13" rx="2" fill="#73bf69"/><text x="888" y="473" fill="#9fa7b3">96%</text>
+    <text x="500" y="497">billing</text>
+    <rect x="640" y="487" width="235" height="13" rx="2" fill="#73bf69"/><text x="883" y="497" fill="#9fa7b3">94%</text>
+    <text x="500" y="521">product_info</text>
+    <rect x="640" y="511" width="225" height="13" rx="2" fill="#73bf69"/><text x="873" y="521" fill="#9fa7b3">90%</text>
+    <text x="500" y="545">account_recovery</text>
+    <rect x="640" y="535" width="195" height="13" rx="2" fill="#f2495c"/><text x="843" y="545" fill="#9fa7b3">78%</text>
+    <text x="500" y="569">technical_support</text>
+    <rect x="640" y="559" width="178" height="13" rx="2" fill="#f2495c"/><text x="826" y="569" fill="#9fa7b3">71%</text>
+  </g>
+</svg>

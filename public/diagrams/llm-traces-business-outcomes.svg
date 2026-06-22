@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 420" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+  <defs>
+    <marker id="ba" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+  <rect x="1" y="1" width="958" height="418" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
+  <text x="24" y="32" font-size="17" font-weight="700" fill="#0f172a">Joining the model span to user intent and business outcome</text>
+
+  <!-- trace container -->
+  <rect x="24" y="58" width="382" height="300" rx="10" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="40" y="80" font-size="12" fill="#334155" font-weight="600">One trace</text>
+
+  <!-- root span -->
+  <rect x="44" y="92" width="342" height="86" rx="8" fill="#eff6ff" stroke="#3b82f6"/>
+  <text x="58" y="113" font-size="12.5" fill="#1d4ed8" font-weight="600">chat.request — root span</text>
+  <text x="58" y="132" font-size="10.5" fill="#1d4ed8">user.task = reset_password</text>
+  <text x="58" y="149" font-size="10.5" fill="#1d4ed8">session.intent = account_recovery</text>
+  <text x="58" y="166" font-size="10.5" fill="#1d4ed8">workflow.path = support / self-serve</text>
+
+  <!-- child span -->
+  <rect x="72" y="194" width="314" height="80" rx="8" fill="#ecfdf5" stroke="#10b981"/>
+  <text x="86" y="215" font-size="12.5" fill="#047857" font-weight="600">gen_ai.chat · gpt-4o</text>
+  <text x="86" y="234" font-size="10.5" fill="#047857">cost $0.0142 · 312 output tokens</text>
+  <text x="86" y="251" font-size="10.5" fill="#047857">response.model = gpt-4o-2026-05</text>
+  <text x="86" y="268" font-size="10.5" fill="#047857">retrieval.doc_ids = [kb-204, kb-77]</text>
+
+  <text x="40" y="298" font-size="10.5" fill="#64748b">Cost, model version and retrieval inputs live</text>
+  <text x="40" y="313" font-size="10.5" fill="#64748b">on the spans — not in a sidecar log.</text>
+  <text x="40" y="338" font-size="10.5" fill="#475569" font-weight="600">HTTP 200 OK — but was the user served?</text>
+
+  <!-- join key -->
+  <rect x="432" y="196" width="124" height="40" rx="20" fill="#eef2ff" stroke="#6366f1"/>
+  <text x="494" y="212" font-size="11" text-anchor="middle" fill="#4338ca" font-weight="600">trace_id</text>
+  <text x="494" y="227" font-size="10" text-anchor="middle" fill="#4338ca">4af9e1c…</text>
+
+  <!-- outcome cards -->
+  <rect x="600" y="68" width="336" height="76" rx="9" fill="#fef2f2" stroke="#f87171"/>
+  <text x="616" y="90" font-size="12.5" fill="#b91c1c" font-weight="600">Eval (async)</text>
+  <text x="616" y="109" font-size="10.5" fill="#b91c1c">faithfulness: FAIL</text>
+  <text x="616" y="126" font-size="10.5" fill="#b91c1c">answer not grounded in the retrieved docs</text>
+
+  <rect x="600" y="162" width="336" height="76" rx="9" fill="#fffbeb" stroke="#f59e0b"/>
+  <text x="616" y="184" font-size="12.5" fill="#b45309" font-weight="600">User feedback</text>
+  <text x="616" y="203" font-size="10.5" fill="#b45309">thumbs-down</text>
+  <text x="616" y="220" font-size="10.5" fill="#b45309">posted back with the trace_id</text>
+
+  <rect x="600" y="256" width="336" height="76" rx="9" fill="#f5f3ff" stroke="#8b5cf6"/>
+  <text x="616" y="278" font-size="12.5" fill="#6d28d9" font-weight="600">Business event</text>
+  <text x="616" y="297" font-size="10.5" fill="#6d28d9">escalated to a human agent</text>
+  <text x="616" y="314" font-size="10.5" fill="#6d28d9">resolution = failed</text>
+
+  <!-- arrows -->
+  <g stroke="#94a3b8" stroke-width="2" fill="none">
+    <line x1="406" y1="216" x2="428" y2="216" marker-end="url(#ba)"/>
+    <line x1="556" y1="210" x2="596" y2="106" marker-end="url(#ba)"/>
+    <line x1="556" y1="216" x2="596" y2="200" marker-end="url(#ba)"/>
+    <line x1="556" y1="222" x2="596" y2="294" marker-end="url(#ba)"/>
+  </g>
+
+  <text x="480" y="400" font-size="11" text-anchor="middle" fill="#64748b">The 200 OK said success. The trace, the eval and the escalation together say it failed — and now you can measure that.</text>
+</svg>

@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 340" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+  <defs>
+    <marker id="je" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+  <rect x="1" y="1" width="958" height="338" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
+  <text x="24" y="32" font-size="17" font-weight="700" fill="#0f172a">How the faithfulness pass rate is computed</text>
+
+  <!-- box 1: inputs -->
+  <rect x="24" y="74" width="204" height="138" rx="9" fill="#f1f5f9" stroke="#94a3b8"/>
+  <text x="40" y="98" font-size="12.5" fill="#334155" font-weight="600">Inputs (from the trace)</text>
+  <text x="40" y="122" font-size="10.5" fill="#475569">• user question</text>
+  <text x="40" y="142" font-size="10.5" fill="#475569">• retrieved context</text>
+  <text x="52" y="158" font-size="9.5" fill="#64748b">rag.retrieval.doc_ids</text>
+  <text x="40" y="180" font-size="10.5" fill="#475569">• model answer</text>
+
+  <!-- box 2: judge -->
+  <rect x="260" y="74" width="204" height="138" rx="9" fill="#f5f3ff" stroke="#8b5cf6"/>
+  <text x="276" y="98" font-size="12.5" fill="#6d28d9" font-weight="600">LLM-as-judge</text>
+  <text x="276" y="122" font-size="10.5" fill="#6d28d9">a separate, strong model</text>
+  <text x="276" y="146" font-size="10.5" fill="#6d28d9">rubric: is every claim</text>
+  <text x="276" y="162" font-size="10.5" fill="#6d28d9">in the answer supported</text>
+  <text x="276" y="178" font-size="10.5" fill="#6d28d9">by the context?</text>
+
+  <!-- box 3: verdict -->
+  <rect x="496" y="74" width="204" height="138" rx="9" fill="#ecfdf5" stroke="#10b981"/>
+  <text x="512" y="98" font-size="12.5" fill="#047857" font-weight="600">Verdict (structured)</text>
+  <text x="512" y="124" font-size="10.5" fill="#047857">score  0.0 – 1.0</text>
+  <text x="512" y="146" font-size="10.5" fill="#047857">pass = score ≥ 0.7</text>
+  <text x="512" y="168" font-size="10.5" fill="#047857">+ short reason</text>
+
+  <!-- box 4: aggregate -->
+  <rect x="732" y="74" width="204" height="138" rx="9" fill="#fffbeb" stroke="#f59e0b"/>
+  <text x="748" y="98" font-size="12.5" fill="#b45309" font-weight="600">Aggregate by intent</text>
+  <text x="748" y="122" font-size="10.5" fill="#b45309">% passing per user.task</text>
+  <text x="748" y="148" font-size="10.5" fill="#047857">order_status  96%</text>
+  <text x="748" y="170" font-size="10.5" fill="#b91c1c">technical_support  71%</text>
+
+  <!-- arrows -->
+  <g stroke="#94a3b8" stroke-width="2" fill="none">
+    <line x1="228" y1="143" x2="256" y2="143" marker-end="url(#je)"/>
+    <line x1="464" y1="143" x2="492" y2="143" marker-end="url(#je)"/>
+    <line x1="700" y1="143" x2="728" y2="143" marker-end="url(#je)"/>
+  </g>
+  <text x="346" y="232" font-size="9.5" text-anchor="middle" fill="#64748b">runs async, on sampled traffic</text>
+  <text x="600" y="232" font-size="9.5" text-anchor="middle" fill="#64748b">written back by trace_id</text>
+
+  <text x="480" y="290" font-size="11" text-anchor="middle" fill="#64748b">The judge is itself an LLM — its scores are trusted only after they agree with human labels on a calibration set.</text>
+</svg>
