@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 470" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+  <defs>
+    <marker id="sp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#94a3b8"/>
+    </marker>
+    <marker id="spg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#10b981"/>
+    </marker>
+  </defs>
+  <rect x="1" y="1" width="958" height="468" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
+  <text x="24" y="30" font-size="17" font-weight="700" fill="#0f172a">SPIFFE/SPIRE on Kubernetes: how a workload gets its identity</text>
+  <text x="936" y="30" font-size="11" text-anchor="end" fill="#64748b">trust domain: example.org</text>
+
+  <!-- SPIRE Server -->
+  <rect x="370" y="50" width="220" height="86" rx="10" fill="#eff6ff" stroke="#3b82f6"/>
+  <text x="480" y="76" font-size="13.5" text-anchor="middle" fill="#1d4ed8" font-weight="600">SPIRE Server (StatefulSet)</text>
+  <text x="480" y="96" font-size="11" text-anchor="middle" fill="#1d4ed8">CA · registration registry</text>
+  <text x="480" y="114" font-size="11" text-anchor="middle" fill="#1d4ed8">datastore (PostgreSQL)</text>
+
+  <!-- Node 1 -->
+  <rect x="40" y="186" width="400" height="240" rx="10" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="56" y="208" font-size="12" fill="#475569" font-weight="600">Node 1</text>
+  <rect x="60" y="222" width="172" height="78" rx="8" fill="#f5f3ff" stroke="#8b5cf6"/>
+  <text x="146" y="246" font-size="12" text-anchor="middle" fill="#6d28d9" font-weight="600">SPIRE Agent (DaemonSet)</text>
+  <text x="146" y="264" font-size="10.5" text-anchor="middle" fill="#6d28d9">Workload API socket</text>
+  <text x="146" y="282" font-size="10.5" text-anchor="middle" fill="#6d28d9">node + workload attestation</text>
+  <rect x="252" y="312" width="170" height="92" rx="8" fill="#ecfdf5" stroke="#10b981"/>
+  <text x="337" y="336" font-size="12" text-anchor="middle" fill="#047857" font-weight="600">Workload: checkout</text>
+  <text x="337" y="354" font-size="9.5" text-anchor="middle" fill="#047857">spiffe://…/sa/checkout</text>
+  <text x="337" y="372" font-size="9.5" text-anchor="middle" fill="#047857">go-spiffe X509Source</text>
+
+  <!-- Node 2 -->
+  <rect x="520" y="186" width="400" height="240" rx="10" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="536" y="208" font-size="12" fill="#475569" font-weight="600">Node 2</text>
+  <rect x="540" y="222" width="172" height="78" rx="8" fill="#f5f3ff" stroke="#8b5cf6"/>
+  <text x="626" y="246" font-size="12" text-anchor="middle" fill="#6d28d9" font-weight="600">SPIRE Agent (DaemonSet)</text>
+  <text x="626" y="264" font-size="10.5" text-anchor="middle" fill="#6d28d9">Workload API socket</text>
+  <text x="626" y="282" font-size="10.5" text-anchor="middle" fill="#6d28d9">node + workload attestation</text>
+  <rect x="732" y="312" width="170" height="92" rx="8" fill="#ecfdf5" stroke="#10b981"/>
+  <text x="817" y="336" font-size="12" text-anchor="middle" fill="#047857" font-weight="600">Workload: payments</text>
+  <text x="817" y="354" font-size="9.5" text-anchor="middle" fill="#047857">spiffe://…/sa/payments</text>
+  <text x="817" y="372" font-size="9.5" text-anchor="middle" fill="#047857">go-spiffe X509Source</text>
+
+  <!-- node attestation arrows -->
+  <g stroke="#94a3b8" stroke-width="2" fill="none">
+    <line x1="170" y1="222" x2="408" y2="138" stroke-dasharray="5 4" marker-end="url(#sp)"/>
+    <line x1="602" y1="222" x2="552" y2="138" stroke-dasharray="5 4" marker-end="url(#sp)"/>
+    <!-- workload API -->
+    <line x1="252" y1="350" x2="234" y2="296" marker-end="url(#sp)"/>
+    <line x1="732" y1="350" x2="714" y2="296" marker-end="url(#sp)"/>
+  </g>
+  <text x="250" y="170" font-size="10" text-anchor="middle" fill="#64748b">1 · node attestation (PSAT)</text>
+  <text x="206" y="332" font-size="9.5" text-anchor="middle" fill="#64748b">2 · Workload API → X.509-SVID</text>
+  <text x="686" y="332" font-size="9.5" text-anchor="middle" fill="#64748b">Workload API → SVID</text>
+
+  <!-- mTLS between workloads -->
+  <line x1="422" y1="358" x2="730" y2="358" stroke="#10b981" stroke-width="2.5" marker-start="url(#spg)" marker-end="url(#spg)"/>
+  <rect x="486" y="338" width="180" height="22" rx="8" fill="#ecfdf5" stroke="#10b981"/>
+  <text x="576" y="353" font-size="10.5" text-anchor="middle" fill="#047857" font-weight="600">3 · mTLS (SVID ↔ SVID)</text>
+
+  <text x="480" y="448" font-size="11" text-anchor="middle" fill="#64748b">No shared secret is ever distributed — identity is attested from the platform, and SVIDs auto-rotate before they expire.</text>
+</svg>
