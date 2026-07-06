@@ -52,7 +52,7 @@ export default function ContactPage() {
 									<span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
 									<span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
 								</span>
-								Open to opportunities - in Sweden 🇸🇪
+								Open to opportunities — worldwide 🌍
 							</p>
 							<p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
 								Platform Engineer, Cloud Engineer and SRE roles — full-time or consulting.
