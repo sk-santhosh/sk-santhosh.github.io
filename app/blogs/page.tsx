@@ -14,7 +14,7 @@ export default function BlogsPage() {
   return (
     <div>
       <div className="flex items-center gap-2 mb-1">
-        <BookOpen size={15} className="text-blue-400" />
+        <BookOpen size={15} className="text-slate-400" />
         <h1 className="text-base font-bold text-slate-900 dark:text-slate-100">Blogs</h1>
       </div>
       <p className="text-sm text-slate-600 dark:text-slate-400 mb-8 leading-relaxed">

@@ -45,7 +45,7 @@ body {
 .dark .prose ol { color: #94a3b8; }
 .dark .prose li { color: #94a3b8; }
 .dark .prose strong { color: #f1f5f9; }
-.dark .prose a { color: #60a5fa; }
+.dark .prose a { color: #38bdf8; } /* sky-400 — brand accent */
 .dark .prose code { background: #1e293b; color: #e2e8f0; border-color: #334155; }
 .dark .prose blockquote { border-color: #334155; color: #94a3b8; }
 .dark .prose hr { border-color: #334155; }
@@ -93,7 +93,7 @@ body {
 }
 
 .prose a {
-  color: #2563eb;
+  color: #0284c7; /* sky-600 — brand accent */
   text-decoration: underline;
   text-underline-offset: 2px;
 }
@@ -129,10 +129,12 @@ body {
   line-height: 1.6;
 }
 
-/* Keep code blocks light even in dark mode (override inline-code dark styles) */
+/* Keep code blocks light even in dark mode (override inline-code dark styles),
+   but soften the background and border so the block sits in the dark page
+   rather than glowing on top of it. */
 .dark .prose pre {
-  background: #f6f8fa;
-  border-color: #d0d7de;
+  background: #eef1f4;
+  border-color: #334155;
 }
 .dark .prose pre code {
   background: transparent;

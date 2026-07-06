@@ -16,7 +16,7 @@ export default function AboutPage() {
 			{/* Bio */}
 			<section>
 				<div className="flex items-center gap-2 mb-3">
-					<User size={15} className="text-blue-400" />
+					<User size={15} className="text-slate-400" />
 					<h1 className="text-base font-bold text-slate-900 dark:text-slate-100">About</h1>
 				</div>
 				<p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
@@ -25,11 +25,39 @@ export default function AboutPage() {
 				<p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mt-3">{resume.summary}</p>
 			</section>
 
+			{/* Core competencies */}
+			<section>
+				<h2 className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-3">Core competencies</h2>
+				<div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+					{resume.competencies.map((group, i) => (
+						<div key={group.category} className="rounded-md border border-slate-200 dark:border-slate-800 px-4 py-3.5">
+							<p
+								className={`text-xs font-semibold uppercase tracking-wider ${
+									[
+										'text-sky-600 dark:text-sky-400',
+										'text-emerald-600 dark:text-emerald-400',
+										'text-violet-600 dark:text-violet-400',
+										'text-amber-700 dark:text-amber-400',
+										'text-rose-600 dark:text-rose-400',
+										'text-blue-600 dark:text-blue-400',
+									][i % 6]
+								}`}
+							>
+								{group.category}
+							</p>
+							<p className="text-xs text-slate-500 dark:text-slate-400 mt-1.5 leading-relaxed">
+								{group.items.join(' · ')}
+							</p>
+						</div>
+					))}
+				</div>
+			</section>
+
 			{/* Experience */}
 			<section>
 				<div className="flex items-center gap-2 mb-4">
-					<Briefcase size={15} className="text-emerald-500" />
-					<h2 className="text-xs font-semibold text-emerald-500 uppercase tracking-widest">Experience</h2>
+					<Briefcase size={15} className="text-slate-400" />
+					<h2 className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Experience</h2>
 				</div>
 				<div className="space-y-5">
 					{resume.experience.map((exp, i) => (
@@ -53,8 +81,8 @@ export default function AboutPage() {
 			{/* Certifications */}
 			<section>
 				<div className="flex items-center gap-2 mb-4">
-					<BadgeCheck size={15} className="text-blue-500" />
-					<h2 className="text-xs font-semibold text-blue-500 uppercase tracking-widest">Certifications</h2>
+					<BadgeCheck size={15} className="text-slate-400" />
+					<h2 className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Certifications</h2>
 				</div>
 				<div className="space-y-3">
 					{resume.certifications.map((cert) => (
@@ -66,7 +94,7 @@ export default function AboutPage() {
 										href={cert.url}
 										target="_blank"
 										rel="noopener noreferrer"
-										className="text-sm font-medium text-slate-800 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+										className="text-sm font-medium text-slate-800 dark:text-slate-200 hover:text-sky-600 dark:hover:text-sky-400 transition-colors"
 									>
 										{cert.name}
 									</a>
@@ -85,8 +113,8 @@ export default function AboutPage() {
 			{/* Education */}
 			<section>
 				<div className="flex items-center gap-2 mb-4">
-					<GraduationCap size={15} className="text-amber-500" />
-					<h2 className="text-xs font-semibold text-amber-500 uppercase tracking-widest">Education</h2>
+					<GraduationCap size={15} className="text-slate-400" />
+					<h2 className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Education</h2>
 				</div>
 				<div className="space-y-4">
 					{resume.education.map((edu) => (
@@ -105,7 +133,7 @@ export default function AboutPage() {
 
 			{/* Contact */}
 			<section>
-				<h2 className="text-xs font-semibold text-rose-500 uppercase tracking-widest mb-3">Contact</h2>
+				<h2 className="text-xs font-semibold text-rose-700 dark:text-rose-400 uppercase tracking-widest mb-3">Contact</h2>
 				<div className="flex flex-wrap gap-2">
 					{[
 						{

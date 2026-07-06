@@ -13,6 +13,71 @@ export const resume = {
 		'14+ years designing, building and operating cloud-native platforms on AWS, Azure and GCP. Led engineering teams of 20+ and delivered 30+ cloud transformation projects — migrations, Kubernetes modernisation and reliability programmes — cutting infrastructure costs by up to 35% while sustaining 99.9% availability for systems serving 10M+ users.',
 	location: 'Chennai, India',
 	email: 'santhoshj.off@gmail.com',
+	// Headline stats for the home page "By the numbers" grid.
+	// All figures are real delivery metrics — keep in sync with the resume, never invent numbers.
+	stats: [
+		{value: '14+', label: 'Years of experience'},
+		{value: '50+', label: 'Production Kubernetes clusters managed'},
+		{value: '10M+', label: 'Users served by our platforms'},
+		{value: '99.9%', label: 'Availability sustained'},
+	],
+	// Core competencies grouped by area — shown on the About page.
+	competencies: [
+		{category: 'Cloud Native', items: ['AWS', 'GCP', 'Azure', 'Kubernetes', 'Docker', 'Helm']},
+		{category: 'Infrastructure as Code', items: ['Terraform', 'Pulumi', 'CloudFormation', 'Kustomize', 'Ansible']},
+		{category: 'CI/CD & GitOps', items: ['GitHub Actions', 'Argo CD', 'FluxCD', 'Jenkins', 'Azure DevOps']},
+		{
+			category: 'Observability',
+			items: ['Prometheus', 'Grafana', 'Loki', 'Tempo', 'Mimir', 'OpenTelemetry', 'New Relic', 'Signoz'],
+		},
+		{
+			category: 'Security & Zero Trust',
+			items: ['Cloudflare Zero Trust', 'SOC2 Compliant', 'IAM', 'RBAC', 'CIS benchmarks', 'DevSecOps'],
+		},
+		{category: 'Development', items: ['Go', 'Python', 'TypeScript', 'Node.js', 'Shell scripting']},
+	],
+	// Impact highlight cards — a headline metric with the work behind it.
+	highlights: [
+		{
+			metric: '35%',
+			metricLabel: 'cloud costs cut',
+			title: 'FinOps governance',
+			description:
+				'Rightsizing, autoscaling, Reserved Instance planning and Karpenter-based Spot optimisation across customer platforms.',
+		},
+		{
+			metric: '80%',
+			metricLabel: 'less deploy effort',
+			title: 'GitOps delivery',
+			description: 'GitOps-driven deployment pipelines built with Argo CD, GitHub Actions, Jenkins and Azure DevOps.',
+		},
+		{
+			metric: '70%',
+			metricLabel: 'less provisioning',
+			title: 'Infrastructure as Code',
+			description:
+				'Terraform, Kustomize and CloudFormation standards rolled out within 2 months — eliminating configuration drift.',
+		},
+		{
+			metric: '20+',
+			metricLabel: 'dev environments',
+			title: 'Self-service platform',
+			description: 'Developer environments orchestrated in shared Kubernetes clusters with Argo CD and GitHub Actions.',
+		},
+		{
+			metric: '15+',
+			metricLabel: 'teams onboarded',
+			title: 'Observability adoption',
+			description:
+				'Self-hosted LGTM stack ingesting 20 GB of logs a day and 10M metric series — at 50% lower cost than managed tooling.',
+		},
+		{
+			metric: '50+',
+			metricLabel: 'CVEs resolved',
+			title: 'DevSecOps programmes',
+			description: 'Vulnerability remediation and CIS-aligned security baselines across 10+ customer environments.',
+		},
+	],
 	social: {
 		github: 'https://github.com/sk-santhosh',
 		linkedin: 'https://linkedin.com/in/sk-santhosh-j',

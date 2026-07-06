@@ -7,6 +7,7 @@ const links = [
 	{title: 'Home', url: '/'},
 	{title: 'Blogs', url: '/blogs'},
 	{title: 'About', url: '/about'},
+	{title: 'Contact', url: '/contact'},
 ];
 
 export default function Nav() {
@@ -23,8 +24,8 @@ export default function Nav() {
 							href={url}
 							className={`flex items-center px-4 py-2 transition-colors outline-none focus:outline-none ${
 								active
-									? 'border-x border-gray-200 dark:border-slate-700 bg-gray-100 dark:bg-slate-800 text-black dark:text-white'
-									: 'text-gray-600 dark:text-slate-400 border-x border-transparent hover:text-black dark:hover:text-white'
+									? 'border-x border-gray-200 dark:border-slate-700 bg-gray-100 dark:bg-slate-800 text-sky-600 dark:text-sky-400'
+									: 'text-gray-600 dark:text-slate-400 border-x border-transparent hover:text-sky-600 dark:hover:text-sky-400'
 							}`}
 						>
 							{title}

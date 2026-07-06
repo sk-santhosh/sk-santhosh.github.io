@@ -8,6 +8,7 @@ const commands = [
   { label: "Home", action: "/", type: "nav", icon: Home },
   { label: "Blogs", action: "/blogs", type: "nav", icon: BookOpen },
   { label: "About", action: "/about", type: "nav", icon: User },
+  { label: "Contact", action: "/contact", type: "nav", icon: Mail },
   { label: "GitHub", action: "https://github.com/sk-santhosh", type: "external", icon: Code2 },
   { label: "LinkedIn", action: "https://linkedin.com/in/sk-santhosh-j", type: "external", icon: Globe },
   { label: "Email", action: "mailto:santhosh@sentinelfox.com", type: "external", icon: Mail },

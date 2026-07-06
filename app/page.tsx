@@ -9,6 +9,7 @@ import {resume} from '@/data/resume';
 import {tagColor} from '@/lib/tag-colors';
 import GitHubContributions from '@/components/github-contributions';
 import BlogCard from '@/components/blog-card';
+import StatGrid, {metricAccent} from '@/components/stat-grid';
 
 const socialLinks = [
 	{
@@ -70,7 +71,7 @@ export default function HomePage() {
 						<a
 							href="/resume.pdf"
 							download
-							className="inline-flex items-center gap-1.5 px-3 h-8 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 transition-colors"
+							className="inline-flex items-center gap-1.5 px-3 h-8 rounded-md text-sm font-medium bg-sky-600 text-white hover:bg-sky-700 active:bg-sky-800 transition-colors"
 						>
 							<Download size={15} /> Resume
 						</a>
@@ -86,13 +87,19 @@ export default function HomePage() {
 				/>
 			</section>
 
+			{/* By the numbers */}
+			<section>
+				<h2 className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-3">By the numbers</h2>
+				<StatGrid />
+			</section>
+
 			{/* Latest Writings */}
 			<section>
 				<div className="flex items-center justify-between mb-3">
-					<h2 className="text-xs font-semibold text-blue-500 uppercase tracking-widest">Blogs</h2>
+					<h2 className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Blogs</h2>
 					<Link
 						href="/blogs"
-						className="flex items-center gap-1 text-xs text-slate-400 dark:text-slate-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+						className="flex items-center gap-1 text-xs text-slate-400 dark:text-slate-500 hover:text-sky-600 dark:hover:text-sky-400 transition-colors"
 					>
 						View all <ArrowRight size={11} />
 					</Link>
@@ -107,9 +114,33 @@ export default function HomePage() {
 			{/* GitHub Contributions */}
 			<GitHubContributions />
 
+			{/* Impact highlights */}
+			<section>
+				<h2 className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-3">Impact</h2>
+				<div className="grid sm:grid-cols-2 gap-2.5">
+					{resume.highlights.map((item) => (
+						<div
+							key={item.title}
+							className="flex items-start justify-between gap-4 rounded-md border border-slate-200 dark:border-slate-800 px-4 py-3.5"
+						>
+							<div className="min-w-0">
+								<p className="text-sm font-medium text-slate-800 dark:text-slate-200">{item.title}</p>
+								<p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">{item.description}</p>
+							</div>
+							<div className="text-right shrink-0 max-w-[5.5rem]">
+								<p className={`text-xl font-bold tracking-tight ${metricAccent}`}>{item.metric}</p>
+								<p className="text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400 leading-tight mt-0.5">
+									{item.metricLabel}
+								</p>
+							</div>
+						</div>
+					))}
+				</div>
+			</section>
+
 			{/* Skills */}
 			<section>
-				<h2 className="text-xs font-semibold text-violet-500 uppercase tracking-widest mb-3">Skills &amp; Tools</h2>
+				<h2 className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-3">Skills &amp; Tools</h2>
 				<div className="flex flex-wrap gap-1.5">
 					{resume.skills.map((skill) => (
 						<span key={skill} className={`text-xs px-2.5 py-1 rounded border transition-colors ${tagColor(skill)}`}>

@@ -60,7 +60,7 @@ export default async function GitHubContributions() {
 	return (
 		<section>
 			<div className="flex items-center justify-between mb-3">
-				<h2 className="text-xs font-semibold text-emerald-500 uppercase tracking-widest">GitHub Contributions</h2>
+				<h2 className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 uppercase tracking-widest">GitHub Contributions</h2>
 				<span className="text-xs text-slate-400 dark:text-slate-500">{total} in the last year</span>
 			</div>
 			<div className="flex gap-[2px] w-full">
