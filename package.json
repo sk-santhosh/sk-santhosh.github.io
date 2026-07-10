@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "og": "node scripts/generate-og.mjs",
+    "sitemap": "node scripts/generate-sitemap.mjs",
     "prepare": "git config core.hooksPath .githooks || true"
   },
   "dependencies": {

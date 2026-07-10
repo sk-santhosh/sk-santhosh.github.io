@@ -1,22 +1,30 @@
 #!/bin/sh
-# Auto-generate Open Graph cards when blog content changes, then stage them.
+# Auto-generate build artefacts when their sources change, then stage them.
 # Activated via `git config core.hooksPath .githooks` (run by `npm install`).
 
-# Only run when a blog markdown file is part of this commit (added/copied/
-# modified/renamed) — keeps unrelated commits fast.
-changed=$(git diff --cached --name-only --diff-filter=ACMR -- 'content/blogs/*.md')
+# What changed in this commit (added/copied/modified/renamed/deleted)?
+blog_changed=$(git diff --cached --name-only --diff-filter=ACMRD -- 'content/blogs/*.md')
+app_changed=$(git diff --cached --name-only --diff-filter=ACMRD -- 'app')
 
-if [ -z "$changed" ]; then
-  exit 0
+# Open Graph cards — regenerate when blog content changes (also prunes
+# cards for deleted posts).
+if [ -n "$blog_changed" ]; then
+  echo "pre-commit: blog content changed, regenerating OG cards…"
+  npm run og || {
+    echo "pre-commit: OG generation failed; aborting commit." >&2
+    exit 1
+  }
+  git add public/og
 fi
 
-echo "pre-commit: blog content changed, regenerating OG cards…"
-npm run og || {
-  echo "pre-commit: OG generation failed; aborting commit." >&2
-  exit 1
-}
-
-# Stage generated/removed cards so they go into this same commit.
-git add public/og
+# Static sitemap — regenerate when blog content or app routes change.
+if [ -n "$blog_changed" ] || [ -n "$app_changed" ]; then
+  echo "pre-commit: regenerating sitemap…"
+  npm run sitemap || {
+    echo "pre-commit: sitemap generation failed; aborting commit." >&2
+    exit 1
+  }
+  git add public/sitemap.xml
+fi
 
 exit 0
