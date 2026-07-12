@@ -1,13 +1,15 @@
 ---
 title: "Building a Kubernetes operator in Go: automating SPIFFE workload registration"
-description: "In the previous post I registered SPIFFE entries by hand with spire-server entry create. Here I build the Kubernetes operator that automates it — a controller-runtime reconciler that watches Deployments and registers them with the SPIRE Entry API, finalizer cleanup and Prometheus metrics included."
+description: "In the previous post I registered SPIFFE entries by hand with spire-server entry create. Here I build a Kubernetes operator that automates it — a controller-runtime reconciler that watches Deployments and registers them with the SPIRE Entry API, finalizer cleanup and Prometheus metrics included."
 date: "2026-06-29"
 tags: ["Kubernetes", "Go", "Operators", "Platform Engineering"]
 ---
 
 In the [previous post](/blogs/zero-trust-workload-identity-spiffe-spire) I gave workloads a zero trust identity with SPIFFE and SPIRE — and registered every workload entry by hand with `spire-server entry create`. That's fine for a demo and untenable in production: a human typing CLI commands does not scale to hundreds of services that come and go on every deploy.
 
-So in this post I build the piece that closes the gap — a Kubernetes operator called **spiffe-registrar** that watches Deployments and registers them with SPIRE automatically. Every new Deployment gets a SPIFFE ID without anyone touching the CLI, and when a Deployment is deleted its entry is cleaned up. It's a real, production-shaped operator built on `controller-runtime`, calling the SPIRE Entry API over gRPC.
+This problem is already solved, officially. The SPIRE project ships [spire-controller-manager](https://github.com/spiffe/spire-controller-manager), an operator that reconciles `ClusterSPIFFEID` custom resources into SPIRE registration entries — if you need automated workload registration in production, use that. This post instead rebuilds a simplified version of the same idea as a learning exercise, to understand `controller-runtime` and the SPIRE Entry API from the inside.
+
+The proof of concept is an operator called **spiffe-registrar** that watches Deployments and registers them with SPIRE automatically. Every new Deployment gets a SPIFFE ID without anyone touching the CLI, and when a Deployment is deleted its entry is cleaned up. It's built on `controller-runtime`, calling the SPIRE Entry API over gRPC — essentially the same machinery the official operator uses, scaled down to something you can read end to end.
 
 ## Why operators exist
 
@@ -158,8 +160,6 @@ type SpiffeRegistrationStatus struct {
 	// +optional
 	LastSyncTime *metav1.Time `json:"lastSyncTime,omitempty"`
 	// +optional
-	RegisteredEntries int `json:"registeredEntries,omitempty"`
-	// +optional
 	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 }
 
@@ -167,7 +167,6 @@ type SpiffeRegistrationStatus struct {
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:scope=Cluster,shortName=sreg
 // +kubebuilder:printcolumn:name="Trust Domain",type=string,JSONPath=`.spec.trustDomain`
-// +kubebuilder:printcolumn:name="Entries",type=integer,JSONPath=`.status.registeredEntries`
 // +kubebuilder:printcolumn:name="Age",type=date,JSONPath=`.metadata.creationTimestamp`
 type SpiffeRegistration struct {
 	metav1.TypeMeta   `json:",inline"`
@@ -263,7 +262,7 @@ type DeploymentReconciler struct {
 }
 ```
 
-Now `Reconcile`. The finalizer pattern is the part to get exactly right: add the finalizer *before* you create remote state, and remove it only *after* the remote state is gone — otherwise you can leak SPIRE entries when a Deployment is deleted:
+Now `Reconcile`. The finalizer pattern is the part to get exactly right: add the finalizer *before* you create remote state, and remove it only *after* the remote state is gone — in *every* path that drops the finalizer, including when a Deployment merely falls out of scope because a policy changed. Miss one path and you leak SPIRE entries:
 
 ```go
 func (r *DeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
@@ -279,8 +278,16 @@ func (r *DeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 		return ctrl.Result{}, err
 	}
 	if policy == nil {
-		// Out of scope — drop any finalizer added on a previous pass.
-		if controllerutil.RemoveFinalizer(&deploy, finalizerName) {
+		// Out of scope — clean up any entry registered on a previous pass,
+		// then drop the finalizer. Removing the finalizer without deleting
+		// the entry would leak it when a policy is deleted or a namespace
+		// label changes.
+		if controllerutil.ContainsFinalizer(&deploy, finalizerName) {
+			if err := r.deleteEntry(ctx, &deploy); err != nil {
+				registrationErrors.WithLabelValues(deploy.Namespace).Inc()
+				return ctrl.Result{}, err
+			}
+			controllerutil.RemoveFinalizer(&deploy, finalizerName)
 			return ctrl.Result{}, r.Update(ctx, &deploy)
 		}
 		return ctrl.Result{}, nil
@@ -329,7 +336,8 @@ func (r *DeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 	}
 
 	registrationTotal.WithLabelValues(deploy.Namespace).Inc()
-	r.setCondition(ctx, policy, metav1.ConditionTrue, "Registered", "all selected Deployments registered")
+	r.setCondition(ctx, policy, metav1.ConditionTrue, "Registered",
+		fmt.Sprintf("registered %s/%s", deploy.Namespace, deploy.Name))
 	log.Info("registered workload", "entryID", entryID)
 
 	// Re-sync periodically so drift (a manually deleted entry) self-heals.
@@ -337,7 +345,7 @@ func (r *DeploymentReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 }
 ```
 
-The SPIRE calls live in two helpers. `ensureEntry` is idempotent — `BatchCreateEntry` returns `AlreadyExists` (and the existing entry) if it's already there, which I treat as success:
+The SPIRE calls live in two helpers. `ensureEntry` is idempotent — `BatchCreateEntry` returns `AlreadyExists` (and the existing entry) if it's already there, which I treat as success. One known limitation of that shortcut: a later change to the policy's TTL never propagates to existing entries, because the create call short-circuits. A fuller implementation would compare the returned entry against the desired spec and call `BatchUpdateEntry` on drift:
 
 ```go
 func (r *DeploymentReconciler) ensureEntry(
@@ -462,7 +470,7 @@ func (r *DeploymentReconciler) setCondition(
 
 ### A caveat on shared identities
 
-The SPIFFE ID is derived from the namespace and service account — its selectors are `k8s:ns` and `k8s:sa` — so it is per *service account*, not per Deployment. Two Deployments sharing a service account map to the **same** SPIFFE ID and the same SPIRE entry. That is correct SPIFFE modelling, but it makes the naive delete-on-Deployment-delete above unsafe: deleting one Deployment would pull the entry out from under a sibling that still needs it. In production, either give each workload its own service account (good practice regardless), or ref-count before deleting — only call `BatchDeleteEntry` once no remaining Deployment selects that SPIFFE ID. The code above assumes one workload per service account; say so in your `SpiffeRegistration` docs, or add the ref-count guard before you ship it.
+The SPIFFE ID is derived from the namespace and service account — its selectors are `k8s:ns` and `k8s:sa` — so it is per *service account*, not per Deployment. Two Deployments sharing a service account map to the **same** SPIFFE ID and the same SPIRE entry. That is correct SPIFFE modelling, but it makes the naive delete-on-Deployment-delete above unsafe: deleting one Deployment would pull the entry out from under a sibling that still needs it. In production, either give each workload its own service account (good practice regardless), or ref-count before deleting — only call `BatchDeleteEntry` once no remaining Deployment selects that SPIFFE ID. The code above assumes one workload per service account; say so in your `SpiffeRegistration` docs, or add the ref-count guard first.
 
 ### Old way vs new way
 
@@ -675,13 +683,17 @@ The **update** path re-runs the same reconcile and asserts `BatchCreateEntry` is
 
 ## Production considerations
 
+This POC stops short of production, but these are the concerns that decide whether any operator like it is ready for it — the same ones the official spire-controller-manager has to answer:
+
 - **Leader election — always on.** Run two or three replicas for availability, but only the leader reconciles. Without `LeaderElection: true`, every replica would race to create and delete the same SPIRE entries. It's one field; never ship without it.
 - **Finalizers on objects you don't own.** Writing a finalizer onto user Deployments is what guarantees cleanup — but it also means that if the operator is down, those Deployments can't be deleted until it recovers. That's the trade-off for guaranteed de-registration. Monitor the operator's liveness, alert on it, and keep a documented break-glass for emergencies: `kubectl patch deployment X -p '{"metadata":{"finalizers":[]}}' --type=merge`.
 - **Rate limiting.** `controller-runtime` queues failed reconciles through a default exponential back-off limiter (≈5ms up to ≈1000s). Returning an `error` from `Reconcile` uses it; returning `RequeueAfter` schedules a fixed retry. I use `RequeueAfter: 30 * time.Second` on SPIRE failures so a flaky server doesn't hammer itself, and a one-minute steady-state re-sync so a manually deleted entry self-heals.
-- **Metrics you get for free.** The manager already exposes `controller_runtime_reconcile_total`, `controller_runtime_reconcile_errors_total` and `controller_runtime_reconcile_time_seconds` per controller — enough to alert on reconcile error rate and p99 latency. The custom `spiffe_registration_total` and `spiffe_registration_errors_total` add the domain view: registrations and failures per namespace. Scrape both from the same Prometheus you already run, and hold the operator to the same [SLOs and error budgets](/blogs/implementing-slos-and-error-budgets) as any other critical service — once workloads can't get an identity without it, it is one.
+- **Metrics you get for free.** The manager already exposes `controller_runtime_reconcile_total`, `controller_runtime_reconcile_errors_total` and `controller_runtime_reconcile_time_seconds` per controller — enough to alert on reconcile error rate and p99 latency. The custom `spiffe_registration_total` and `spiffe_registration_errors_total` add the domain view: registrations and failures per namespace. Scrape both from the same Prometheus you already run. Registration availability belongs in the identity layer's [error budget](/blogs/implementing-slos-and-error-budgets): if the operator is down, new workloads can't get an identity at all.
 
 ## Conclusion
 
 Put the two posts together and you have the full picture: SPIFFE and SPIRE give every workload a short-lived, attested identity, and this operator makes that identity *automatic* — registration is a side effect of deploying, de-registration is guaranteed by a finalizer, and a human never touches `spire-server entry create` again. Manual CLI commands don't scale. Control loops do.
 
-If you're assembling this into a platform, it sits alongside the other foundations in this series: the [SPIFFE/SPIRE identity layer](/blogs/zero-trust-workload-identity-spiffe-spire) it automates, keeping the cluster current with [zero-downtime Kubernetes upgrades](/blogs/zero-downtime-kubernetes-upgrades), and running it affordably with [Karpenter and spot instances](/blogs/reducing-kubernetes-costs-karpenter-spot).
+And to restate the framing from the top: `spiffe-registrar` is a learning build, inspired by the SPIRE project's own [spire-controller-manager](https://github.com/spiffe/spire-controller-manager). I wrote it to understand `controller-runtime` and the SPIRE Entry API mechanics, not to replace the official tool — if you're rolling this out for real, deploy spire-controller-manager. The concepts carry over directly: the same reconcile loop, the same Entry API, the same trade-offs.
+
+Elsewhere in this series: the [SPIFFE/SPIRE identity layer](/blogs/zero-trust-workload-identity-spiffe-spire) this operator automates, [zero-downtime Kubernetes upgrades](/blogs/zero-downtime-kubernetes-upgrades) to keep the cluster current, and [Karpenter and spot instances](/blogs/reducing-kubernetes-costs-karpenter-spot) to run it affordably.

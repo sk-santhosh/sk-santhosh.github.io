@@ -5,7 +5,7 @@ export const resume = {
 	openToWork: {
 		enabled: true,
 		message:
-			'Open to work | Platform Engineer, Cloud Engineer & SRE roles - full-time or consulting | Open to relocation and international opportunities—let’s connect and discuss how I can contribute to your team.',
+			'Open to work — Platform Engineer, Cloud Engineer & SRE roles · full-time or consulting · open to relocation worldwide',
 	},
 	tagline:
 		'Platform & Cloud Engineer and SRE with 14+ years building and operating cloud-native platforms on AWS, Azure, and GCP for systems serving 10M+ users.',

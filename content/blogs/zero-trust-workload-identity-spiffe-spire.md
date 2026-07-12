@@ -1,13 +1,15 @@
 ---
 title: "Implementing zero trust workload identity with SPIFFE/SPIRE on Kubernetes"
-description: "Static API keys and shared secrets don't scale, and they all hit the Secret Zero problem. Here's how SPIFFE and SPIRE give every workload a short-lived, attested identity on Kubernetes — with production manifests, go-spiffe mTLS and the operational reality of running it."
+description: "Static API keys and shared secrets don't scale, and they all hit the Secret Zero problem. Here's how SPIFFE and SPIRE give every workload a short-lived, attested identity on Kubernetes — with working manifests, go-spiffe mTLS and the operational considerations the quickstarts skip."
 date: "2026-06-29"
 tags: ["Kubernetes", "Security", "Zero Trust", "Platform Engineering"]
 ---
 
 Every platform I've worked on eventually hits the same wall: services need to authenticate to each other, and the answer was always a shared secret. An API key in a Kubernetes Secret, a token mounted from Vault, a long-lived service-account credential. It works for five services. At fifty it's a sprawl of secrets nobody can rotate without an outage, and at five hundred it's the thing the next breach report will be written about.
 
-SPIFFE and SPIRE fix this properly: every workload gets a short-lived, cryptographically verifiable identity that it never has to be handed as a secret. This is how I deploy it on Kubernetes and use it for real mutual TLS, plus the parts the quickstarts skip — HA, TTL tuning and what to monitor.
+SPIFFE and SPIRE fix this properly: every workload gets a short-lived, cryptographically verifiable identity that it never has to be handed as a secret. Here's how to deploy it on Kubernetes and use it for real mutual TLS, plus the parts the quickstarts skip — HA, TTL tuning and what to monitor.
+
+> **A note on scope:** this post and the [follow-up where I build a registration operator](/blogs/kubernetes-operator-spiffe-workload-registration) document a personal proof of concept — a hands-on way to learn SPIFFE/SPIRE, not a production rollout. The operator in the follow-up takes its inspiration from SPIRE's official [spire-controller-manager](https://github.com/spiffe/spire-controller-manager).
 
 ## The problem: Secret Zero
 
@@ -133,6 +135,7 @@ plugins {
   DataStore "sql" {
     plugin_data {
       database_type     = "postgres"
+      # Placeholder — use IAM auth or an injected credential, not a password in a ConfigMap
       connection_string = "dbname=spire host=spire-db.spire-system user=spire password=changeme sslmode=require"
     }
   }
