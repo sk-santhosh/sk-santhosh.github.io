@@ -20,9 +20,11 @@ export default function ThemeToggle() {
     <button
       onClick={toggle}
       title={dark ? "Switch to light mode" : "Switch to dark mode"}
+      aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
+      aria-pressed={dark}
       className="p-1.5 rounded-md text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
     >
-      {dark ? <Sun size={14} /> : <Moon size={14} />}
+      {dark ? <Sun size={14} aria-hidden="true" /> : <Moon size={14} aria-hidden="true" />}
     </button>
   );
 }

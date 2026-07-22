@@ -63,9 +63,10 @@ export default function HomePage() {
 								target="_blank"
 								rel="noopener noreferrer"
 								title={label}
+								aria-label={label}
 								className={`p-2 rounded-md text-slate-400 active:bg-slate-200 dark:active:bg-slate-700 transition-colors min-h-[32px] min-w-[32px] flex items-center justify-center border border-slate-200 dark:border-slate-700 ${color}`}
 							>
-								<Icon size={16} />
+								<Icon size={16} aria-hidden="true" />
 							</a>
 						))}
 						<a
@@ -78,8 +79,8 @@ export default function HomePage() {
 					</div>
 				</div>
 				<Image
-					src="/santhosh.jpg"
-					alt={resume.name}
+					src="/santhosh-192.jpg"
+					alt={`Portrait of ${resume.name}, ${resume.title}`}
 					width={96}
 					height={96}
 					className="rounded-md object-contain w-24 h-24 shrink-0 ring-2 ring-slate-100 dark:ring-slate-800"

@@ -3,16 +3,39 @@ import {MdEmail} from 'react-icons/md';
 import {FaGithub, FaLinkedin} from 'react-icons/fa';
 import {FaXTwitter} from 'react-icons/fa6';
 import {resume} from '@/data/resume';
+import {siteUrl} from '@/lib/site';
 
 export const metadata = {
 	title: 'About',
 	description: resume.summary,
 	alternates: {canonical: '/about'},
+	openGraph: {
+		title: 'About',
+		description: resume.summary,
+		url: `${siteUrl}/about`,
+		type: 'profile',
+	},
+};
+
+const profilePageJsonLd = {
+	'@context': 'https://schema.org',
+	'@type': 'ProfilePage',
+	'@id': `${siteUrl}/about#profilepage`,
+	name: `About ${resume.name}`,
+	description: resume.summary,
+	url: `${siteUrl}/about`,
+	inLanguage: 'en',
+	isPartOf: {'@id': `${siteUrl}/#website`},
+	mainEntity: {'@id': `${siteUrl}/#person`},
 };
 
 export default function AboutPage() {
 	return (
 		<div className="space-y-10">
+			<script
+				type="application/ld+json"
+				dangerouslySetInnerHTML={{__html: JSON.stringify(profilePageJsonLd)}}
+			/>
 			{/* Bio */}
 			<section>
 				<div className="flex items-center gap-2 mb-3">

@@ -17,16 +17,6 @@ const OUT = path.join(ROOT, "public/sitemap.xml");
 // Same origin default as lib/site.ts.
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://sk-santhosh.info";
 
-const today = new Date().toISOString().slice(0, 10);
-
-// Static routes — keep in sync with the pages under app/.
-const staticRoutes = [
-  { loc: siteUrl, lastmod: today, changefreq: "daily", priority: "1.0" },
-  { loc: `${siteUrl}/about`, lastmod: today, changefreq: "daily", priority: "0.8" },
-  { loc: `${siteUrl}/blogs`, lastmod: today, changefreq: "daily", priority: "0.8" },
-  { loc: `${siteUrl}/contact`, lastmod: today, changefreq: "daily", priority: "0.7" },
-];
-
 const blogRoutes = fs
   .readdirSync(BLOGS_DIR)
   .filter((f) => f.endsWith(".md"))
@@ -34,13 +24,27 @@ const blogRoutes = fs
     const { data } = matter(fs.readFileSync(path.join(BLOGS_DIR, file), "utf8"));
     return {
       loc: `${siteUrl}/blogs/${file.replace(/\.md$/, "")}`,
-      lastmod: new Date(data.date).toISOString().slice(0, 10),
-      changefreq: "daily",
+      // Prefer an explicit `updated` frontmatter date over the publish date
+      // so lastmod reflects real content changes, not sitemap regeneration.
+      lastmod: new Date(data.updated ?? data.date).toISOString().slice(0, 10),
+      changefreq: "monthly",
       priority: "0.6",
     };
   })
   // Newest posts first, matching the blog listing.
   .sort((a, b) => (a.lastmod < b.lastmod ? 1 : -1));
+
+// The home page and blog index genuinely change whenever a post is published,
+// so their lastmod is the newest post date — an honest signal, unlike "today".
+const newestPost = blogRoutes[0]?.lastmod ?? new Date().toISOString().slice(0, 10);
+
+// Static routes — keep in sync with the pages under app/.
+const staticRoutes = [
+  { loc: siteUrl, lastmod: newestPost, changefreq: "weekly", priority: "1.0" },
+  { loc: `${siteUrl}/about`, lastmod: newestPost, changefreq: "monthly", priority: "0.8" },
+  { loc: `${siteUrl}/blogs`, lastmod: newestPost, changefreq: "weekly", priority: "0.8" },
+  { loc: `${siteUrl}/contact`, lastmod: newestPost, changefreq: "monthly", priority: "0.7" },
+];
 
 const urls = [...staticRoutes, ...blogRoutes]
   .map(

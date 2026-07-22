@@ -63,9 +63,13 @@ export default async function GitHubContributions() {
 				<h2 className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 uppercase tracking-widest">GitHub Contributions</h2>
 				<span className="text-xs text-slate-400 dark:text-slate-500">{total} in the last year</span>
 			</div>
-			<div className="flex gap-[2px] w-full">
+			<div
+				role="img"
+				aria-label={`GitHub contribution calendar: ${total} contributions in the last year`}
+				className="flex gap-[2px] w-full"
+			>
 				{weeks.map((week, wi) => (
-					<div key={wi} className="flex flex-col gap-[2px] flex-1">
+					<div key={wi} aria-hidden="true" className="flex flex-col gap-[2px] flex-1">
 						{week.map((day, di) => (
 							<div
 								key={di}

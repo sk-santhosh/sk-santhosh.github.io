@@ -1,8 +1,15 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Calendar } from "lucide-react";
+import { ArrowLeft, ArrowRight, Calendar, Clock } from "lucide-react";
 import type { Metadata } from "next";
-import { getAllBlogs, getBlogBySlug, formatDate } from "@/lib/blogs";
+import {
+  getAllBlogs,
+  getBlogBySlug,
+  getAdjacentBlogs,
+  getRelatedBlogs,
+  formatDate,
+} from "@/lib/blogs";
+import BlogCard from "@/components/blog-card";
 import { tagColor } from "@/lib/tag-colors";
 import { siteUrl } from "@/lib/site";
 import { resume } from "@/data/resume";
@@ -38,8 +45,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       title: post.title,
       description: post.description,
       siteName: resume.name,
+      locale: "en_US",
       publishedTime: post.date,
+      modifiedTime: post.updated ?? post.date,
       authors: [resume.name],
+      section: post.tags[0],
       tags: post.tags,
       images: [ogImage],
     },
@@ -58,6 +68,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   if (!post) notFound();
 
   const postUrl = `${siteUrl}/blogs/${slug}`;
+  const { previous, next } = getAdjacentBlogs(slug);
+  const related = getRelatedBlogs(slug, post.tags, 3);
 
   const articleJsonLd = {
     "@context": "https://schema.org",
@@ -65,13 +77,24 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     headline: post.title,
     description: post.description,
     datePublished: post.date,
-    dateModified: post.date,
+    dateModified: post.updated ?? post.date,
     keywords: post.tags.join(", "),
-    image: `${siteUrl}/og/${slug}.png`,
+    articleSection: post.tags[0],
+    wordCount: post.wordCount,
+    timeRequired: `PT${post.readingTime}M`,
+    inLanguage: "en",
+    isAccessibleForFree: true,
+    image: {
+      "@type": "ImageObject",
+      url: `${siteUrl}/og/${slug}.png`,
+      width: 1200,
+      height: 630,
+    },
     url: postUrl,
-    mainEntityOfPage: postUrl,
-    author: { "@type": "Person", name: resume.name, url: siteUrl },
-    publisher: { "@type": "Person", name: resume.name, url: siteUrl },
+    mainEntityOfPage: { "@type": "WebPage", "@id": postUrl },
+    isPartOf: { "@id": `${siteUrl}/#website` },
+    author: { "@type": "Person", "@id": `${siteUrl}/#person`, name: resume.name, url: siteUrl },
+    publisher: { "@type": "Person", "@id": `${siteUrl}/#person`, name: resume.name, url: siteUrl },
   };
 
   const breadcrumbJsonLd = {
@@ -108,8 +131,12 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-4">{post.description}</p>
         <div className="flex flex-wrap items-center gap-3">
           <span className="flex items-center gap-1.5 text-xs text-slate-400 dark:text-slate-500">
-            <Calendar size={12} className="text-slate-400" />
-            <time>{formatDate(post.date)}</time>
+            <Calendar size={12} className="text-slate-400" aria-hidden="true" />
+            <time dateTime={post.date}>{formatDate(post.date)}</time>
+          </span>
+          <span className="flex items-center gap-1.5 text-xs text-slate-400 dark:text-slate-500">
+            <Clock size={12} className="text-slate-400" aria-hidden="true" />
+            {post.readingTime} min read
           </span>
           <div className="flex gap-1.5 flex-wrap">
             {post.tags.map((tag) => (
@@ -122,6 +149,51 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       </header>
 
       <div className="prose" dangerouslySetInnerHTML={{ __html: post.content }} />
+
+      {/* Previous / next post navigation */}
+      {(previous || next) && (
+        <nav
+          aria-label="Adjacent posts"
+          className="mt-10 pt-6 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row justify-between gap-3"
+        >
+          {next ? (
+            <Link
+              href={`/blogs/${next.slug}`}
+              rel="next"
+              className="group flex items-center gap-1.5 text-sm text-slate-500 dark:text-slate-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors min-h-[44px] max-w-full sm:max-w-[48%]"
+            >
+              <ArrowLeft size={14} className="shrink-0" aria-hidden="true" />
+              <span className="truncate">{next.title}</span>
+            </Link>
+          ) : (
+            <span />
+          )}
+          {previous && (
+            <Link
+              href={`/blogs/${previous.slug}`}
+              rel="prev"
+              className="group flex items-center gap-1.5 text-sm text-slate-500 dark:text-slate-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors min-h-[44px] max-w-full sm:max-w-[48%] sm:text-right sm:justify-end"
+            >
+              <span className="truncate">{previous.title}</span>
+              <ArrowRight size={14} className="shrink-0" aria-hidden="true" />
+            </Link>
+          )}
+        </nav>
+      )}
+
+      {/* Related posts — internal links by shared tags */}
+      {related.length > 0 && (
+        <section aria-label="Related posts" className="mt-10">
+          <h2 className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-3">
+            Related posts
+          </h2>
+          <div>
+            {related.map((p) => (
+              <BlogCard key={p.slug} post={p} />
+            ))}
+          </div>
+        </section>
+      )}
     </article>
   );
 }

@@ -14,7 +14,10 @@ export default function Nav() {
 	const pathname = usePathname();
 
 	return (
-		<nav className="sticky top-0 z-50 flex items-center justify-center border-b border-gray-200 dark:border-slate-800 bg-white/95 dark:bg-slate-950/95 nav-blur font-mono text-xs transition-colors print:hidden">
+		<nav
+			aria-label="Main navigation"
+			className="sticky top-0 z-50 flex items-center justify-center border-b border-gray-200 dark:border-slate-800 bg-white/95 dark:bg-slate-950/95 nav-blur font-mono text-xs transition-colors print:hidden"
+		>
 			<div className="flex items-center">
 				{links.map(({title, url}) => {
 					const active = url === '/' ? pathname === '/' : pathname.startsWith(url);
@@ -22,6 +25,7 @@ export default function Nav() {
 						<Link
 							key={url}
 							href={url}
+							aria-current={active ? 'page' : undefined}
 							className={`flex items-center px-4 py-2 transition-colors outline-none focus:outline-none ${
 								active
 									? 'border-x border-gray-200 dark:border-slate-700 bg-gray-100 dark:bg-slate-800 text-sky-600 dark:text-sky-400'

@@ -23,9 +23,16 @@ const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains-mono",
 });
 
+// e.g. "https://twitter.com/its_sk__" → "@its_sk__"
+const twitterHandle = `@${resume.social.twitter.split("/").filter(Boolean).pop()}`;
+
 export const viewport = {
   width: "device-width",
   initialScale: 1,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#020617" },
+  ],
 };
 
 export const metadata: Metadata = {
@@ -55,6 +62,11 @@ export const metadata: Metadata = {
   category: "technology",
   alternates: {
     canonical: "/",
+    types: {
+      "application/rss+xml": [
+        { url: "/rss.xml", title: `${resume.name} — Blog` },
+      ],
+    },
   },
   robots: {
     index: true,
@@ -81,6 +93,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
+    site: twitterHandle,
+    creator: twitterHandle,
     title: siteTitle,
     description: resume.summary,
     images: [ogImage.url],
@@ -88,18 +102,27 @@ export const metadata: Metadata = {
 };
 
 // schema.org structured data — helps Google build a rich knowledge-panel result.
+// `@id` gives Person/WebSite stable identities that page-level schema
+// (BlogPosting, ProfilePage, …) can reference instead of redefining.
 const personJsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
+  "@id": `${siteUrl}/#person`,
   name: resume.name,
   url: siteUrl,
-  image: `${siteUrl}/santhosh.jpg`,
+  image: {
+    "@type": "ImageObject",
+    url: `${siteUrl}/santhosh.jpg`,
+    width: 3117,
+    height: 3117,
+  },
   jobTitle: resume.title,
   description: resume.summary,
   email: `mailto:${resume.email}`,
   address: {
     "@type": "PostalAddress",
     addressLocality: resume.location,
+    addressCountry: "IN",
   },
   sameAs: [resume.social.github, resume.social.linkedin, resume.social.twitter],
   knowsAbout: resume.skills,
@@ -108,9 +131,13 @@ const personJsonLd = {
 const websiteJsonLd = {
   "@context": "https://schema.org",
   "@type": "WebSite",
+  "@id": `${siteUrl}/#website`,
   name: siteTitle,
+  description: resume.summary,
   url: siteUrl,
-  author: { "@type": "Person", name: resume.name },
+  inLanguage: "en",
+  author: { "@id": `${siteUrl}/#person` },
+  publisher: { "@id": `${siteUrl}/#person` },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -128,9 +155,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 pb-10">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:px-3 focus:py-2 focus:rounded-md focus:bg-white dark:focus:bg-slate-900 focus:text-sky-600 dark:focus:text-sky-400 focus:border focus:border-slate-200 dark:focus:border-slate-700 focus:text-sm"
+        >
+          Skip to content
+        </a>
         <OpenToWorkBanner />
         <Nav />
-        <main className="max-w-2xl md:max-w-3xl lg:max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">{children}</main>
+        <main id="main-content" className="max-w-2xl md:max-w-3xl lg:max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">{children}</main>
         <footer className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-slate-950/95 nav-blur border-t border-slate-100 dark:border-slate-800">
           <div className="max-w-2xl md:max-w-3xl lg:max-w-4xl mx-auto px-4 sm:px-6 py-2 flex items-center justify-between">
             <span className="text-xs text-slate-400 dark:text-slate-500">© {new Date().getFullYear()} {resume.name}</span>

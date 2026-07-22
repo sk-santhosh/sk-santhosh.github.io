@@ -4,16 +4,41 @@ import {MdEmail} from 'react-icons/md';
 import {FaGithub, FaLinkedin} from 'react-icons/fa';
 import {FaXTwitter} from 'react-icons/fa6';
 import {resume} from '@/data/resume';
+import {siteUrl} from '@/lib/site';
+
+const description = `Get in touch with ${resume.name} — ${resume.title}. Open to roles, consulting and interesting infrastructure problems.`;
 
 export const metadata = {
 	title: 'Contact',
-	description: `Get in touch with ${resume.name} — ${resume.title}. Open to roles, consulting and interesting infrastructure problems.`,
+	description,
 	alternates: {canonical: '/contact'},
+	openGraph: {
+		title: 'Contact',
+		description,
+		url: `${siteUrl}/contact`,
+		type: 'website',
+	},
+};
+
+const contactPageJsonLd = {
+	'@context': 'https://schema.org',
+	'@type': 'ContactPage',
+	'@id': `${siteUrl}/contact#contactpage`,
+	name: `Contact ${resume.name}`,
+	description,
+	url: `${siteUrl}/contact`,
+	inLanguage: 'en',
+	isPartOf: {'@id': `${siteUrl}/#website`},
+	mainEntity: {'@id': `${siteUrl}/#person`},
 };
 
 export default function ContactPage() {
 	return (
 		<div className="space-y-10">
+			<script
+				type="application/ld+json"
+				dangerouslySetInnerHTML={{__html: JSON.stringify(contactPageJsonLd)}}
+			/>
 			{/* Intro */}
 			<section>
 				<div className="flex items-center gap-2 mb-3">

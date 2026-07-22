@@ -15,6 +15,13 @@ if [ -n "$blog_changed" ]; then
     exit 1
   }
   git add public/og
+
+  echo "pre-commit: regenerating RSS feed and llms.txt…"
+  npm run rss || {
+    echo "pre-commit: RSS generation failed; aborting commit." >&2
+    exit 1
+  }
+  git add public/rss.xml public/llms.txt
 fi
 
 # Static sitemap — regenerate when blog content or app routes change.

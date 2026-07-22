@@ -56,14 +56,60 @@ export interface BlogPost {
   title: string;
   description: string;
   date: string;
+  /** Optional last-updated date from frontmatter; falls back to `date`. */
+  updated?: string;
   tags: string[];
+  wordCount: number;
+  /** Estimated reading time in whole minutes (min 1). */
+  readingTime: number;
   content: string;
 }
 
-export interface BlogMeta extends Omit<BlogPost, "content"> {}
+export type BlogMeta = Omit<BlogPost, "content">;
 
 function parseDate(dateStr: string): Date {
   return new Date(dateStr);
+}
+
+const WORDS_PER_MINUTE = 220;
+
+function countWords(markdown: string): number {
+  // Strip fenced code blocks and inline markup noise before counting so the
+  // estimate tracks prose, not code density.
+  const prose = markdown
+    .replace(/```[\s\S]*?```/g, " ")
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, " ")
+    .replace(/[#*_>`~\[\]()]/g, " ");
+  return prose.split(/\s+/).filter(Boolean).length;
+}
+
+function readingTimeMinutes(wordCount: number): number {
+  return Math.max(1, Math.round(wordCount / WORDS_PER_MINUTE));
+}
+
+// rehype plugin: make article images lazy — they are always below the fold
+// (the post header comes first), so lazy-loading them protects LCP.
+interface HastNode {
+  type: string;
+  tagName?: string;
+  properties?: Record<string, unknown>;
+  children?: HastNode[];
+}
+
+function rehypeLazyImages() {
+  return (tree: HastNode) => {
+    const visit = (node: HastNode) => {
+      if (node.type === "element" && node.tagName === "img") {
+        node.properties = {
+          ...node.properties,
+          loading: "lazy",
+          decoding: "async",
+        };
+      }
+      node.children?.forEach(visit);
+    };
+    visit(tree);
+  };
 }
 
 export function getAllBlogs(): BlogMeta[] {
@@ -73,17 +119,53 @@ export function getAllBlogs(): BlogMeta[] {
     .map((filename) => {
       const slug = filename.replace(/\.md$/, "");
       const raw = fs.readFileSync(path.join(BLOGS_DIR, filename), "utf8");
-      const { data } = matter(raw);
+      const { data, content } = matter(raw);
+      const wordCount = countWords(content);
 
       return {
         slug,
         title: data.title as string,
         description: data.description as string,
         date: data.date as string,
+        updated: data.updated as string | undefined,
         tags: (data.tags as string[]) ?? [],
+        wordCount,
+        readingTime: readingTimeMinutes(wordCount),
       };
     })
     .sort((a, b) => parseDate(b.date).getTime() - parseDate(a.date).getTime());
+}
+
+// Previous/next posts in the date-sorted list (newest first). "Previous" is
+// the newer neighbour, "next" the older one — matching reading order on the
+// blog index.
+export function getAdjacentBlogs(slug: string): {
+  previous: BlogMeta | null;
+  next: BlogMeta | null;
+} {
+  const all = getAllBlogs();
+  const i = all.findIndex((p) => p.slug === slug);
+  if (i === -1) return { previous: null, next: null };
+  return {
+    previous: i > 0 ? all[i - 1] : null,
+    next: i < all.length - 1 ? all[i + 1] : null,
+  };
+}
+
+// Posts sharing the most tags with the given post; recency breaks ties.
+// Falls back to the most recent posts when nothing shares a tag.
+export function getRelatedBlogs(slug: string, tags: string[], limit = 3): BlogMeta[] {
+  const others = getAllBlogs().filter((p) => p.slug !== slug);
+  const tagSet = new Set(tags);
+  return others
+    .map((p, recency) => ({
+      post: p,
+      overlap: p.tags.filter((t) => tagSet.has(t)).length,
+      recency,
+    }))
+    .sort((a, b) => b.overlap - a.overlap || a.recency - b.recency)
+    .slice(0, limit)
+    .map(({ post }) => post);
 }
 
 export async function getBlogBySlug(slug: string): Promise<BlogPost | null> {
@@ -92,6 +174,7 @@ export async function getBlogBySlug(slug: string): Promise<BlogPost | null> {
 
   const raw = fs.readFileSync(filePath, "utf8");
   const { data, content } = matter(raw);
+  const wordCount = countWords(content);
 
   const processed = await unified()
     .use(remarkParse)
@@ -102,6 +185,7 @@ export async function getBlogBySlug(slug: string): Promise<BlogPost | null> {
       // json/yaml/bash/javascript/typescript and add Terraform + nginx.
       languages: { ...common, hcl, terraform: hcl, tf: hcl, nginx },
     })
+    .use(rehypeLazyImages)
     .use(rehypeStringify)
     .process(content);
 
@@ -110,7 +194,10 @@ export async function getBlogBySlug(slug: string): Promise<BlogPost | null> {
     title: data.title as string,
     description: data.description as string,
     date: data.date as string,
+    updated: data.updated as string | undefined,
     tags: (data.tags as string[]) ?? [],
+    wordCount,
+    readingTime: readingTimeMinutes(wordCount),
     content: processed.toString(),
   };
 }
