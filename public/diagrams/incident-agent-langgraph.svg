@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 430" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+  <defs>
+    <marker id="ga" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#94a3b8"/>
+    </marker>
+    <marker id="gv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#8b5cf6"/>
+    </marker>
+  </defs>
+  <rect x="1" y="1" width="958" height="428" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
+  <text x="24" y="30" font-size="17" font-weight="700" fill="#0f172a">The investigation graph — two branches, one judge, one escape hatch</text>
+
+  <!-- parallel bracket -->
+  <rect x="118" y="56" width="272" height="292" rx="10" fill="#fafaf9" stroke="#e2e8f0" stroke-dasharray="4 4"/>
+  <text x="254" y="74" font-size="10.5" text-anchor="middle" fill="#94a3b8">both edges leave START — one superstep, run in parallel</text>
+
+  <!-- START -->
+  <rect x="24" y="183" width="76" height="34" rx="17" fill="#f1f5f9" stroke="#94a3b8"/>
+  <text x="62" y="205" font-size="12" text-anchor="middle" fill="#334155" font-weight="600">START</text>
+
+  <!-- investigate -->
+  <rect x="130" y="86" width="246" height="100" rx="9" fill="#eff6ff" stroke="#3b82f6"/>
+  <text x="253" y="108" font-size="13" text-anchor="middle" fill="#1d4ed8" font-weight="600">investigate</text>
+  <g font-size="10.5" fill="#1d4ed8">
+    <text x="146" y="128">query_prometheus · query_loki</text>
+    <text x="146" y="145">query_tempo · get_pod_events</text>
+    <text x="146" y="162">ReAct loop over MCP tools</text>
+  </g>
+  <text x="146" y="178" font-size="10" fill="#3b82f6">→ metrics-based RCA, every claim cited</text>
+
+  <!-- recall -->
+  <rect x="130" y="220" width="246" height="100" rx="9" fill="#ecfdf5" stroke="#10b981"/>
+  <text x="253" y="242" font-size="13" text-anchor="middle" fill="#047857" font-weight="600">recall</text>
+  <g font-size="10.5" fill="#047857">
+    <text x="146" y="262">embed the alert → pgvector ANN</text>
+    <text x="146" y="279">resolved threads only · similarity ≥ 0.78</text>
+    <text x="146" y="296">below the floor → return nothing</text>
+  </g>
+  <text x="146" y="312" font-size="10" fill="#10b981">→ how this was fixed last time</text>
+
+  <!-- summarise -->
+  <rect x="412" y="164" width="176" height="78" rx="9" fill="#f5f3ff" stroke="#8b5cf6"/>
+  <text x="500" y="188" font-size="13" text-anchor="middle" fill="#6d28d9" font-weight="600">summarise</text>
+  <text x="500" y="207" font-size="10.5" text-anchor="middle" fill="#6d28d9">runs once, after both</text>
+  <text x="500" y="223" font-size="10.5" text-anchor="middle" fill="#6d28d9">branches have landed</text>
+
+  <!-- judge -->
+  <rect x="624" y="164" width="152" height="78" rx="9" fill="#fff7ed" stroke="#fb923c"/>
+  <text x="700" y="188" font-size="13" text-anchor="middle" fill="#c2410c" font-weight="600">judge</text>
+  <text x="700" y="207" font-size="10.5" text-anchor="middle" fill="#c2410c">grounded in the</text>
+  <text x="700" y="223" font-size="10.5" text-anchor="middle" fill="#c2410c">evidence collected?</text>
+
+  <!-- post -->
+  <rect x="812" y="96" width="124" height="80" rx="9" fill="#ecfdf5" stroke="#10b981"/>
+  <text x="874" y="120" font-size="12" text-anchor="middle" fill="#047857" font-weight="600">post summary</text>
+  <text x="874" y="138" font-size="10.5" text-anchor="middle" fill="#047857">to the thread</text>
+  <text x="874" y="160" font-size="10.5" text-anchor="middle" fill="#059669">→ END</text>
+
+  <!-- ask -->
+  <rect x="812" y="230" width="124" height="94" rx="9" fill="#fffbeb" stroke="#f59e0b"/>
+  <text x="874" y="254" font-size="12" text-anchor="middle" fill="#b45309" font-weight="600">ask the thread</text>
+  <text x="874" y="272" font-size="10.5" text-anchor="middle" fill="#b45309">≤ 3 targeted</text>
+  <text x="874" y="288" font-size="10.5" text-anchor="middle" fill="#b45309">questions</text>
+  <text x="874" y="310" font-size="10.5" text-anchor="middle" fill="#d97706">→ END</text>
+
+  <g stroke="#94a3b8" stroke-width="2" fill="none">
+    <line x1="100" y1="194" x2="126" y2="146" marker-end="url(#ga)"/>
+    <line x1="100" y1="206" x2="126" y2="262" marker-end="url(#ga)"/>
+    <line x1="376" y1="146" x2="408" y2="184" marker-end="url(#ga)"/>
+    <line x1="376" y1="262" x2="408" y2="222" marker-end="url(#ga)"/>
+    <line x1="588" y1="203" x2="620" y2="203" marker-end="url(#ga)"/>
+    <line x1="776" y1="192" x2="808" y2="150" marker-end="url(#ga)"/>
+    <line x1="776" y1="214" x2="808" y2="264" marker-end="url(#ga)"/>
+  </g>
+  <text x="776" y="158" font-size="10" text-anchor="end" fill="#047857" font-weight="600">grounded</text>
+  <text x="776" y="258" font-size="10" text-anchor="end" fill="#b45309" font-weight="600">not grounded</text>
+
+  <!-- human reply loop -->
+  <path d="M 874 324 L 874 372 L 62 372 L 62 221" fill="none" stroke="#8b5cf6" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#gv)"/>
+  <rect x="302" y="362" width="346" height="18" fill="#ffffff"/>
+  <text x="475" y="376" font-size="10.5" text-anchor="middle" fill="#6d28d9">a human reply signals the workflow — the graph runs again</text>
+
+  <text x="480" y="410" font-size="11" text-anchor="middle" fill="#64748b">The shape of a first-level investigation is known in advance, so it is a graph. The open-ended part — which queries answer this alert — is bounded inside one node.</text>
+</svg>

@@ -95,7 +95,7 @@ Retries are only safe if reprocessing the same item is harmless. Use a dedupe ke
 
 When the node drains, your pod gets SIGTERM. Use the window: stop accepting new work, finish or checkpoint what's in flight, then exit. Keep the grace period under the two-minute budget.
 
-```javascript
+```typescript
 let shuttingDown = false;
 
 process.on('SIGTERM', async () => {
@@ -105,7 +105,7 @@ process.on('SIGTERM', async () => {
 	process.exit(0);
 });
 
-async function loop() {
+async function loop(): Promise<void> {
 	while (!shuttingDown) {
 		const job = await queue.receive();
 		if (job) await handleIdempotently(job);

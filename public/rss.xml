@@ -5,8 +5,52 @@
     <link>https://sk-santhosh.info/blogs</link>
     <description>Thoughts on DevOps, platform engineering, Kubernetes, cloud infrastructure and SRE.</description>
     <language>en</language>
-    <lastBuildDate>Tue, 21 Jul 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Thu, 10 Sep 2026 00:00:00 GMT</lastBuildDate>
     <atom:link href="https://sk-santhosh.info/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>Agent memory and context engineering in Postgres (3/3)</title>
+      <link>https://sk-santhosh.info/blogs/incident-bot-agent-memory-context-engineering</link>
+      <guid isPermaLink="true">https://sk-santhosh.info/blogs/incident-bot-agent-memory-context-engineering</guid>
+      <pubDate>Thu, 10 Sep 2026 00:00:00 GMT</pubDate>
+      <description>An agent whose pod can vanish mid-investigation and whose workflow exits after thirty minutes idle — so every message it has ever seen is a row, in one table with a raw column and a compacted one, with tool output reduced before it reaches the context. Plus one incident thread walked row by row, from 42,709 tokens of telemetry down to 1,889.</description>
+      <category>AI</category>
+      <category>SRE</category>
+      <category>PostgreSQL</category>
+      <category>Platform Engineering</category>
+    </item>
+    <item>
+      <title>Embedding and vector search for incident recall (2/3)</title>
+      <link>https://sk-santhosh.info/blogs/incident-bot-embedding-vector-search</link>
+      <guid isPermaLink="true">https://sk-santhosh.info/blogs/incident-bot-embedding-vector-search</guid>
+      <pubDate>Thu, 10 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Step 6 of a first-level investigation — &quot;have we seen this before?&quot; — is the one a human always loses, because Slack search is keyword search. How pgvector makes it work: rendering alerts and resolved threads into the same shape so similarity means something, a cosine HNSW index and the filter trap hiding inside it, and a Kafka pipeline that re-embeds whole threads rather than messages.</description>
+      <category>AI</category>
+      <category>PostgreSQL</category>
+      <category>RAG</category>
+      <category>SRE</category>
+    </item>
+    <item>
+      <title>Incident agents with LangGraph, LangChain and MCP (1/3)</title>
+      <link>https://sk-santhosh.info/blogs/incident-bot-langgraph-langchain-mcp</link>
+      <guid isPermaLink="true">https://sk-santhosh.info/blogs/incident-bot-langgraph-langchain-mcp</guid>
+      <pubDate>Thu, 10 Sep 2026 00:00:00 GMT</pubDate>
+      <description>How the investigation itself is built and run — MCP servers as the only door to Prometheus, Loki, Tempo and pod events; a LangGraph state graph running the telemetry sweep and the recall search in parallel; a ReAct loop confined to a single node; an LLM judge deciding whether anything gets posted; why none of it can live inside workflow code; and KEDA scaling the workers to zero between incidents.</description>
+      <category>AI</category>
+      <category>LangChain</category>
+      <category>MCP</category>
+      <category>Platform Engineering</category>
+    </item>
+    <item>
+      <title>How an AI does first-level incident analysis</title>
+      <link>https://sk-santhosh.info/blogs/ai-first-level-incident-analysis</link>
+      <guid isPermaLink="true">https://sk-santhosh.info/blogs/ai-first-level-incident-analysis</guid>
+      <pubDate>Wed, 09 Sep 2026 00:00:00 GMT</pubDate>
+      <description>The first fifteen minutes of every production alert are the same seven steps against the same four systems — and the one step that matters most, &quot;have we seen this before?&quot;, is the one a human always loses. How a Slack bot runs that pass in under a minute, and how it and the on-call engineer work the incident together.</description>
+      <category>AI</category>
+      <category>SRE</category>
+      <category>Observability</category>
+      <category>Platform Engineering</category>
+    </item>
     <item>
       <title>Sandboxing serverless workloads with gVisor and Kubernetes RuntimeClass</title>
       <link>https://sk-santhosh.info/blogs/sandboxing-serverless-workloads-with-gvisor</link>
@@ -27,28 +71,6 @@
       <category>Kubernetes</category>
       <category>GitOps</category>
       <category>CI/CD</category>
-      <category>Platform Engineering</category>
-    </item>
-    <item>
-      <title>Building a Kubernetes operator in Go: automating SPIFFE workload registration</title>
-      <link>https://sk-santhosh.info/blogs/kubernetes-operator-spiffe-workload-registration</link>
-      <guid isPermaLink="true">https://sk-santhosh.info/blogs/kubernetes-operator-spiffe-workload-registration</guid>
-      <pubDate>Mon, 29 Jun 2026 00:00:00 GMT</pubDate>
-      <description>In the previous post I registered SPIFFE entries by hand with spire-server entry create. Here I build a Kubernetes operator that automates it — a controller-runtime reconciler that watches Deployments and registers them with the SPIRE Entry API, finalizer cleanup and Prometheus metrics included.</description>
-      <category>Kubernetes</category>
-      <category>Go</category>
-      <category>Operators</category>
-      <category>Platform Engineering</category>
-    </item>
-    <item>
-      <title>Implementing zero trust workload identity with SPIFFE/SPIRE on Kubernetes</title>
-      <link>https://sk-santhosh.info/blogs/zero-trust-workload-identity-spiffe-spire</link>
-      <guid isPermaLink="true">https://sk-santhosh.info/blogs/zero-trust-workload-identity-spiffe-spire</guid>
-      <pubDate>Mon, 29 Jun 2026 00:00:00 GMT</pubDate>
-      <description>Static API keys and shared secrets don't scale, and they all hit the Secret Zero problem. Here's how SPIFFE and SPIRE give every workload a short-lived, attested identity on Kubernetes — with working manifests, go-spiffe mTLS and the operational considerations the quickstarts skip.</description>
-      <category>Kubernetes</category>
-      <category>Security</category>
-      <category>Zero Trust</category>
       <category>Platform Engineering</category>
     </item>
     <item>

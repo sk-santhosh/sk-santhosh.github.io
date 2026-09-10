@@ -39,16 +39,18 @@ The first move is to stop treating the interesting data as logging exhaust. Cost
 
 The difference is queryability. If the model version is a span attribute, "p95 latency by model version" or "cost since we shipped the new prompt" is one query. If it's in a log line, it's an afternoon of correlation. Put it on the span:
 
-```python
-with tracer.start_as_current_span("gen_ai.chat") as span:
-    span.set_attribute("gen_ai.request.model", "gpt-4o")
-    span.set_attribute("gen_ai.response.model", "gpt-4o-2026-05")  # exact version served
-    span.set_attribute("gen_ai.usage.input_tokens", usage.input)
-    span.set_attribute("gen_ai.usage.output_tokens", usage.output)
-    span.set_attribute("gen_ai.usage.cost_usd", cost(usage))        # derived: tokens x price
-    # retrieval inputs that produced this answer — so a bad answer is traceable
-    span.set_attribute("rag.retrieval.doc_ids", retrieved_ids)
-    span.set_attribute("rag.retrieval.top_score", top_score)
+```typescript
+await tracer.startActiveSpan('gen_ai.chat', async (span) => {
+	span.setAttribute('gen_ai.request.model', 'gpt-4o');
+	span.setAttribute('gen_ai.response.model', 'gpt-4o-2026-05'); // exact version served
+	span.setAttribute('gen_ai.usage.input_tokens', usage.input);
+	span.setAttribute('gen_ai.usage.output_tokens', usage.output);
+	span.setAttribute('gen_ai.usage.cost_usd', cost(usage)); // derived: tokens x price
+	// retrieval inputs that produced this answer — so a bad answer is traceable
+	span.setAttribute('rag.retrieval.doc_ids', retrievedIds);
+	span.setAttribute('rag.retrieval.top_score', topScore);
+	span.end();
+});
 ```
 
 Recording the **retrieval inputs** matters more than it looks. When an answer is wrong, the first question is always "did the model hallucinate, or did it get fed the wrong context?" With the retrieved document IDs on the span you can answer it immediately, instead of trying to reconstruct what the retriever returned at the time.
@@ -57,21 +59,27 @@ Recording the **retrieval inputs** matters more than it looks. When an answer is
 
 Attributes about the model tell you *how* the call ran. They still don't tell you *why* the user was there. That context lives at the top of the request, so put it on the **root span**: what the user was trying to accomplish.
 
-```python
-with tracer.start_as_current_span("chat.request") as root:
-    root.set_attribute("user.task", "reset_password")
-    root.set_attribute("session.intent", "account_recovery")
-    root.set_attribute("workflow.path", "support/self-serve")
+```typescript
+await tracer.startActiveSpan('chat.request', async (root) => {
+	root.setAttribute('user.task', 'reset_password');
+	root.setAttribute('session.intent', 'account_recovery');
+	root.setAttribute('workflow.path', 'support/self-serve');
+	// ... the rest of the request runs inside this span
+	root.end();
+});
 ```
 
 If the intent needs to be visible on child spans too — to slice the model call or the retrieval by it — propagate it with **baggage**, which rides alongside the trace context:
 
-```python
-from opentelemetry import baggage, context
+```typescript
+import {context, propagation} from '@opentelemetry/api';
 
-ctx = baggage.set_baggage("session.intent", "account_recovery")
-context.attach(ctx)
-# a span processor can copy baggage onto every span in the trace
+const ctx = propagation.setBaggage(
+	context.active(),
+	propagation.createBaggage({'session.intent': {value: 'account_recovery'}}),
+);
+// a span processor can copy baggage onto every span in the trace
+context.with(ctx, () => handleRequest(req));
 ```
 
 This is the unlock. Now you can ask questions that are about *users*, not infrastructure: which user tasks have the worst answer quality, whether `account_recovery` costs more per resolution than `billing`, whether one `workflow.path` quietly burns twice the tokens of another. The same telemetry, sliced by what people were actually trying to do.
@@ -80,11 +88,11 @@ This is the unlock. Now you can ask questions that are about *users*, not infras
 
 Intent on the way in is half of it. The other half is the outcome — and the outcome usually arrives *later*, from a different system. The join key that makes this possible is the **trace ID**. Capture it at request time, return it to the client, and stamp it on everything downstream:
 
-```python
-from opentelemetry import trace
+```typescript
+import {trace} from '@opentelemetry/api';
 
-span_ctx = trace.get_current_span().get_span_context()
-trace_id = format(span_ctx.trace_id, "032x")   # return this with the response
+const spanCtx = trace.getActiveSpan()?.spanContext();
+const traceId = spanCtx?.traceId; // already 32-char hex — return this with the response
 ```
 
 With that ID flowing outward, you can correlate the trace with the three signals that actually define whether the AI worked:
@@ -103,22 +111,22 @@ The faithfulness numbers used below — 71% for `technical_support`, 96% for `or
 
 The judge runs off the hot path on sampled traffic, and the prompt asks for a numeric score and a short reason so each verdict is auditable:
 
-```python
-JUDGE_RUBRIC = """You are grading an answer for faithfulness.
+```typescript
+const JUDGE_RUBRIC = `You are grading an answer for faithfulness.
 Given the CONTEXT and the ANSWER, decide whether every factual claim in the
 ANSWER is supported by the CONTEXT. Unsupported or invented claims fail.
-Return JSON: {"score": 0.0-1.0, "supported_claims": int, "total_claims": int, "reason": "..."}"""
+Return JSON: {"score": 0.0-1.0, "supported_claims": int, "total_claims": int, "reason": "..."}`;
 
-resp = judge.chat.completions.create(
-    model="gpt-4o",                          # strong model, ideally not the one being judged
-    response_format={"type": "json_object"},
-    messages=[
-        {"role": "system", "content": JUDGE_RUBRIC},
-        {"role": "user", "content": f"CONTEXT:\n{context}\n\nANSWER:\n{answer}"},
-    ],
-)
-verdict = json.loads(resp.choices[0].message.content)
-passed = verdict["score"] >= 0.7             # the pass/fail threshold
+const resp = await judge.chat.completions.create({
+	model: 'gpt-4o', // strong model, ideally not the one being judged
+	response_format: {type: 'json_object'},
+	messages: [
+		{role: 'system', content: JUDGE_RUBRIC},
+		{role: 'user', content: `CONTEXT:\n${retrieved}\n\nANSWER:\n${answer}`},
+	],
+});
+const verdict = JSON.parse(resp.choices[0].message.content ?? '{}');
+const passed = verdict.score >= 0.7; // the pass/fail threshold
 ```
 
 Each verdict is written back against the trace ID, and the **faithfulness pass rate is simply the share of sampled answers that clear the 0.7 threshold, aggregated by `user.task`** — which is exactly the per-intent column on the dashboard.
@@ -154,20 +162,25 @@ That decision comes down to a real tension: checking quality costs time, and the
 
 A practical pattern: tag each check with where it ran, so the latency budget is visible too.
 
-```python
-# inline guardrail — blocks, so keep it cheap
-with tracer.start_as_current_span("guardrail.safety") as g:
-    g.set_attribute("check.kind", "inline")
-    g.set_attribute("check.passed", safe)
+```typescript
+// inline guardrail — blocks, so keep it cheap
+tracer.startActiveSpan('guardrail.safety', (g) => {
+	g.setAttribute('check.kind', 'inline');
+	g.setAttribute('check.passed', safe);
+	g.end();
+});
 
-# async eval — emitted later, linked back to the original trace
-with tracer.start_as_current_span(
-    "eval.faithfulness",
-    links=[trace.Link(original_span_context)],
-) as e:
-    e.set_attribute("check.kind", "async")
-    e.set_attribute("eval.score", score)
-    e.set_attribute("eval.passed", score >= 0.7)
+// async eval — emitted later, linked back to the original trace
+tracer.startActiveSpan(
+	'eval.faithfulness',
+	{links: [{context: originalSpanContext}]},
+	(e) => {
+		e.setAttribute('check.kind', 'async');
+		e.setAttribute('eval.score', score);
+		e.setAttribute('eval.passed', score >= 0.7);
+		e.end();
+	},
+);
 ```
 
 The span **link** is the clean way to attach an async verdict to the request it judges without forcing it into the original trace's timing.

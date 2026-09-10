@@ -34,35 +34,44 @@ OpenTelemetry defines a standard set of `gen_ai.*` attributes, so a model call l
 
 You rarely write these spans by hand. Libraries like OpenLLMetry or OpenInference auto-instrument the common SDKs and emit the `gen_ai.*` conventions for you — initialise once and every model call is traced:
 
-```python
-from traceloop.sdk import Traceloop
-from openai import OpenAI
+```typescript
+import * as traceloop from '@traceloop/node-server-sdk';
+import OpenAI from 'openai';
 
-# exports OTLP to your collector; auto-instruments the OpenAI/Anthropic SDKs
-Traceloop.init(app_name="support-assistant")
+// exports OTLP to your collector; auto-instruments the OpenAI/Anthropic SDKs
+traceloop.initialize({appName: 'support-assistant', instrumentModules: {openAI: OpenAI}});
 
-client = OpenAI()
-resp = client.chat.completions.create(
-    model="gpt-4o",
-    temperature=0.2,
-    messages=[{"role": "user", "content": question}],
-)
+const client = new OpenAI();
+const resp = await client.chat.completions.create({
+	model: 'gpt-4o',
+	temperature: 0.2,
+	messages: [{role: 'user', content: question}],
+});
 ```
 
 When you orchestrate a pipeline yourself, wrap each stage in a span so the trace shows the whole request. The model call slots in as a child span with the GenAI attributes:
 
-```python
-from opentelemetry import trace
+```typescript
+import {trace} from '@opentelemetry/api';
 
-tracer = trace.get_tracer("rag")
+const tracer = trace.getTracer('rag');
 
-with tracer.start_as_current_span("chat.request"):
-    with tracer.start_as_current_span("rag.retrieve"):
-        chunks = vector_store.search(question, k=8)
-    with tracer.start_as_current_span("rag.rerank"):
-        context = rerank(question, chunks)[:4]
-    # the LLM call here is auto-instrumented as gen_ai.chat
-    answer = answer_with_context(question, context)
+const answer = await tracer.startActiveSpan('chat.request', async (root) => {
+	const chunks = await tracer.startActiveSpan('rag.retrieve', async (s) => {
+		const hits = await vectorStore.search(question, {k: 8});
+		s.end();
+		return hits;
+	});
+	const context = await tracer.startActiveSpan('rag.rerank', async (s) => {
+		const ranked = (await rerank(question, chunks)).slice(0, 4);
+		s.end();
+		return ranked;
+	});
+	// the LLM call here is auto-instrumented as gen_ai.chat
+	const result = await answerWithContext(question, context);
+	root.end();
+	return result;
+});
 ```
 
 ## Collect it the standard way

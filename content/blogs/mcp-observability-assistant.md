@@ -25,26 +25,34 @@ The server is a thin, read-only adapter over each backend's HTTP API. Three tool
 - `query_loki(logql, start, end, limit)` — logs filtered by label and pattern
 - `query_tempo(traceql, start, end)` and `get_trace(trace_id)` — traces and spans
 
-With the Python MCP SDK, a tool is just a decorated function. The docstring and type hints _are_ the interface the model sees, so they need to be clear:
+With the TypeScript MCP SDK, a tool is a name, a description, a schema and a handler. That description and schema _are_ the interface the model sees, so they need to be clear:
 
-```python
-from mcp.server.fastmcp import FastMCP
-import httpx
+```typescript
+import {McpServer} from '@modelcontextprotocol/sdk/server/mcp.js';
+import {z} from 'zod';
 
-mcp = FastMCP("observability")
-PROM = "http://prometheus.monitoring.svc.cluster.local:9090"
+const server = new McpServer({name: 'observability', version: '1.0.0'});
+const PROM = 'http://prometheus.monitoring.svc.cluster.local:9090';
 
-@mcp.tool()
-def query_prometheus(promql: str, start: str, end: str, step: str = "30s") -> dict:
-    """Run a PromQL range query. Times are RFC3339.
-    Use for metrics: request latency, error rate, CPU and memory saturation."""
-    r = httpx.get(
-        f"{PROM}/api/v1/query_range",
-        params={"query": promql, "start": start, "end": end, "step": step},
-        timeout=15,
-    )
-    r.raise_for_status()
-    return r.json()["data"]
+server.tool(
+	'query_prometheus',
+	`Run a PromQL range query. Times are RFC3339.
+Use for metrics: request latency, error rate, CPU and memory saturation.`,
+	{
+		promql: z.string(),
+		start: z.string(),
+		end: z.string(),
+		step: z.string().default('30s'),
+	},
+	async ({promql, start, end, step}) => {
+		const url = new URL(`${PROM}/api/v1/query_range`);
+		url.search = new URLSearchParams({query: promql, start, end, step}).toString();
+		const r = await fetch(url, {signal: AbortSignal.timeout(15_000)});
+		if (!r.ok) throw new Error(`Prometheus ${r.status}: ${await r.text()}`);
+		const {data} = await r.json();
+		return {content: [{type: 'text', text: JSON.stringify(data)}]};
+	},
+);
 ```
 
 `query_loki` and `query_tempo` follow the same shape against `/loki/api/v1/query_range` and Tempo's `/api/search` — a few dozen lines each. The model writes the PromQL and LogQL; your job is to hand it a safe, well-described door into each system.

@@ -23,26 +23,35 @@ Two decisions shape retrieval quality more than anything else: how you chunk, an
 
 **Chunking.** Split documents into passages small enough to be specific but large enough to stand alone. Around 500–800 tokens with a little overlap is a sensible default — overlap stops a sentence that straddles a boundary from losing its meaning.
 
-```python
-def chunk(text: str, size: int = 800, overlap: int = 150) -> list[str]:
-    words = text.split()
-    step = size - overlap
-    return [" ".join(words[i:i + size]) for i in range(0, len(words), step)]
+```typescript
+function chunk(text: string, size = 800, overlap = 150): string[] {
+	const words = text.split(/\s+/);
+	const step = size - overlap;
+	const out: string[] = [];
+	for (let i = 0; i < words.length; i += step) {
+		out.push(words.slice(i, i + size).join(' '));
+	}
+	return out;
+}
 ```
 
 **Embeddings.** An embedding model maps text to a vector so that similar meanings sit close together. Serve one through the same OpenAI-compatible interface as your LLM — vLLM can host an embedding model directly — and call it with any OpenAI client:
 
-```python
-from openai import OpenAI
+```typescript
+import OpenAI from 'openai';
 
-embed_client = OpenAI(base_url="http://vllm-embed.ai.svc.cluster.local:8000/v1",
-                      api_key="not-needed")
+const embedClient = new OpenAI({
+	baseURL: 'http://vllm-embed.ai.svc.cluster.local:8000/v1',
+	apiKey: 'not-needed',
+});
 
-def embed(texts: list[str]) -> list[list[float]]:
-    resp = embed_client.embeddings.create(
-        model="BAAI/bge-base-en-v1.5", input=texts,
-    )
-    return [d.embedding for d in resp.data]
+async function embed(texts: string[]): Promise<number[][]> {
+	const resp = await embedClient.embeddings.create({
+		model: 'BAAI/bge-base-en-v1.5',
+		input: texts,
+	});
+	return resp.data.map((d) => d.embedding);
+}
 ```
 
 **Storage.** `bge-base` emits 768-dimension vectors, so the table holds the chunk text plus a `vector(768)` column. An HNSW index keeps nearest-neighbour search fast as the table grows:
@@ -62,49 +71,58 @@ CREATE INDEX ON chunks USING hnsw (embedding vector_cosine_ops);
 
 Then chunk, embed and insert each document:
 
-```python
-import psycopg
-from pgvector.psycopg import register_vector
+```typescript
+import {Client} from 'pg';
+import pgvector from 'pgvector/pg';
 
-with psycopg.connect(DSN) as conn:
-    register_vector(conn)
-    for doc_id, text in load_documents():
-        chunks = chunk(text)
-        vectors = embed(chunks)
-        with conn.cursor() as cur:
-            cur.executemany(
-                "INSERT INTO chunks (doc_id, content, embedding) VALUES (%s, %s, %s)",
-                [(doc_id, c, v) for c, v in zip(chunks, vectors)],
-            )
+const conn = new Client({connectionString: DSN});
+await conn.connect();
+await pgvector.registerType(conn);
+
+for (const {docId, text} of await loadDocuments()) {
+	const chunks = chunk(text);
+	const vectors = await embed(chunks);
+	for (const [i, content] of chunks.entries()) {
+		await conn.query(
+			'INSERT INTO chunks (doc_id, content, embedding) VALUES ($1, $2, $3)',
+			[docId, content, pgvector.toSql(vectors[i])],
+		);
+	}
+}
 ```
 
 ## Retrieval and generation
 
 On a query, embed the question with the _same_ model, pull the closest chunks with pgvector's cosine-distance operator (`<=>`), then ask the LLM to answer using only that context:
 
-```python
-llm = OpenAI(base_url="http://vllm.ai.svc.cluster.local:8000/v1", api_key="not-needed")
+```typescript
+const llm = new OpenAI({
+	baseURL: 'http://vllm.ai.svc.cluster.local:8000/v1',
+	apiKey: 'not-needed',
+});
 
-def answer(question: str, k: int = 5) -> str:
-    qvec = embed([question])[0]
+async function answer(question: string, k = 5): Promise<string | null> {
+	const [qvec] = await embed([question]);
 
-    with psycopg.connect(DSN) as conn:
-        register_vector(conn)
-        rows = conn.execute(
-            "SELECT content FROM chunks ORDER BY embedding <=> %s LIMIT %s",
-            (qvec, k),
-        ).fetchall()
+	const {rows} = await conn.query(
+		'SELECT content FROM chunks ORDER BY embedding <=> $1 LIMIT $2',
+		[pgvector.toSql(qvec), k],
+	);
 
-    context = "\n\n".join(r[0] for r in rows)
-    resp = llm.chat.completions.create(
-        model="meta-llama/Llama-3.2-3B-Instruct",
-        messages=[
-            {"role": "system", "content":
-             "Answer using only the context below. If the answer isn't there, say you don't know."},
-            {"role": "user", "content": f"Context:\n{context}\n\nQuestion: {question}"},
-        ],
-    )
-    return resp.choices[0].message.content
+	const context = rows.map((r) => r.content).join('\n\n');
+	const resp = await llm.chat.completions.create({
+		model: 'meta-llama/Llama-3.2-3B-Instruct',
+		messages: [
+			{
+				role: 'system',
+				content:
+					"Answer using only the context below. If the answer isn't there, say you don't know.",
+			},
+			{role: 'user', content: `Context:\n${context}\n\nQuestion: ${question}`},
+		],
+	});
+	return resp.choices[0].message.content;
+}
 ```
 
 That system prompt is doing real work: instructing the model to stay within the retrieved context — and to admit when the answer isn't there — is what turns a confident hallucination into an honest "I don't know".

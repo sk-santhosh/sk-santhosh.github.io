@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 500" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+  <defs>
+    <marker id="pa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#94a3b8"/>
+    </marker>
+    <marker id="pi" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#6366f1"/>
+    </marker>
+  </defs>
+  <rect x="1" y="1" width="958" height="498" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
+  <text x="24" y="30" font-size="17" font-weight="700" fill="#0f172a">Where the agent's memory lives — two runs, one incident</text>
+
+  <!-- run 1 -->
+  <rect x="24" y="48" width="912" height="128" rx="10" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="40" y="68" font-size="12" fill="#475569" font-weight="600">Run 1 · 03:14 — the alert arrives</text>
+  <g text-anchor="middle">
+    <rect x="44" y="80" width="156" height="62" rx="8" fill="#f1f5f9" stroke="#94a3b8"/>
+    <text x="122" y="106" font-size="11.5" fill="#334155">loadContext</text>
+    <text x="122" y="123" font-size="10" fill="#475569">nothing to restore yet</text>
+    <rect x="232" y="80" width="268" height="62" rx="8" fill="#f5f3ff" stroke="#8b5cf6"/>
+    <text x="366" y="106" font-size="11.5" fill="#6d28d9">round: investigate → summarise</text>
+    <text x="366" y="123" font-size="11.5" fill="#6d28d9">→ judge</text>
+    <rect x="532" y="80" width="180" height="62" rx="8" fill="#eef2ff" stroke="#6366f1"/>
+    <text x="622" y="101" font-size="11.5" fill="#4338ca" font-weight="600">commitRound</text>
+    <text x="622" y="117" font-size="10" fill="#4338ca">the whole round, one tx</text>
+    <text x="622" y="132" font-size="10" fill="#4338ca">every loop</text>
+    <rect x="744" y="80" width="172" height="62" rx="8" fill="#fffbeb" stroke="#f59e0b"/>
+    <text x="830" y="103" font-size="11.5" fill="#b45309">post questions</text>
+    <text x="830" y="121" font-size="10.5" fill="#b45309">idle 30 min → exit</text>
+  </g>
+  <text x="830" y="162" font-size="10.5" text-anchor="middle" fill="#dc2626">the pod's heap ends here</text>
+  <g stroke="#94a3b8" stroke-width="2" fill="none">
+    <line x1="200" y1="111" x2="228" y2="111" marker-end="url(#pa)"/>
+    <line x1="500" y1="111" x2="528" y2="111" marker-end="url(#pa)"/>
+    <line x1="712" y1="111" x2="740" y2="111" marker-end="url(#pa)"/>
+  </g>
+
+  <!-- postgres -->
+  <rect x="24" y="194" width="912" height="124" rx="10" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="40" y="214" font-size="12" fill="#475569" font-weight="600">Postgres</text>
+  <text x="916" y="214" font-size="11" text-anchor="end" fill="#64748b">written explicitly — because nothing else persists</text>
+  <g text-anchor="middle">
+    <rect x="44" y="228" width="200" height="76" rx="9" fill="#f1f5f9" stroke="#94a3b8"/>
+    <text x="144" y="252" font-size="12" fill="#334155" font-weight="600">agent_messages.content</text>
+    <text x="144" y="270" font-size="10.5" fill="#475569">raw, verbatim</text>
+    <text x="144" y="288" font-size="10.5" fill="#64748b">audit — never sent</text>
+
+    <rect x="268" y="228" width="200" height="76" rx="9" fill="#f5f3ff" stroke="#8b5cf6"/>
+    <text x="368" y="252" font-size="12" fill="#6d28d9" font-weight="600">agent_messages.compact</text>
+    <text x="368" y="270" font-size="10.5" fill="#6d28d9">written once, at tool time</text>
+    <text x="368" y="288" font-size="10.5" fill="#7c3aed">this is the context</text>
+
+    <rect x="492" y="228" width="200" height="76" rx="9" fill="#eff6ff" stroke="#3b82f6"/>
+    <text x="592" y="252" font-size="12" fill="#1d4ed8" font-weight="600">incident_state</text>
+    <text x="592" y="270" font-size="10.5" fill="#1d4ed8">window · status</text>
+    <text x="592" y="288" font-size="10.5" fill="#3b82f6">rounds · opened_at</text>
+
+    <rect x="716" y="228" width="200" height="76" rx="9" fill="#ecfdf5" stroke="#10b981"/>
+    <text x="816" y="252" font-size="12" fill="#047857" font-weight="600">incident_threads</text>
+    <text x="816" y="270" font-size="10.5" fill="#047857">pgvector</text>
+    <text x="816" y="288" font-size="10.5" fill="#10b981">cross-incident recall</text>
+  </g>
+
+  <path d="M 622 142 L 622 185 L 144 185 L 144 224" fill="none" stroke="#6366f1" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#pi)"/>
+  <path d="M 368 185 L 368 224" fill="none" stroke="#6366f1" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#pi)"/>
+  <rect x="628" y="158" width="74" height="16" fill="#f8fafc"/>
+  <text x="632" y="170" font-size="10" fill="#4338ca">every loop</text>
+
+  <!-- run 2 -->
+  <rect x="24" y="336" width="912" height="110" rx="10" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="40" y="356" font-size="12" fill="#475569" font-weight="600">Run 2 · 07:31 — an engineer tags the bot four hours later, with no worker pods in between</text>
+  <g text-anchor="middle">
+    <rect x="44" y="370" width="190" height="56" rx="8" fill="#fffbeb" stroke="#f59e0b"/>
+    <text x="139" y="392" font-size="11.5" fill="#b45309">@mention</text>
+    <text x="139" y="410" font-size="10" fill="#b45309">written to Postgres first</text>
+    <rect x="266" y="370" width="200" height="56" rx="8" fill="#eef2ff" stroke="#6366f1"/>
+    <text x="366" y="392" font-size="11.5" fill="#4338ca">signalWithStart</text>
+    <text x="366" y="410" font-size="10" fill="#4338ca">closed run → a new one</text>
+    <rect x="498" y="370" width="190" height="56" rx="8" fill="#f5f3ff" stroke="#8b5cf6"/>
+    <text x="593" y="392" font-size="11.5" fill="#6d28d9">loadContext</text>
+    <text x="593" y="410" font-size="10" fill="#6d28d9">one query, ORDER BY seq</text>
+    <rect x="744" y="370" width="172" height="56" rx="8" fill="#ecfdf5" stroke="#10b981"/>
+    <text x="830" y="392" font-size="11.5" fill="#047857">round 3 continues</text>
+    <text x="830" y="410" font-size="10" fill="#047857">as if nothing stopped</text>
+  </g>
+  <g stroke="#94a3b8" stroke-width="2" fill="none">
+    <line x1="234" y1="398" x2="262" y2="398" marker-end="url(#pa)"/>
+    <line x1="466" y1="398" x2="494" y2="398" marker-end="url(#pa)"/>
+    <line x1="688" y1="398" x2="740" y2="398" marker-end="url(#pa)"/>
+  </g>
+  <path d="M 144 304 L 144 324 L 593 324 L 593 366" fill="none" stroke="#8b5cf6" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#pi)"/>
+  <path d="M 368 304 L 368 324" fill="none" stroke="#8b5cf6" stroke-width="2"/>
+
+  <text x="480" y="478" font-size="11" text-anchor="middle" fill="#64748b">Temporal makes the orchestration durable. Everything the agent knows is durable only because a row was written for it.</text>
+</svg>
