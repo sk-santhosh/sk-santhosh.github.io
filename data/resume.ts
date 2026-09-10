@@ -1,16 +1,16 @@
 export const resume = {
 	name: 'Santhosh Kumar J',
-	title: 'Platform Engineer · Cloud Engineer · SRE',
+	title: 'AI Engineer · Software Developer · Platform Engineer',
 	// Toggle the scrolling "open to work" banner above the nav bar.
 	openToWork: {
 		enabled: true,
 		message:
-			'Open to work — Platform Engineer, Cloud Engineer & SRE roles · full-time or consulting · open to relocation worldwide',
+			'Open to work — AI Engineer, Software Developer & Platform Engineer roles · full-time or consulting · open to relocation worldwide',
 	},
 	tagline:
-		'Platform & Cloud Engineer and SRE with 14+ years building and operating cloud-native platforms on AWS, Azure, and GCP for systems serving 10M+ users.',
+		'A software developer turned platform engineer, now building AI systems — 14+ years from embedded firmware and backend services to cloud-native platforms on AWS, Azure and GCP serving 10M+ users.',
 	summary:
-		'14+ years designing, building and operating cloud-native platforms on AWS, Azure and GCP. Led engineering teams of 20+ and delivered 30+ cloud transformation projects — migrations, Kubernetes modernisation and reliability programmes — cutting infrastructure costs by up to 35% while sustaining 99.9% availability for systems serving 10M+ users.',
+		'A software developer who grew into platform engineering. 14+ years that began in embedded firmware and backend services and moved into designing, building and operating cloud-native platforms on AWS, Azure and GCP. Led engineering teams of 20+ and delivered 30+ cloud transformation projects — migrations, Kubernetes modernisation and reliability programmes — cutting infrastructure costs by up to 35% while sustaining 99.9% availability for systems serving 10M+ users.',
 	location: 'Chennai, India',
 	email: 'santhoshj.off@gmail.com',
 	// Headline stats for the home page "By the numbers" grid.

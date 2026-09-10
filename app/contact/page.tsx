@@ -80,7 +80,7 @@ export default function ContactPage() {
 								Open to opportunities — worldwide 🌍
 							</p>
 							<p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-								Platform Engineer, Cloud Engineer and SRE roles — full-time or consulting.
+								AI Engineer, Software Developer and Platform Engineer roles — full-time or consulting.
 							</p>
 						</>
 					) : (

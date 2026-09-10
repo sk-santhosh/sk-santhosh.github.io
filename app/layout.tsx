@@ -48,6 +48,8 @@ export const metadata: Metadata = {
   publisher: resume.name,
   keywords: [
     resume.name,
+    "AI Engineer",
+    "Software Developer",
     "Platform Engineer",
     "Cloud Engineer",
     "Site Reliability Engineer",
