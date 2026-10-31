@@ -1,0 +1,520 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------
+   Design tokens
+   Full-bleed flame orange over coal black, white type,
+   hairline technical grid. Display = Archivo, text = Inter.
+----------------------------------------------------------------*/
+@theme {
+  --color-flame-700: #b8381a;
+  --color-flame-600: #d8451d;
+  --color-flame-500: #ee5126;
+  --color-flame-400: #f66c3d;
+  --color-flame-300: #fb8b61;
+
+  --color-coal-950: #08080a;
+  --color-coal-900: #0e0e11;
+  --color-coal-850: #141418;
+  --color-coal-800: #1b1b20;
+  --color-coal-700: #26262d;
+  --color-coal-600: #35353e;
+
+  --color-chalk: #ffffff;
+
+  /* Light surfaces for the inner pages — warm neutrals that sit with orange */
+  --color-paper: #f2f0ec;
+  --color-paper-deep: #e6e2db;
+  --color-paper-card: #ffffff;
+  --color-ink: #131211;
+  --color-ink-soft: #403b35;
+  --color-ink-mute: #7a736a;
+  --color-rule: #d5cfc6;
+  --color-ash-300: #c9c9d1;
+  --color-ash-400: #9a9aa6;
+  --color-ash-500: #74747f;
+
+  --font-display: var(--font-archivo), "Helvetica Neue", Helvetica, Arial,
+    sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+
+    /* The four vertical rails of the layout grid. Every piece of
+       content and every drawn line reads these, so text always sits
+       exactly on a line. --rail-r is the matching right-hand inset. */
+    --rail-1: 5%;
+    --rail-2: 35%;
+    --rail-3: 65%;
+    --rail-4: 95%;
+    --rail-r: calc(100% - var(--rail-4));
+
+    /* Horizontal rails */
+    --row-1: 13%;
+    --row-2: 72%;
+  }
+
+  /* Phones need a slightly wider gutter than 5% would give */
+  @media (width < 40rem) {
+    :root {
+      --rail-1: 6.5%;
+      --rail-4: 93.5%;
+    }
+  }
+
+  html {
+    -webkit-tap-highlight-color: transparent;
+    /* iOS Safari inflates text in landscape without this */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-coal-950);
+    color: var(--color-chalk);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* The home route is a fixed, full-viewport screen.
+     Driven by <ScreenLock/> from the pathname — a :has() selector on the
+     page element goes stale while the router keeps the old tree mounted
+     during a client-side navigation, which left inner pages unscrollable. */
+  html.screen-locked,
+  html.screen-locked body {
+    overflow: hidden;
+    overscroll-behavior: none;
+    /* The home screen is sized in svh so it always fits the smallest
+       viewport; if Safari's toolbar then collapses, this keeps the
+       exposed strip the same colour instead of flashing the page ground. */
+    background-color: var(--color-flame-500);
+  }
+
+  /* Deliberately no :has() scroll-lock for the open menu. The router
+     keeps the previous page's tree in the DOM briefly after a client-side
+     navigation, and a :has() rule matching a stale node is exactly what
+     previously left inner pages unscrollable. The panel uses
+     overscroll-contain instead. */
+
+  ::selection {
+    background-color: var(--color-chalk);
+    color: var(--color-flame-600);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-chalk);
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* ---------------------------------------------------------------
+   Utilities
+----------------------------------------------------------------*/
+
+/* Content padding that lands exactly on the outer rails */
+@utility rails {
+  padding-left: var(--rail-1);
+  padding-right: var(--rail-r);
+}
+
+/* Same, but as absolute offsets for overlay content */
+@utility rail-l {
+  left: var(--rail-1);
+}
+
+@utility rail-rt {
+  right: var(--rail-r);
+}
+
+/* The flame field used on the home screen and page mastheads */
+@utility bg-flame {
+  background-color: var(--color-flame-500);
+  background-image:
+    radial-gradient(
+      120% 90% at 18% 8%,
+      color-mix(in srgb, #ff7a45 55%, transparent) 0%,
+      transparent 55%
+    ),
+    radial-gradient(
+      90% 80% at 85% 95%,
+      color-mix(in srgb, #c93a16 70%, transparent) 0%,
+      transparent 60%
+    ),
+    linear-gradient(158deg, #e9491f 0%, #ee5126 42%, #ef5027 68%, #d94520 100%);
+}
+
+/* Editorial label: small, wide-tracked, uppercase */
+@utility label {
+  font-size: 0.6875rem;
+  line-height: 1.2;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* Link with the design's thin baseline underline */
+@utility rule-link {
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -0.3em;
+    height: 1px;
+    background-color: currentColor;
+    transform: scaleX(var(--rule, 0));
+    transform-origin: left;
+    transition: transform 0.4s var(--ease-out-soft);
+  }
+
+  &:hover,
+  &:focus-visible {
+    --rule: 1;
+  }
+}
+
+/* Portrait treatment: the source photo is a normal JPG, so it is
+   blended into the flame field and its edges are dissolved rather
+   than shown as a hard rectangle. Drop in a cut-out PNG and this
+   still works — there is simply no background left to dissolve. */
+@utility portrait-blend {
+  /* The source is a studio JPG on a light backdrop, not a cut-out.
+     Lifting the backdrop to white lets the wrapper's multiply blend
+     erase it against the flame field, leaving only the subject.
+     A real cut-out PNG dropped in its place still renders correctly. */
+  filter: contrast(1.06) brightness(1.16) saturate(0.92);
+  -webkit-mask-image: radial-gradient(
+    ellipse 82% 94% at 50% 50%,
+    #000 58%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(
+    ellipse 82% 94% at 50% 50%,
+    #000 58%,
+    transparent 100%
+  );
+}
+
+/* ---------------------------------------------------------------
+   Animations
+----------------------------------------------------------------*/
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(26px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes portrait-in {
+  from {
+    opacity: 0;
+    transform: translateY(32px) scale(1.04);
+  }
+  to {
+    /* Slightly under 1 so the multiply does not crush the face */
+    opacity: 0.93;
+    transform: none;
+  }
+}
+
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@utility animate-rise {
+  animation: rise 0.9s var(--ease-out-soft) both;
+}
+
+@utility animate-fade {
+  animation: fade 1.1s var(--ease-out-soft) both;
+}
+
+@utility animate-portrait-in {
+  animation: portrait-in 1.3s var(--ease-out-soft) both;
+}
+
+@keyframes pulse-dot {
+  0% {
+    opacity: 0.6;
+    transform: scale(0.85);
+  }
+  70%,
+  100% {
+    opacity: 0;
+    transform: scale(2.4);
+  }
+}
+
+@utility animate-pulse-dot {
+  animation: pulse-dot 2.4s var(--ease-out-soft) infinite;
+}
+
+@utility animate-spin-slow {
+  animation: spin-slow 14s linear infinite;
+}
+
+/* Reveal-on-scroll, driven by <Reveal /> */
+@utility reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.7s var(--ease-out-soft),
+    transform 0.7s var(--ease-out-soft);
+
+  &[data-shown="true"] {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* iOS Safari zooms the viewport when a focused field is under 16px,
+   so form controls stay at 16px until there is room for the smaller size. */
+@layer base {
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
+
+  @media (width >= 40rem) {
+    input,
+    textarea,
+    select {
+      font-size: inherit;
+    }
+  }
+}
+
+/* ---------------------------------------------------------------
+   Light page surface
+----------------------------------------------------------------*/
+@utility page-light {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+}
+
+/* ---------------------------------------------------------------
+   Markdown body (project + post detail pages)
+----------------------------------------------------------------*/
+@utility prose-md {
+  color: var(--color-ink-soft);
+  font-size: 1rem;
+  line-height: 1.8;
+
+  & > * + * {
+    margin-top: 1.25em;
+  }
+
+  & h2 {
+    margin-top: 2.4em;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    color: var(--color-ink);
+  }
+
+  & h3 {
+    margin-top: 2em;
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--color-ink);
+  }
+
+  & p > strong {
+    color: var(--color-ink);
+    font-weight: 600;
+  }
+
+  & a {
+    color: var(--color-flame-600);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  & ul,
+  & ol {
+    padding-left: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6em;
+  }
+
+  & ul {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  & ul > li {
+    position: relative;
+    padding-left: 1.5rem;
+  }
+
+  & ul > li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.72em;
+    width: 0.75rem;
+    height: 1px;
+    background-color: var(--color-flame-500);
+  }
+
+  & ol {
+    list-style: decimal;
+  }
+
+  & ol > li::marker {
+    color: var(--color-flame-600);
+    font-variant-numeric: tabular-nums;
+  }
+
+  & blockquote {
+    border-left: 2px solid var(--color-flame-500);
+    padding-left: 1.25rem;
+    font-style: italic;
+    color: var(--color-ink);
+  }
+
+  & code {
+    background-color: var(--color-paper-deep);
+    border: 1px solid var(--color-rule);
+    padding: 0.1em 0.35em;
+    font-size: 0.875em;
+    color: var(--color-ink);
+  }
+
+  /* Shiki emits its own background/colour on .shiki; this covers both the
+     highlighted output and the plain fallback for unknown languages. */
+  & pre {
+    background-color: #1e1e1e;
+    color: #d4d4d4;
+    padding: 1.25rem;
+    overflow-x: auto;
+    font-size: 0.8125rem;
+    line-height: 1.65;
+    tab-size: 2;
+  }
+
+  & pre code {
+    background: none;
+    border: 0;
+    padding: 0;
+    color: inherit;
+    font-size: inherit;
+  }
+
+  /* Shiki marks each line; keep long lines scrolling rather than wrapping */
+  & pre .line {
+    white-space: pre;
+  }
+
+  & table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    display: block;
+    overflow-x: auto;
+  }
+
+  & th,
+  & td {
+    border: 1px solid var(--color-rule);
+    padding: 0.6rem 0.8rem;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  & th {
+    background-color: var(--color-paper-deep);
+    color: var(--color-ink);
+    font-weight: 600;
+  }
+
+  & hr {
+    border: 0;
+    border-top: 1px solid var(--color-rule);
+  }
+
+  /* Inline SVG diagrams authored in the markdown */
+  & .diagram {
+    margin-top: 2.4em;
+    border: 1px solid var(--color-rule);
+    background-color: var(--color-paper-card);
+    padding: 1.25rem;
+    overflow-x: auto;
+  }
+
+  & .diagram svg {
+    display: block;
+    width: 100%;
+    min-width: 32rem;
+    height: auto;
+  }
+
+  & .diagram figcaption {
+    margin-top: 1rem;
+    font-size: 0.6875rem;
+    line-height: 1.5;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-ink-mute);
+  }
+
+  /* Post diagrams arrive as markdown images rather than inline SVG, so the
+     paragraph wrapping them becomes the same bordered card as .diagram. */
+  & p:has(> img) {
+    margin-top: 2.4em;
+    border: 1px solid var(--color-rule);
+    background-color: var(--color-paper-card);
+    padding: 1.25rem;
+    overflow-x: auto;
+  }
+
+  & img {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+  }
+}
