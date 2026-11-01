@@ -3,8 +3,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import ArticleShell from "@/components/ArticleShell";
 import { ArrowUpRight, Github } from "@/components/Icons";
+import { site } from "@/data/content";
 import { getProject, getProjects } from "@/lib/content";
-import { sharedMetadata } from "@/lib/seo";
+import { sharedMetadata, siteUrl } from "@/lib/seo";
 
 
 /* Only the slugs below exist; anything else is a 404 rather than an
@@ -35,8 +36,43 @@ export default async function ProjectPage({
   const project = getProject(slug);
   if (!project) notFound();
 
+  const schema = [
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareSourceCode",
+      "@id": `${siteUrl}/projects/${project.slug}#software`,
+      name: project.title,
+      description: project.summary,
+      url: `${siteUrl}/projects/${project.slug}`,
+      programmingLanguage: project.tags.join(", "),
+      author: { "@id": `${siteUrl}/#person` },
+      isPartOf: { "@id": `${siteUrl}/#website` },
+      ...(project.repo ? { codeRepository: project.repo } : {}),
+      image: `${siteUrl}/projects/${project.slug}/opengraph-image`,
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: site.fullName, item: siteUrl },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Projects",
+          item: `${siteUrl}/projects`,
+        },
+        { "@type": "ListItem", position: 3, name: project.title },
+      ],
+    },
+  ];
+
   return (
-    <ArticleShell
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      />
+      <ArticleShell
       backHref="/projects"
       backLabel="All projects"
       eyebrow={`${project.category} · ${project.year}`}
@@ -113,5 +149,6 @@ export default async function ProjectPage({
       }
       html={project.html}
     />
+    </>
   );
 }

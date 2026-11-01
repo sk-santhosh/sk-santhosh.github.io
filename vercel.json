@@ -1,0 +1,12 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/blogs/compliance-private-networking-aws-vpc",
+      "destination": "/blogs/kubernetes-cloudflare-private-networking",
+      "permanent": true
+    }
+  ]
+}
+
