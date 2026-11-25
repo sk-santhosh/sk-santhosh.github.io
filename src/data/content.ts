@@ -45,6 +45,7 @@ export const nav = [
   { label: "Projects", href: "/projects" },
   { label: "Blogs", href: "/blogs" },
   { label: "Contact", href: "/contact" },
+  { label: "Refer me", href: "/refer" },
 ] as const;
 
 /**
@@ -86,6 +87,13 @@ export const pages = {
     lede: "Hiring, migrating, or firefighting — tell me what you're building and what's hurting.",
     description:
       "Get in touch about SRE roles, Kubernetes migrations or a second opinion on your reliability roadmap.",
+  },
+  "/refer": {
+    index: "05",
+    title: "Refer me",
+    lede: "Thanks for referring me. Every detail your company's portal will ask for is below, with a copy button beside each one.",
+    description:
+      "Candidate details for referring Santhoshkumar J — contact, experience, availability, target roles and a ready-to-paste referral note.",
   },
 } as const;
 
@@ -248,3 +256,24 @@ export const services = [
     body: "LGTM stacks and OpenTelemetry pipelines with traces, metrics and logs correlated — so triage starts with context, not archaeology.",
   },
 ] as const;
+
+/**
+ * The /refer page: the fields company referral portals ask for, so a
+ * referrer can copy each one straight into the form. No resume link.
+ */
+export const referral = {
+  firstName: "Santhoshkumar",
+  lastName: "J",
+  totalExperience: "13 years",
+  noticePeriod: "Immediate",
+  workAuthorization:
+    "Indian citizen — authorized to work in India; requires visa sponsorship elsewhere",
+  relocation: "Open to relocate — remote, hybrid or onsite",
+  targetRoles: [
+    "Site Reliability Engineer",
+    "Platform Engineer",
+    "Kubernetes Engineer",
+    "DevOps Engineer",
+  ],
+  note: "Santhoshkumar is a Kubernetes and SRE engineer with 13 years in the industry. As co-founder and Staff Kubernetes Engineer at SentinelFox, he ran 10+ production clusters across EKS, AKS and GKE, sustained 99.9% availability for 10M+ users, and set up SLOs, error budgets and blameless postmortems across 15+ teams. He cut incident triage from ~15 minutes to under one and manual deployment effort by 80% with GitOps. He is CKA-certified, available immediately, and open to relocation.",
+} as const;
