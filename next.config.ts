@@ -20,6 +20,9 @@ const nextConfig: NextConfig = {
    * but never hydrates. Development only — ignored in production builds.
    */
   allowedDevOrigins: ["192.168.1.*", "*.local"],
+  experimental: {
+    agentUpgrade: "security",
+  },
   /**
    * cacheComponents is off deliberately. Every route here renders from
    * markdown on disk at build time, so there is no dynamic data for it to
